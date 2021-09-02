@@ -7,81 +7,42 @@ const createNewUser = async(userData) => {
     });
 }
 
-
-const login = (username, password) => {
-    let data = {
-        accountInfo: {
-            username: username,
-            password: password
-        }
-    }
-    
-    return new Promise((resolve, reject) => {
-        user.find(data).then((res) => {
-            if(res.length != 0)
-                resolve(res);
-            else
-                reject(new Error("invalid username or password"));
-        }).catch((err) => {
-            console.log(err);
-        })
+const getUserInfoByID = async (userID) => {
+    await user.findById(userID).then((data) => {
+        if(data === null)
+            return 'ERROR! no data was found with userID'
+        return data;
+    }).catch((err) => {
+        console.log(err);
     })
-
 }
 
-const getUserInfoByID = (userID) => {
-    return new Promise((resolve, reject) => {
-        user.findById(userID).then((data) => {
-            (data)? (
-                resolve(data)
-            ) : (
-                reject(new Error("Error! no user found with given ID"))
-            );
-        }).catch((err) => {
-            console.log(err);
-        })
-    })
-    
-}
-
-const updateUser = async(userData, userID) => {
-    user.findByIdAndUpdate(userID, userData).then((res) => {
-        console.log(res);
+const updateUser = async (userData, userID) => {
+    await user.findByIdAndUpdate(userID, userData).then((data) => {
+        return data;
     }).catch((err) => {
         console.log(err);
     })
 }
 
 const deleteUser = async(userID) => {
-    user.findByIdAndDelete(userID).then((res) => {
-        return res
+    await user.findByIdAndDelete(userID).then((data) => {
+        return data
+    }).catch((err) => {
+        console.log(err);
     })
 }
 
-const getCart = (userID) => {
-    return new Promise((resolve, reject) => {
-        user.findById(userID).then((data) => {
-            (data) ? (
-                resolve(data.carts)
-            ) : (
-                resolve("no item in cart")
-            )
-        }).catch((err) => {
-            console.log(err.message);
-        })
-    })
-}
-
-const updateCart = (userID, newCart) => {
-    user.findByIdAndUpdate(userID, newCart);
+const likeUser = async(userID, targetID) => {
+    await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.likes": targetID }}).then((data) => {
+        console.log(data);
+    }).catch((err) => { console.log(err) });
 }
 
 module.exports = {
     createNewUser,
-    login,
     updateUser,
     deleteUser,
     getUserInfoByID,
-    getCart,
-    updateCart,
+    likeUser,
 }

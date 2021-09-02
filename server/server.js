@@ -17,10 +17,10 @@ app.use(express.json());
 //include API routes
 app.use('/', routerConfig)
 
-app.use(express.static(path.resolve(__dirname, '..', 'client/build')));
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-})
+// app.use(express.static(path.resolve(__dirname, '..', 'client/build')));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+// })
 
 //listen request
 app.listen(process.env.PORT || 5000, () => {

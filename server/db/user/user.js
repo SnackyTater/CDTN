@@ -16,7 +16,7 @@ const User = new Schema({
         },
         password: {
             type: String,
-            required: true,
+            required: [true, 'password is required'],
             minlength: 8,
         },
     },
@@ -27,21 +27,58 @@ const User = new Schema({
         },
         fullName: {
             type: String,
-            required: true
+            default: '',
         },
         DateOfBirth: {
             type: Date,
         },
-        like: [{
-            id: mongoose.Types.ObjectId,
+        gender: {
+            type: String,
+        },
+        description: {
+            type: String,
+            maxlength: 500
+        },
+        passions: [{
+            _id: mongoose.Types.ObjectId,
+            name: String,
         }],
-        match: [{
-            id: mongoose.Types.ObjectId,
-        }],
+        block: [{
+            _id: mongoose.Types.ObjectId,
+        }]
     },
-    
-    
+    matchMakingConfig:{
+        location: {
+            longitude: Number,
+            latitude: Number
+        },
+        gender: String,
+        age: {
+            from: {
+                type: Number,
+                default: 18,
+            },
+            to: {
+                type: Number,
+                default: 31,
+            }
+        },
+        zoneLimit:{
+            diameter: {
+                type: Number,
+                default: 80000,
+            },
+            status: {
+                type: Boolean,
+                default: false
+            }
+        }
+    },
+    matchMakingStatus: {
+        likes: [{ type: mongoose.Types.ObjectId }],
+        matches: [{ type: mongoose.Types.ObjectId }]
+    },
 })
 
-const account = mongoose.model('Account', User);
-module.exports = account;
+const user = mongoose.model('user', User);
+module.exports = user;
