@@ -8,13 +8,13 @@ const createNewUser = async(userData) => {
 }
 
 const getUserInfoByID = async (userID) => {
-    await user.findById(userID).then((data) => {
-        if(data === null)
-            return 'ERROR! no data was found with userID'
-        return data;
-    }).catch((err) => {
-        console.log(err);
-    })
+    try{
+        let data = await user.findById(userID);
+        if(data != null) {return data}
+        else {throw new Error ('no data was found with given userID')}
+    } catch (err) {
+        throw(err.message)
+    }
 }
 
 const updateUser = async (userData, userID) => {
@@ -34,9 +34,16 @@ const deleteUser = async(userID) => {
 }
 
 const likeUser = async(userID, targetID) => {
-    await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.likes": targetID }}).then((data) => {
-        console.log(data);
-    }).catch((err) => { console.log(err) });
+    try {
+        let status = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.likes": targetID }});
+        if(status != null){
+            return {status: status, message: `like ${targetID} successfully`};
+        } else {
+            throw new Error("there's something wrong")
+        }
+    } catch(err) {
+        throw (err.message)
+    }
 }
 
 const checkLogin = async (account) => {
@@ -52,6 +59,19 @@ const checkLogin = async (account) => {
     }
 }
 
+const nopeUser = async(userID, targetID) => {
+    try {
+        let status = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.nopes": targetID }});
+        if(status != null){
+            return {status: status, message: `nope ${targetID} successfully`};
+        } else {
+            throw new Error("there's something wrong");
+        }
+    } catch(err) {
+        throw (err.message)
+    }
+}
+
 
 module.exports = {
     createNewUser,
@@ -59,5 +79,6 @@ module.exports = {
     deleteUser,
     getUserInfoByID,
     likeUser,
-    checkLogin
+    nopeUser,
+    checkLogin,
 }

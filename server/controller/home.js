@@ -9,13 +9,22 @@ router.get('/home', (req, res) => {
     res.json({message: 'sth'});
 });
 
-router.post('/swipe-right', (req, res) => {
-    console.log('blin')
-    userController.likeUser(req.body.userID, req.body.targetID).then((data) => {
-        res.json("added");
-    }).catch((err) => {
-        console.log(err);
-    })
+router.post('/swipe-right', async(req, res) => {
+    try{
+        let status = await userController.likeUser(req.body.userID, req.body.targetID);
+        res.status(200).json(status)
+    } catch(err) {
+        throw(err);
+    }
+})
+
+router.post('/swipe-left', async(req, res) => {
+    try{
+        let status = await userController.nopeUser(req.body.userID, req.body.targetID);
+        res.status(200).json(status)
+    } catch(err) {
+        throw(err);
+    }
 })
 
 
