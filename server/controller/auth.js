@@ -3,25 +3,17 @@ const router = Router();
 const jwt = require('jsonwebtoken');
 
 const userController = require('../db/user/controller');
+const auth = require('../authorization/auth');
 
-const posts = [
-    {
-        username: 'tater',
-        title: 'Post1'
-    },{
-        username: 'blyat',
-        title: 'post2'
+router.post('/login', async (req, res) => {
+    try{
+        let userInfo = await userController.checkLogin(req.body);
+        let accountInfo = userInfo.toJSON().accountInfo;
+        let token = await auth.createToken(accountInfo);
+            res.status(200).json({access_token: token, userInfo: userInfo});
+    } catch (err) {
+        res.status(404).json(err);
     }
-]
-
-router.get('/posts', authenticateToken, (req, res) => {
-    res.json(posts.filter(post => post.username === req.user.name));
-})
-
-router.post('/login', (req, res) => {
-    const account = {name: req.body.name}
-    const accessToken = jwt.sign(account, 'd3d0872a0de4d0a01945920f3cc044')
-    res.json({access_token: accessToken})
 })
 
 function authenticateToken(req, res, next) {
@@ -30,7 +22,7 @@ function authenticateToken(req, res, next) {
     if(token == null)
         return res.sendStatus(401);
     else
-        jwt.verify(token, 'd3d0872a0de4d0a01945920f3cc044', (err, user) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
             if(err)
                 return res.sendStatus(403)
             req.user = user

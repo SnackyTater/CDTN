@@ -39,10 +39,25 @@ const likeUser = async(userID, targetID) => {
     }).catch((err) => { console.log(err) });
 }
 
+const checkLogin = async (account) => {
+    try{
+        let data = await user.findOne({'accountInfo.username': account.username, 'accountInfo.password': account.password});
+        if(data != null){
+            return data;
+        } else {
+            throw new Error('wrong username or password');
+        }
+    } catch (err) {
+        throw(err.message);
+    }
+}
+
+
 module.exports = {
     createNewUser,
     updateUser,
     deleteUser,
     getUserInfoByID,
     likeUser,
+    checkLogin
 }
