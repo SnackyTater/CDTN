@@ -23,7 +23,7 @@ const User = new Schema({
     userInfo: {
         profileImage: {
             type: String,
-            default: '../uploads/defaultProfile/profile.png',
+            default: '',
         },
         fullName: {
             type: String,
@@ -34,10 +34,12 @@ const User = new Schema({
         },
         gender: {
             type: String,
+            default: 'unknown',
         },
         description: {
             type: String,
-            maxlength: 500
+            maxlength: 500,
+            default: '',
         },
         passions: [{
             _id: mongoose.Types.ObjectId,
@@ -48,11 +50,14 @@ const User = new Schema({
         }]
     },
     matchMakingConfig:{
-        location: {
-            longitude: Number,
-            latitude: Number
+        location: [{
+            Types: Number,
+            default: [0, 0]
+        }],
+        gender: {
+            type: String,
+            default: 'both',
         },
-        gender: String,
         age: {
             from: {
                 type: Number,

@@ -1,10 +1,22 @@
 const mongoose = require('mongoose');
 const user = require('./user');
 
-const createNewUser = async(userData) => {
-    await user.create(userData).then((res) => {
-        console.log(res);
-    });
+const createNewUserAccount = async(userData) => {
+    try{
+        let query = await user.create({accountInfo: userData});
+        return query;
+    } catch(err) {
+        if(err.code == 11000){
+            if(err.keyValue.hasOwnProperty('accountInfo.username')){
+                throw `${err.keyValue['accountInfo.username']} has been used`;
+            }
+            if(err.keyValue.hasOwnProperty('accountInfo.email')){
+                throw `${err.keyValue['accountInfo.email']} has been used`;
+            }
+        } else {
+            throw err.message;
+        }
+    }
 }
 
 const getUserInfoByID = async (userID) => {
@@ -17,12 +29,18 @@ const getUserInfoByID = async (userID) => {
     }
 }
 
-const updateUser = async (userData, userID) => {
-    await user.findByIdAndUpdate(userID, userData).then((data) => {
-        return data;
-    }).catch((err) => {
+const updateUserInfo = async (userID, userData) => {
+    try{
+        let query = await user.findByIdAndUpdate({_id: new mongoose.Types.ObjectId(userID)}, {$set: userData}, {new: true});
+        if(query != null){
+            return query;
+        } else {
+            throw new Error('no user was found with given ID');
+        }
+    } catch(err) {
         console.log(err);
-    })
+        throw(err.message)
+    }
 }
 
 const deleteUser = async(userID) => {
@@ -72,13 +90,31 @@ const nopeUser = async(userID, targetID) => {
     }
 }
 
+const blockUser = async(userID, targetID) => {
+    try {
+        let status = await user.updateOne({_id: userID}, {$push:{ "userInfo.block": targetID }});
+        if(status != null){
+            return {status: status, message: `block ${targetID} successfully`};
+        } else {
+            throw new Error("there's something wrong");
+        }
+    } catch(err) {
+        throw (err.message)
+    }
+}
+
+const recommend = async(userInfo) => {
+    //find all the people within diameter of user's cordinate & gender & age
+}
+
 
 module.exports = {
-    createNewUser,
-    updateUser,
+    createNewUserAccount,
+    updateUserInfo,
     deleteUser,
     getUserInfoByID,
     likeUser,
     nopeUser,
     checkLogin,
+    blockUser,
 }

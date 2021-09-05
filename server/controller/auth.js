@@ -1,4 +1,4 @@
-const { Router } = require('express');
+const { Router, response } = require('express');
 const router = Router();
 const jwt = require('jsonwebtoken');
 
@@ -18,8 +18,8 @@ router.post('/login', async (req, res) => {
 
 router.post('/signup', async(req, res) => {
     try{
-        await userController.createNewUser({accountInfo: req.body});
-        res.json('account created successfully');
+        let response = await userController.createNewUserAccount(req.body);
+        res.json({message: 'account created successfully', data: response});
     } catch (err) {
         res.json(err);
     }

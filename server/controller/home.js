@@ -3,8 +3,7 @@ const router = express.Router();
 
 const userController = require('../db/user/controller');
 
-//when logged in
-router.get('/home', (req, res) => {
+router.get('/recs', (req, res) => {
     //return array of match card
     res.json({message: 'sth'});
 });
