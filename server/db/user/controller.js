@@ -66,11 +66,14 @@ const likeUser = async(userID, targetID) => {
 
 const checkLogin = async (account) => {
     try{
-        let data = await user.findOne({'accountInfo.username': account.username, 'accountInfo.password': account.password});
-        if(data != null){
-            return data;
+        let query = await user.findOne({'accountInfo.username': account.username});
+        if(query != null){
+            let data = query.toJSON();
+            if(data != data.userInfo.password == account.password)
+                return data;
+            throw new Error('wrong password');
         } else {
-            throw new Error('wrong username or password');
+            throw new Error('wrong username');
         }
     } catch (err) {
         throw(err.message);

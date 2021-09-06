@@ -1,4 +1,4 @@
-const { Router, response } = require('express');
+const { Router } = require('express');
 const router = Router();
 const jwt = require('jsonwebtoken');
 
@@ -10,7 +10,7 @@ router.post('/login', async (req, res) => {
         let userInfo = await userController.checkLogin(req.body);
         let accountInfo = userInfo.toJSON().accountInfo;
         let token = await auth.createToken(accountInfo);
-            res.status(200).json({access_token: token, userInfo: userInfo});
+        res.status(200).json({access_token: token, userInfo: userInfo});
     } catch (err) {
         res.status(404).json(err);
     }
