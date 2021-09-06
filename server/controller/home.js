@@ -4,10 +4,12 @@ const router = express.Router();
 const userController = require('../db/user/controller');
 
 router.get('/recs', (req, res) => {
+    console.log(req.headers['authorization']);
     //return array of match card
     res.json({message: 'sth'});
 });
 
+//
 router.post('/swipe-right', async(req, res) => {
     try{
         let status = await userController.likeUser(req.body.userID, req.body.targetID);
@@ -17,6 +19,7 @@ router.post('/swipe-right', async(req, res) => {
     }
 })
 
+//
 router.post('/swipe-left', async(req, res) => {
     try{
         let status = await userController.nopeUser(req.body.userID, req.body.targetID);
