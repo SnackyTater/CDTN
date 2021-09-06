@@ -8,8 +8,7 @@ const auth = require('../authorization/auth');
 router.post('/login', async (req, res) => {
     try{
         let userInfo = await userController.checkLogin(req.body);
-        let accountInfo = userInfo.toJSON().accountInfo;
-        let token = await auth.createToken(accountInfo);
+        let token = await auth.createToken(String(userInfo._id));
         res.status(200).json({access_token: token, userInfo: userInfo});
     } catch (err) {
         res.status(404).json(err);

@@ -69,8 +69,11 @@ const checkLogin = async (account) => {
         let query = await user.findOne({'accountInfo.username': account.username});
         if(query != null){
             let data = query.toJSON();
-            if(data != data.userInfo.password == account.password)
+            if(data.accountInfo.password == account.password){
+                //console.log(data)
                 return data;
+            }
+                
             throw new Error('wrong password');
         } else {
             throw new Error('wrong username');
