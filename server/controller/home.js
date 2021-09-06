@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 const userController = require('../db/user/controller');
+const {authenticateToken} = require('../authorization/auth');
 
-router.get('/recs', (req, res) => {
-    console.log(req.headers['authorization']);
-    //return array of match card
-    res.json({message: 'sth'});
+router.get('/recs', authenticateToken, (req, res) => {
+    
+    res.json(req.data);
 });
 
 //
