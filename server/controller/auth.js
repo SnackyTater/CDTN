@@ -17,12 +17,18 @@ router.post('/login', async (req, res) => {
 
 router.post('/signup', async(req, res) => {
     try{
-        let response = await userController.createNewUserAccount(req.body);
-        res.json({message: 'account created successfully', data: response});
+        let diff_ms = Date.now() - new Date(req.body.userInfo.DateOfBirth).getTime();
+        let age_dt = new Date(diff_ms); 
+        let age = Math.abs(age_dt.getUTCFullYear() - 1970);
+        if(age < 18){
+            throw 'you must be older than 18 to signup';
+        } else {
+            let response = await userController.createNewUserAccount(req.body);
+            res.json({message: 'account created successfully', data: response});
+        }
     } catch (err) {
         res.json(err);
     }
 })
 
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzA0NzY4NjB9.WeamuWbOscgCzpW0xe0KBFMSGhdNq1GOpzggX_L6i0U"
 module.exports = router;

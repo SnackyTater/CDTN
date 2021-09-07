@@ -3,7 +3,7 @@ const user = require('./user');
 
 const createNewUserAccount = async(userData) => {
     try{
-        let query = await user.create({accountInfo: userData});
+        let query = await user.create({accountInfo: userData.accountInfo, userInfo: userData.userInfo});
         return query;
     } catch(err) {
         if(err.code == 11000){

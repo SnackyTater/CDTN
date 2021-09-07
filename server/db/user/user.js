@@ -21,16 +21,20 @@ const User = new Schema({
         },
     },
     userInfo: {
-        profileImage: {
+        profileImage: [{
             type: String,
             default: '',
-        },
+        }],
         fullName: {
             type: String,
             default: '',
         },
         DateOfBirth: {
             type: Date,
+        },
+        mobileNumber: {
+            type: String,
+            default: ''
         },
         gender: {
             type: String,
