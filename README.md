@@ -9,8 +9,8 @@ dùng cho chuyên đề tốt nghiệp 2020-2021
 - "/api/signup" (05/09/2021)
 - "/api/login" (05/09/2021)
 - "/api/profile/:id" (07/09/2021)
-- "/api/update/:id" (07/09/2021)
-- "/api/delete/:id" (07/09/2021)
+- "/api/profile/update/:id" (07/09/2021)
+- "/api/profile/delete/:id" (07/09/2021)
 
 # các API chưa hoàn thiện 
 - "/api/recs"
