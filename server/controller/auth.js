@@ -8,7 +8,11 @@ const auth = require('../authorization/auth');
 router.post('/login', async (req, res) => {
     try{
         let userInfo = await userController.checkLogin(req.body);
-        let token = await auth.createToken(String(userInfo._id));
+        let holder = {
+            accountInfo: userInfo.accountInfo,
+            _id: userInfo._id
+        }
+        let token = await auth.createToken(JSON.stringify(holder));
         res.status(200).json({access_token: token, userInfo: userInfo});
     } catch (err) {
         res.status(404).json(err);
@@ -20,6 +24,7 @@ router.post('/signup', async(req, res) => {
         let diff_ms = Date.now() - new Date(req.body.userInfo.DateOfBirth).getTime();
         let age_dt = new Date(diff_ms); 
         let age = Math.abs(age_dt.getUTCFullYear() - 1970);
+
         if(age < 18){
             throw 'you must be older than 18 to signup';
         } else {

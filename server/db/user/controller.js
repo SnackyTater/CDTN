@@ -51,6 +51,24 @@ const deleteUser = async(userID) => {
     })
 }
 
+const checkLogin = async (account) => {
+    try{
+        let query = await user.findOne({'accountInfo.username': account.username});
+        if(query != null){
+            let data = query.toJSON();
+            if(data.accountInfo.password == account.password){
+                return data;
+            } else {
+                throw new Error('wrong password');
+            }
+        } else {
+            throw new Error('wrong username');
+        }
+    } catch (err) {
+        throw(err.message);
+    }
+}
+
 const likeUser = async(userID, targetID) => {
     try {
         let status = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.likes": targetID }});
@@ -61,25 +79,6 @@ const likeUser = async(userID, targetID) => {
         }
     } catch(err) {
         throw (err.message)
-    }
-}
-
-const checkLogin = async (account) => {
-    try{
-        let query = await user.findOne({'accountInfo.username': account.username});
-        if(query != null){
-            let data = query.toJSON();
-            if(data.accountInfo.password == account.password){
-                //console.log(data)
-                return data;
-            }
-                
-            throw new Error('wrong password');
-        } else {
-            throw new Error('wrong username');
-        }
-    } catch (err) {
-        throw(err.message);
     }
 }
 
@@ -109,8 +108,13 @@ const blockUser = async(userID, targetID) => {
     }
 }
 
-const recommend = async(userInfo) => {
-    //find all the people within diameter of user's cordinate & gender & age
+const recommend = async(userMatchMakingConfig) => {
+    try{
+        let recs = await user.find();
+        return recs;
+    } catch(err) {
+        throw(err.message);
+    }
 }
 
 

@@ -9,9 +9,7 @@ const authenticateToken = (req, res, next) => {
         jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
             if(err)
                 return res.sendStatus(403)
-            console.log(data);
-            console.log('blin1');
-            req.data = data
+            req.accountInfo = data
             next();
         })
     }     
