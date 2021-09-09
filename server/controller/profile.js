@@ -18,7 +18,7 @@ router.post('/update/:id', authenticateToken, async(req, res) => {
     }
 });
 
-router.get('/profile/:id', authenticateToken, async(req, res) => {
+router.get('/:id', authenticateToken, async(req, res) => {
     try{
         if(req.accountInfo._id == req.params.id){
             let data = await userController.getUserInfoByID(req.params.id);

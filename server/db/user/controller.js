@@ -3,7 +3,7 @@ const user = require('./user');
 
 const createNewUserAccount = async(userData) => {
     try{
-        let query = await user.create({accountInfo: userData.accountInfo, userInfo: userData.userInfo});
+        let query = await user.create({accountInfo: userData.accountInfo, userInfo: userData.userInfo, matchMakingConfig: userData.matchMakingConfig});
         return query;
     } catch(err) {
         if(err.code == 11000){
@@ -108,11 +108,37 @@ const blockUser = async(userID, targetID) => {
     }
 }
 
-const recommend = async(userMatchMakingConfig) => {
+const recommend = async(userID) => {
     try{
-        let recs = await user.find();
+        //get user match making info
+        let userInfo = await getUserInfoByID(userID);
+
+        //setup match-making config for searching based on user preferrence
+        //gender
+        let gender = (userInfo.matchMakingConfig.gender == 'both') ? (
+            [{"userInfo.gender": 'female'}, {"userInfo.gender": 'male'}]
+        ) : (
+            [{"userInfo.gender": userInfo.matchMakingConfig.gender}]
+        )
+        
+        //all user which are liked, noped, matched, blocked, self
+        let nin = [...userInfo.userInfo.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
+        nin.push(userInfo._id)
+        
+        //age
+        let ageFrom = new Date(Date.now() - userInfo.matchMakingConfig.age.from*31536000000).toISOString();
+        let ageTo = new Date(Date.now() - userInfo.matchMakingConfig.age.to*31536000000).toISOString();
+        
+        //query
+        let recs = await user.find({$and: [
+                {$or: gender},  //find user based on gender male || female || both
+                {"_id": {$nin: nin}},   //find user except for user which contained in this list
+                {"userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo}}, //find user born between age from & age to
+                //{"matchMakingInfo.location": {$nearSphere: { $geometry: { type: "Point", coordinates: [userInfo.matchMakingConfig.location[0], userInfo.matchMakingConfig.location[1]]}, $maxDistance: 10000 }}} //find user 
+            ]});
         return recs;
     } catch(err) {
+        //console.log(err)
         throw(err.message);
     }
 }
@@ -127,4 +153,5 @@ module.exports = {
     nopeUser,
     checkLogin,
     blockUser,
+    recommend,
 }

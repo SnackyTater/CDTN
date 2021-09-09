@@ -54,10 +54,13 @@ const User = new Schema({
         }]
     },
     matchMakingConfig:{
-        location: [{
-            Types: Number,
-            default: [0, 0]
-        }],
+        location: {
+            type: {
+                type: String,
+                default: "Point",
+            },
+            coordinates: [Number],
+        },
         gender: {
             type: String,
             default: 'both',
@@ -90,5 +93,6 @@ const User = new Schema({
     },
 })
 
+User.index({"matchMakingConfig.location": '2dsphere'})
 const user = mongoose.model('user', User);
 module.exports = user;
