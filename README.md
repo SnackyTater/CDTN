@@ -1,7 +1,8 @@
 # CDTN
 name: cosmitto
 description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
-link heroku: https://cosmitto.herokuapp.com/
+
+# link heroku: https://cosmitto.herokuapp.com/
 
 # cho front-end(Q.Anh)
 - B1: npm run install-client (chỉ cần chạy 1 lần khi mới clone app về)
