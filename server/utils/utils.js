@@ -4,6 +4,12 @@ const ageCalulator = (dob) => {
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
 
+const dobCalculator = (dob) => {
+    let diff = new Date(Date.now() - dob*31536000000);
+    return diff.toISOString();
+}
+
 module.exports = {
     ageCalulator,
+    dobCalculator,
 }

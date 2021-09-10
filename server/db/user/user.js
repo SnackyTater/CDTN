@@ -89,6 +89,7 @@ const User = new Schema({
     matchMakingStatus: {
         likes: [{ type: mongoose.Types.ObjectId }],
         nopes: [{type: mongoose.Types.ObjectId}],
+        liked: [{type: mongoose.Types.ObjectId}],
         matches: [{ type: mongoose.Types.ObjectId }]
     },
 })

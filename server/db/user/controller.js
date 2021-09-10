@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const user = require('./user');
+const {dobCalculator} = require('../../utils/utils')
 
 const createNewUserAccount = async(userData) => {
     try{
@@ -111,10 +112,10 @@ const blockUser = async(userID, targetID) => {
 const recommend = async(userID) => {
     try{
         //get user match making info
-        let userInfo = await getUserInfoByID(userID);
+        let query = await getUserInfoByID(userID);
+        let userInfo = query.toJSON();
 
         //setup match-making config for searching based on user preferrence
-        //gender
         let gender = (userInfo.matchMakingConfig.gender == 'both') ? (
             [{"userInfo.gender": 'female'}, {"userInfo.gender": 'male'}]
         ) : (
@@ -125,20 +126,31 @@ const recommend = async(userID) => {
         let nin = [...userInfo.userInfo.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
         nin.push(userInfo._id)
         
-        //age
-        let ageFrom = new Date(Date.now() - userInfo.matchMakingConfig.age.from*31536000000).toISOString();
-        let ageTo = new Date(Date.now() - userInfo.matchMakingConfig.age.to*31536000000).toISOString();
+        let ageFrom = dobCalculator(userInfo.matchMakingConfig.age.from);
+        let ageTo = dobCalculator(userInfo.matchMakingConfig.age.to);
         
+        let longtitude = userInfo.matchMakingConfig.location.coordinates[0];
+        let latitude = userInfo.matchMakingConfig.location.coordinates[1];
+        let maxDistance = userInfo.matchMakingConfig.zoneLimit.diameter;
+
         //query
-        let recs = await user.find({$and: [
-                {$or: gender},  //find user based on gender male || female || both
-                {"_id": {$nin: nin}},   //find user except for user which contained in this list
-                {"userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo}}, //find user born between age from & age to
-                //{"matchMakingInfo.location": {$nearSphere: { $geometry: { type: "Point", coordinates: [userInfo.matchMakingConfig.location[0], userInfo.matchMakingConfig.location[1]]}, $maxDistance: 10000 }}} //find user 
-            ]});
+        let recs = await user.find({
+                $or: gender,                                            //find user based on gender male || female || both
+                "_id": {$nin: nin},                                     //find user except for user which contained in this list
+                "userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo},   //find user born between age from & age to
+                "matchMakingConfig.location": {                         //find user within diameter of coordinates
+                    $nearSphere: {
+                        $geometry: {
+                           type : "Point",
+                           coordinates : [longtitude, latitude]
+                        },
+                        $maxDistance: maxDistance
+                     }
+                }
+        });
         return recs;
     } catch(err) {
-        //console.log(err)
+        console.log(err.message)
         throw(err.message);
     }
 }
