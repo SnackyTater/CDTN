@@ -70,33 +70,70 @@ const checkLogin = async (account) => {
     }
 }
 
-const likeUser = async(userID, targetID) => {
+const toggleLikeUser = async(userID, targetID) => {
     try {
-        let status = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.likes": targetID }});
-        if(status != null){
-            return {status: status, message: `like ${targetID} successfully`};
+        let userInfo = await user.findOne({_id: userID})
+        let targetInfo = await user.findOne({_id: targetID});
+
+        if(userInfo != null && targetInfo != null){
+            //contain id of which has been liked by the user 
+            let userLikes = userInfo.matchMakingStatus.likes
+            let targetLikes = targetInfo.matchMakingStatus.likes
+
+            //contain targetID index (-1 mean not exist, else)
+            let targetIndex = userLikes.indexOf(mongoose.Types.ObjectId(targetID))  //check if targetID is in user's like list
+            let userIndex = targetLikes.indexOf(mongoose.Types.ObjectId(userID))    //check if userID is in target's like list
+
+            //user unlike target but target doesnt like user
+            if(targetIndex != -1){
+                await user.updateOne({_id: userID}, {$pop: {"matchMakingStatus.likes": targetIndex-1}}) //remove targetID from user's like list
+                await user.updateOne({_id: targetID}, {$pop: {"matchMakingStatus.liked": userIndex-1}}) //remove userID from target's liked list
+
+                return {message: `unlike ${targetInfo.userInfo.fullName} successfully`};
+            } else {
+                await user.updateOne({_id: userID}, {$push:{"matchMakingStatus.likes": targetID}}); //add targetID to user's like list
+                await user.updateOne({_id: targetID}, {$push:{"matchMakingStatus.liked": userID}})  //add userID to target's liked list
+
+                if(userIndex != -1) return {message: `match with user ${targetInfo.userInfo.fullName}`} //check if user is in target's like list
+
+                return {message: `like ${targetID} successfully`};
+            }
         } else {
-            throw new Error("there's something wrong")
+            throw new Error("no user was found with given ID")
         }
     } catch(err) {
         throw (err.message)
     }
 }
 
-const nopeUser = async(userID, targetID) => {
+//same shit like toggle like
+const toggleNopeUser = async(userID, targetID) => {
     try {
-        let status = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.nopes": targetID }});
-        if(status != null){
-            return {status: status, message: `nope ${targetID} successfully`};
+        let userInfo = await user.findOne({_id: userID})
+        
+        if(userInfo != null){
+            //contain id of which has been liked by the user 
+            let userNopes = userInfo.matchMakingStatus.likes 
+
+            //contain targetID index (-1 mean not exist, else)
+            let targetIndex = userNopes.indexOf(mongoose.Types.ObjectId(targetID))
+
+            if(targetIndex != -1){
+                let query = await user.updateOne({_id: userID}, {$pop: {"matchMakingStatus.nopes": targetIndex-1}})
+                return {status: query, message: `un-nope ${targetID} successfully`};
+            } else {
+                let query = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.nopes": targetID }});
+                return {status: query, message: `nope ${targetID} successfully`};
+            }
         } else {
-            throw new Error("there's something wrong");
+            throw new Error("no user was found with given ID")
         }
     } catch(err) {
         throw (err.message)
     }
 }
 
-const blockUser = async(userID, targetID) => {
+const toggleBlockUser = async(userID, targetID) => {
     try {
         let status = await user.updateOne({_id: userID}, {$push:{ "userInfo.block": targetID }});
         if(status != null){
@@ -135,6 +172,7 @@ const recommend = async(userID) => {
 
         //query
         let recs = await user.find({
+                //"accountInfo.status": true,                           //find user which their account has been verified
                 $or: gender,                                            //find user based on gender male || female || both
                 "_id": {$nin: nin},                                     //find user except for user which contained in this list
                 "userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo},   //find user born between age from & age to
@@ -161,9 +199,9 @@ module.exports = {
     updateUserInfo,
     deleteUser,
     getUserInfoByID,
-    likeUser,
-    nopeUser,
     checkLogin,
-    blockUser,
+    toggleLikeUser,
+    toggleNopeUser,
+    toggleBlockUser,
     recommend,
 }

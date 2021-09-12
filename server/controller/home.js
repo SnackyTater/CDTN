@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 
 const userController = require('../db/user/controller');
 const {authenticateToken} = require('../authorization/auth');
@@ -15,10 +14,10 @@ router.get('/recs', authenticateToken, async(req, res) => {
 });
 
 //like
-router.post('/swipe-right', authenticateToken, async(req, res) => {
+router.post('/like',authenticateToken ,async(req, res) => {
     try{
         if(req.accountInfo._id == req.body.userID){
-            let status = await userController.likeUser(req.body.userID, req.body.targetID);
+            let status = await userController.toggleLikeUser(req.body.userID, req.body.targetID);
             res.status(200).json(status)
         } else {
             res.status(403).json({"message": 'login required'})
@@ -29,10 +28,10 @@ router.post('/swipe-right', authenticateToken, async(req, res) => {
 })
 
 //nope
-router.post('/swipe-left', authenticateToken, async(req, res) => {
+router.post('/nope', authenticateToken, async(req, res) => {
     try{
         if(req.accountInfo._id == req.body.userID){
-            let status = await userController.nopeUser(req.body.userID, req.body.targetID);
+            let status = await userController.toggleNopeUser(req.body.userID, req.body.targetID);
             res.status(200).json(status)
         } else {
             res.status(403).json({"message": 'login required'});

@@ -9,16 +9,20 @@ const User = new Schema({
             unique: [true, 'this user name has been used'],
             minlength: 5
         },
-        email:{
-            type: String,
-            required :[true, 'email is required'],
-            unique: [true, 'this email has been used for another account']
-        },
         password: {
             type: String,
             required: [true, 'password is required'],
             minlength: 8,
         },
+        email:{
+            type: String,
+            required :[true, 'email is required'],
+            unique: [true, 'this email has been used for another account']
+        },
+        status: {
+            type: Boolean,
+            default: false
+        }
     },
     userInfo: {
         profileImage: [{
