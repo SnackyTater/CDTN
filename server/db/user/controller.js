@@ -96,7 +96,7 @@ const toggleLikeUser = async(userID, targetID) => {
 
                 if(userIndex != -1) return {message: `match with user ${targetInfo.userInfo.fullName}`} //check if user is in target's like list
 
-                return {message: `like ${targetID} successfully`};
+                return {message: `like ${targetInfo.userInfo.fullName} successfully`};
             }
         } else {
             throw new Error("no user was found with given ID")
@@ -106,7 +106,7 @@ const toggleLikeUser = async(userID, targetID) => {
     }
 }
 
-//same shit like toggle like
+//same shit like toggle like (u too block)
 const toggleNopeUser = async(userID, targetID) => {
     try {
         let userInfo = await user.findOne({_id: userID})
