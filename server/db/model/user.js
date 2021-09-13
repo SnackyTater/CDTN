@@ -17,9 +17,14 @@ const User = new Schema({
         email:{
             type: String,
             required :[true, 'email is required'],
-            unique: [true, 'this email has been used for another account']
+            unique: [true, 'this email has been used']
         },
-        status: {
+        mobileNumber: {
+            type: String,
+            default: '',
+            unique: [true, 'this mobile number has been used']
+        },
+        isVerify: {
             type: Boolean,
             default: false
         }
@@ -36,11 +41,8 @@ const User = new Schema({
         DateOfBirth: {
             type: Date,
         },
-        mobileNumber: {
-            type: String,
-            default: ''
-        },
         gender: {
+            enum: ['male', 'female', 'unkown'],
             type: String,
             default: 'unknown',
         },
@@ -53,9 +55,21 @@ const User = new Schema({
             _id: mongoose.Types.ObjectId,
             name: String,
         }],
-        block: [{
-            _id: mongoose.Types.ObjectId,
-        }]
+        relationship: {
+            status: {
+                enum: ['single', 'married', 'dating', 'complicated'],
+                type: String,
+                default: 'single',
+            },
+            related: {
+                type: mongoose.Types.ObjectId,
+                ref: 'user',
+            },
+            since:{
+                type: Date,
+                default: Date.now,
+            }
+        }
     },
     matchMakingConfig:{
         location: {
@@ -66,6 +80,7 @@ const User = new Schema({
             coordinates: [Number],
         },
         gender: {
+            enum: ['male', 'female', 'both'],
             type: String,
             default: 'both',
         },
@@ -84,17 +99,33 @@ const User = new Schema({
                 type: Number,
                 default: 80000,
             },
-            status: {
+            isOn: {
                 type: Boolean,
-                default: false
+                default: true
             }
         }
     },
     matchMakingStatus: {
-        likes: [{ type: mongoose.Types.ObjectId }],
-        nopes: [{type: mongoose.Types.ObjectId}],
-        liked: [{type: mongoose.Types.ObjectId}],
-        matches: [{ type: mongoose.Types.ObjectId }]
+        likes: [{ 
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }],
+        nopes: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }],
+        liked: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }],
+        matches: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }],
+        block: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }]
     },
 })
 
