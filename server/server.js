@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const multer = require('multer');
+const upload = multer();
 
 //config dotenv
 const path = require('path');
@@ -13,9 +15,15 @@ const routerConfig = require('./config/route');
 //connect to DB
 mongoose();
 
-//use middlewares
+//use cors
 app.use(cors());
-app.use(express.json());
+
+// for parsing application/x-www-form-urlencoded & raw json
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+
+// for parsing multipart/form-data
+app.use(upload.array()); 
 
 //include API routes
 app.use('/', routerConfig)
