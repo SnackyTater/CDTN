@@ -5,7 +5,6 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 # link heroku: https://cosmitto.herokuapp.com/
 
 # các API đã hoạt động (không cần update thêm trừ khi yêu cầu thay đổi)
-- "/api/signup"                 (05/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
 - "/api/login"                  (05/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
 - "/api/profile/:id"            (07/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
 - "/api/profile/update/:id"     (07/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
@@ -13,6 +12,10 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 - "/api/recs"                   (10/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
 - "/api/like"                   (12/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
 - "/api/nope"                   (12/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
+- "api/profile/image"           (15/09/2021)                (đã đủ được yêu cầu cơ bản & chưa phát sinh lỗi)
+
+# các API đã hoàn thành nhưng lỗi
+- "/api/signup"                 (15/09/2021)                (phát sinh lỗi & chưa sửa)
 
 # các API chưa hoàn thiện 
 - "/api/block"
@@ -20,7 +23,7 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 
 # todo
 - REFRACTOR KHI LÀM XONG CƠ BẢN (cả DB nếu cần)
-- upload image lên cloud
+- upload image lên cloud                                                                                        DONE!
 - chat app
 - recommendation system (dựa theo giới tính, khu vực, không được trong danh sách nope && block, tag(optional))  DONE!
 - các chức năng cho admin
