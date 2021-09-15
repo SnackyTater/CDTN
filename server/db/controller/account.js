@@ -1,10 +1,8 @@
 const user = require('../model/user');
 
-const register = async (accountInfo) => {
+const register = async (account) => {
     try{
-        console.log(accountInfo)
-        let query = await user.create(accountInfo);
-        console.log(query)
+        let query = await user.create({"accountInfo": account.accountInfo, "userInfo": account.userInfo, "matchMakingConfig": account.matchMakingConfig});
         return query;
     } catch(err) {
         if(err.code == 11000){

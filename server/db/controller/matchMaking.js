@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const user = require('../model/user');
 const {dobCalculator} = require('../../utils/utils')
-const {} = require('../controller/chatLog')
+const {} = require('../controller/chatLog');
+const { getUserBioByID } = require('./user');
 
 const toggleLikeUser = async(userID, targetID) => {
     try {
@@ -86,7 +87,7 @@ const toggleBlockUser = async(userID, targetID) => {
 const recommend = async(userID) => {
     try{
         //get user match making info
-        let query = await getUserInfoByID(userID);
+        let query = await getUserBioByID(userID);
         let userInfo = query.toJSON();
 
         //setup match-making config for searching based on user preferrence
@@ -97,7 +98,7 @@ const recommend = async(userID) => {
         )
         
         //all user which are liked, noped, matched, blocked, self
-        let nin = [...userInfo.userInfo.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
+        let nin = [...userInfo.matchMakingStatus.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
         nin.push(userInfo._id)
         
         let ageFrom = dobCalculator(userInfo.matchMakingConfig.age.from);
@@ -113,6 +114,7 @@ const recommend = async(userID) => {
                 $or: gender,                                            //find user based on gender male || female || both
                 "_id": {$nin: nin},                                     //find user except for user which contained in this list
                 "userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo},   //find user born between age from & age to
+                "userInfo.relationship.status": "single",
                 "matchMakingConfig.location": {                         //find user within diameter of coordinates
                     $nearSphere: {
                         $geometry: {
