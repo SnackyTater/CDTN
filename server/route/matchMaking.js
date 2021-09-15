@@ -18,7 +18,7 @@ router.post('/like', authenticateToken,async(req, res) => {
     try{
         if(req.accountInfo._id == req.body.userID){
             let status = await toggleLikeUser(req.body.userID, req.body.targetID);
-            res.status(200).json(status)
+            res.status(200).json(status);
         } else {
             res.status(403).json({"message": 'login required'})
         }

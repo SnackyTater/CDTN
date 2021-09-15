@@ -1,9 +1,9 @@
-const { request } = require('express');
 const express = require('express');
 const router = express.Router();
 
 router.use('/api/profile', require('../route/profile'));
-router.use('/api', require('../route/home'));
-router.use('/api', require('../route/auth'));
+router.use('/api/matchMaking', require('../route/matchMaking'));
+router.use('/api/account', require('../route/account'));
+router.use('/api/passion', require('../route/passion'));
 
 module.exports = router

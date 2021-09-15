@@ -21,12 +21,17 @@ const User = new Schema({
         },
         mobileNumber: {
             type: String,
+            unique: [true, 'this mobile number has been used'],
             default: '',
-            unique: [true, 'this mobile number has been used']
         },
         isVerify: {
             type: Boolean,
             default: false
+        },
+        status: {
+            enum: ['ban', 'normal'],
+            type: String,
+            default: 'normal'
         }
     },
     userInfo: {
@@ -52,8 +57,8 @@ const User = new Schema({
             default: '',
         },
         passions: [{
-            _id: mongoose.Types.ObjectId,
-            name: String,
+            type: mongoose.Types.ObjectId,
+            ref: 'passions'
         }],
         relationship: {
             status: {

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const user = require('../model/user');
 const {dobCalculator} = require('../../utils/utils')
+const {} = require('../controller/chatLog')
 
 const toggleLikeUser = async(userID, targetID) => {
     try {
@@ -26,7 +27,11 @@ const toggleLikeUser = async(userID, targetID) => {
                 await user.updateOne({_id: userID}, {$push:{"matchMakingStatus.likes": targetID}}); //add targetID to user's like list
                 await user.updateOne({_id: targetID}, {$push:{"matchMakingStatus.liked": userID}})  //add userID to target's liked list
 
-                if(userIndex != -1) return {message: `match with user ${targetInfo.userInfo.fullName}`} //check if user is in target's like list
+                if(userIndex != -1){
+
+                    return {message: `match with user ${targetInfo.userInfo.fullName}`} //check if user is in target's like list
+                }
+                
 
                 return {message: `like ${targetInfo.userInfo.fullName} successfully`};
             }
@@ -117,7 +122,7 @@ const recommend = async(userID) => {
                         $maxDistance: maxDistance
                      }
                 }
-        });
+        },'userInfo');
         return recs;
     } catch(err) {
         console.log(err.message)

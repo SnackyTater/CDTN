@@ -7,10 +7,17 @@ const chatLog = new Schema({
         default: '',
     },
     participant: [{
-        user: { type: mongoose.Types.ObjectId }
+        user: { 
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        }
     }],
     log: [{
         from: { type: mongoose.Types.ObjectId },
+        time: {
+            type: Date,
+            default: Date.now
+        },
         content: {
             text: {
                 type: String,

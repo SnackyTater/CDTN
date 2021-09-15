@@ -8,6 +8,9 @@ const upload = multer();
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '..','.env')});
 
+//config PORT
+const PORT = process.env.PORT || 5000;
+
 //include DB
 const mongoose = require('./config/mongoose');
 const routerConfig = require('./config/route');
@@ -23,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
 // for parsing multipart/form-data
-app.use(upload.array()); 
+// app.use(upload.array()); 
 
 //include API routes
 app.use('/', routerConfig)
@@ -35,6 +38,6 @@ app.get('*', (req, res) => {
 })
 
 //listen request
-app.listen(process.env.PORT || 5000, () => {
-    console.log("listen to client's request at port 10000");
+app.listen(PORT, () => {
+    console.log(`listen to client's request at port ${PORT}`);
 });

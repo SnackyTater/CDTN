@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Tag = new Schema({
+const Passion = new Schema({
     name: {
         type: String,
         default: '',
     }
 })
 
-const tag = mongoose.model('Tags', Tag);
-module.exports = tag;
+const passion = mongoose.model('passions', Passion);
+module.exports = passion;
