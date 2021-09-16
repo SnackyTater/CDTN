@@ -14,7 +14,7 @@ const getUserBioByID = async (userID) => {
 
 const updateUserBio = async (userID, userData) => {
     try{
-        let query = await user.findByIdAndUpdate({_id: userID}, {$set: userData}, {new: true});
+        let query = await user.findByIdAndUpdate({_id: userID}, {$set: userData}, {new: true, select: {"userInfo": 1}});
         if(query != null){
             return query;
         } else {
@@ -28,7 +28,7 @@ const updateUserBio = async (userID, userData) => {
 
 const addUserImage = async(userID, imageURL) => {
     try{
-        let query = await user.findByIdAndUpdate({_id: userID}, {$push:{ "userInfo.profileImage": imageURL }}, {new: true});
+        let query = await user.findByIdAndUpdate({_id: userID}, {$push:{ "userInfo.profileImage": imageURL }}, {new: true, select: {"userInfo": 1}});
         if(query != null){
             return query;
         } else {

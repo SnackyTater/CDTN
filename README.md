@@ -5,14 +5,14 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 # link heroku: https://cosmitto.herokuapp.com/
 
 # các API đã hoạt động (không cần update thêm trừ khi yêu cầu thay đổi)
-- "/api/login"                  (05/09/2021)                
-- "/api/profile/:id"            (07/09/2021)                
-- "/api/profile/update/:id"     (07/09/2021)                
-- "/api/profile/delete/:id"     (07/09/2021)                
-- "/api/recs"                   (10/09/2021)                
-- "/api/like"                   (12/09/2021)                
-- "/api/nope"                   (12/09/2021)                
-- "api/profile/image"           (15/09/2021)                
+- "/api/login"                  (05/09/2021)
+- "/api/profile/:id"            (07/09/2021)
+- "/api/profile/update/:id"     (07/09/2021)
+- "/api/profile/delete/:id"     (07/09/2021)
+- "/api/recs"                   (10/09/2021)
+- "/api/like"                   (12/09/2021)
+- "/api/nope"                   (12/09/2021)
+- "api/profile/image"           (15/09/2021)
 - "/api/signup"                 (15/09/2021)
 
 # các API đã hoàn thành nhưng lỗi || chưa test

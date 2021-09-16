@@ -7,7 +7,7 @@ const {ageCalulator} = require('../utils/utils');
 
 router.post('/login', async (req, res) => {
     try{
-        const userInfo = await login(req.body.username, req.body.password);
+        const userInfo = await login(req.body.identityVerification, req.body.password);
         const holder = {
             accountInfo: userInfo.accountInfo,
             _id: userInfo._id

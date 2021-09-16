@@ -96,7 +96,7 @@ const recommend = async(userID) => {
         ) : (
             [{"userInfo.gender": userInfo.matchMakingConfig.gender}]
         )
-        
+        console.log(gender)
         //all user which are liked, noped, matched, blocked, self
         let nin = [...userInfo.matchMakingStatus.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
         nin.push(userInfo._id)

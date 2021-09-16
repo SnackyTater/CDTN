@@ -14,7 +14,7 @@ router.get('/recs', authenticateToken, async(req, res) => {
 });
 
 //like
-router.post('/like', authenticateToken,async(req, res) => {
+router.post('/like', authenticateToken, async(req, res) => {
     try{
         if(req.accountInfo._id == req.body.userID){
             let status = await toggleLikeUser(req.body.userID, req.body.targetID);

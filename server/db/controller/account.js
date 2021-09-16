@@ -21,9 +21,9 @@ const register = async (account) => {
     }
 }
 
-const login = async (username, password) => {
+const login = async (userIdentityVerification, password) => {
     try{
-        const query = await user.findOne({'accountInfo.username': username});
+        const query = await user.findOne({$or: [{"accountInfo.username": userIdentityVerification}, {"accountInfo.mobileNumber": userIdentityVerification}]});
         if(query != null){
             if(query.accountInfo.isVerify == false) throw TypeError('account must be verified before logging in');;    //check if account has been verified ? (continue to check password) : (throw error)
             if(query.accountInfo.password == password) return query;
@@ -45,6 +45,7 @@ const findAccount = async(identityVerification) => {
                 {"accountInfo.mobileNumber": identityVerification}
             ]
         }, 'accountInfo -_id')
+        //send verification form to identify if its real user or not
         return accountInfo;
     } catch(err) {
         throw(err.message)
