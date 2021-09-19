@@ -23,6 +23,7 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 
 
 # todo
+- Làm front-end (tiến độ: 0.01%)
 - REFRACTOR KHI LÀM XONG CƠ BẢN (cả DB nếu cần)                                                                 DONE!
 - upload image lên cloud                                                                                        DONE!
 - chat app
