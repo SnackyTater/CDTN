@@ -13,7 +13,9 @@
     background-image: url("./assets/couple-silhouette-evening-5k-2j-1920x1080.jpg");
 }
 .signup-holder{
-    top: 35%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     position: relative;
     text-align: center;
 }

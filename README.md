@@ -21,6 +21,15 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 
 # các API chưa hoàn thiện 
 
+# frontend (component đã hoàn thiện nhưng còn vấn đề)
+- landing page (80%, chưa responsive cho mobile)
+- login form (50%, chưa responvie cho mobile & resize màn hình)
+
+# frontend chưa hoàn thiện
+- register form
+- forgot password
+- home (admin, normal user)
+- profile
 
 # todo
 - Làm front-end (tiến độ: 0.01%)
