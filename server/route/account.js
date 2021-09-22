@@ -3,7 +3,8 @@ const router = Router();
 
 const {login, register, findAccount, resetPassword} = require('../db/controller/account');
 const {createToken} = require('../authorization/auth');
-const {ageCalulator} = require('../utils/utils');
+const {ageCalulator, generateCode} = require('../utils/utils');
+const {mailOptions, sendEmail} = require('../config/nodemailer')
 
 router.post('/login', async (req, res) => {
     try{
@@ -30,6 +31,22 @@ router.post('/signup', async(req, res) => {
             res.json({message: 'account created successfully', data: response});
         }
     } catch (err) {
+        res.json(err);
+    }
+})
+
+router.post('/emailVerificate', async(req, res) => {
+    try{
+        if(req.body.email){
+            let code = generateCode(99999);
+            let mail = mailOptions(req.body.email, code)
+            const nodeMailerRes = await sendEmail(mail);
+            if(nodeMailerRes)
+                res.status(200).json({code: code, status: nodeMailerRes})
+            else
+                res.json({message: 'idk, something wrong'});
+        }
+    }catch(err){
         res.json(err);
     }
 })

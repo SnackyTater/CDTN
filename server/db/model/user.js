@@ -82,7 +82,10 @@ const User = new Schema({
                 type: String,
                 default: "Point",
             },
-            coordinates: [Number],
+            coordinates: {
+                type: [Number],
+                default: [0,0]
+            }
         },
         gender: {
             enum: ['male', 'female', 'both'],

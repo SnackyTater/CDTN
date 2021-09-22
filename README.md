@@ -40,5 +40,5 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 - các chức năng cho admin                                                                                       DONE!
 - làm script tạo dummy data
 - SMS OTP cho điện thoại (optional - nếu làm được và k mất $$)
-- verify account = google mail
+- verify account = google mail                                                                                  DONE!
 - stringee video call (optional)

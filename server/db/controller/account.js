@@ -2,7 +2,7 @@ const user = require('../model/user');
 
 const register = async (account) => {
     try{
-        let query = await user.create({"accountInfo": account.accountInfo, "userInfo": account.userInfo, "matchMakingConfig": account.matchMakingConfig});
+        let query = await user.create({"accountInfo": account.accountInfo, "userInfo": account.userInfo});
         return query;
     } catch(err) {
         if(err.code == 11000){
@@ -16,6 +16,7 @@ const register = async (account) => {
                 throw `${err.keyValue['accountInfo.mobileNumber']} has been used`;
             }
         } else {
+            console.log(err)
             throw err.message;
         }
     }

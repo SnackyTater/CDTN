@@ -1,28 +1,26 @@
-import { useState } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Navbar from './component/navbar/navbar';
-import Login from './component/login/login'
-import './App.css'
+import Landing from './component/landing/landing';
+import Signup from './component/signup/signup';
+import Profile from './component/profile/profile'
 
 function App() {
-    const [isOpen, setIsOpen ] = useState(false);
-
-    const openLoginForm = () => setIsOpen(true);
-    const closeLoginForm = () => setIsOpen(false);
-
     return (
-        <div className="App">
-            <header className="nav-holder">
-                <Navbar openLoginForm={openLoginForm}/>
-            </header>
-            <div className="banner">
-                <div className="signup-holder">
-                    <p>Swipe right</p>
-                    <a href="/"><button>Signup</button></a>
-                </div>
+        <Router>
+            <div className="App">
+                <Switch>
+                    <Route exact path="/">
+                        <Landing/>
+                    </Route>
+                    <Route exact path="/signup">
+                        <Signup/>
+                    </Route>
+                    <Route exact path="/profile">
+                        <Profile/>
+                    </Route>
+                </Switch>
             </div>
-            <Login isOpen={isOpen} closeLoginForm={closeLoginForm} />
-        </div>
+        </Router>
     )
 }
 

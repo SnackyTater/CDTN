@@ -52,4 +52,5 @@ ul li a{
     border-radius: 15px;
     transition: all 0.3s ease 0s;
     font-size: 1vw;
+    cursor: pointer;
 }

@@ -1,0 +1,97 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.overlay{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+.signup-form{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    width: 20vw;
+    height: auto;
+    padding: 50px;
+    z-index: 1;
+    border-radius: 20px;
+}
+.signup-form-close-button{
+    color: rgba(0, 0, 0, 0.8);
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    top: 1.5vh;
+    right: 1.5vw;
+    font-size: 1.3vw;
+    cursor: pointer;
+}
+.form-send-code-holder form{
+    margin-top: 20px;
+}
+.form-send-code-holder form input{
+    position: relative;
+    width: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    height: 5vh;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+}
+
+.form-send-code-holder button{
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+    left: 50%;
+    transform: translate(-50%);
+    border: none;
+    border-radius: 24px;
+    background-image: linear-gradient(45deg,#fd267a,#ff7854);
+    padding: 10px 10px;
+    cursor: pointer;
+}
+.form-send-code-holder form button:hover{
+    background-image: linear-gradient(45deg,#ff7854,#fd267a);
+}
+#email::placeholder{
+    text-align: center;
+}
+.signup-form p{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+.form-verify-code-holder{
+    position: relative;
+}
+.form-verify-code-holder form input{
+    width: 100%;
+    height: 5vh;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    text-align: center;
+}
+p {
+    color: rgba(0, 0, 0, 0.3);
+}
+.form-verify-code-holder button{
+    position: relative;
+    margin-top: 10px;
+    left: 50%;
+    transform: translate(-50%);
+    border: none;
+    border-radius: 24px;
+    background-image: linear-gradient(45deg,#fd267a,#ff7854);
+    padding: 10px 10px;
+    width: 100%;
+    cursor: pointer;
+}

@@ -10,24 +10,28 @@
 .banner{
     height: 100vh;
     width: 100%;
-    background-image: url("./assets/couple-silhouette-evening-5k-2j-1920x1080.jpg");
+    background-image: url("../../assets/couple-silhouette-evening-5k-2j-1920x1080.jpg");
 }
-.signup-holder{
+.landing-signup-button-holder{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     position: relative;
     text-align: center;
 }
-.signup-holder p{
+.landing-signup-button-holder p{
     font-size: 8vw;
     padding: 30px 20px;
     color: whitesmoke;
 }
-.signup-holder a button{
+.landing-signup-button{
     border: none;
     border-radius: 50px;
     padding: 10px 80px;
     background-image: linear-gradient(45deg,#fd267a,#ff7854);
     font-size: 30px;
+    cursor: pointer;
+}
+.landing-signup-button:hover{
+    background-image: linear-gradient(45deg,#ff7854,#fd267a);
 }
