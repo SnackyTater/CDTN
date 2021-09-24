@@ -24,10 +24,6 @@ const User = new Schema({
             unique: [true, 'this mobile number has been used'],
             default: '',
         },
-        isVerify: {
-            type: Boolean,
-            default: false
-        },
         status: {
             enum: ['ban', 'normal'],
             type: String,

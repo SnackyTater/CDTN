@@ -13,11 +13,12 @@ export default function Login({isOpen, closeSignupForm}) {
 
     const sendVerificationCodeToEmail=(e)=>{
         e.preventDefault();
-        getValidationCode(email)
+        history.push('/signup', {mobile: 'taterazay98@gmail.com'});
+        //getValidationCode(email)
     }
 
     const getValidationCode = (email) => {
-        axios.post('http://localhost:5000/api/account/emailVerificate', {email})
+        axios.post('https://cosmitto.herokuapp.com/api/account/emailVerificate', {email})
             .then((res) => {return res.data})
             .then((data) => {
                 console.log(data);

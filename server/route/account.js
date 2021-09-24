@@ -23,10 +23,9 @@ router.post('/login', async (req, res) => {
 router.post('/signup', async(req, res) => {
     try{
         let age = ageCalulator(new Date(req.body.userInfo.DateOfBirth))
-        console.log(age)
-        if(age < 18){
-            throw 'you must be older than 18 to signup';
-        } else {
+        if (!age) throw 'must enter user date of birth';
+        if(age < 18) throw 'you must be older than 18 to signup';
+        else {
             let response = await register(req.body);
             res.json({message: 'account created successfully', data: response});
         }
@@ -38,13 +37,20 @@ router.post('/signup', async(req, res) => {
 router.post('/emailVerificate', async(req, res) => {
     try{
         if(req.body.email){
-            let code = generateCode(99999);
-            let mail = mailOptions(req.body.email, code)
-            const nodeMailerRes = await sendEmail(mail);
-            if(nodeMailerRes)
-                res.status(200).json({code: code, status: nodeMailerRes})
-            else
-                res.json({message: 'idk, something wrong'});
+            const checkAccountExist = await findAccount(req.body.email);
+            if(!checkAccountExist){
+                let code = generateCode(99999);
+                let mail = mailOptions(req.body.email, code);
+                const nodeMailerRes = await sendEmail(mail);
+                if(nodeMailerRes)
+                    res.status(200).json({code: code, status: nodeMailerRes});
+                else
+                    res.json({message: 'idk, something wrong'});
+            } else {
+                res.status(406).json({message: "this email has been used for another account"});
+            }
+        } else {
+            res.status(204).json({message: "please enter user's email"});
         }
     }catch(err){
         res.json(err);
