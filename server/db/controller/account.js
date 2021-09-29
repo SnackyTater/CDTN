@@ -5,33 +5,41 @@ const register = async (account) => {
         let query = await user.create({"accountInfo": account.accountInfo, "userInfo": account.userInfo});
         return query;
     } catch(err) {
-        if(err.code == 11000){
-            if(err.keyValue.hasOwnProperty('accountInfo.username')){
-                throw `${err.keyValue['accountInfo.username']} has been used`;
-            }
-            if(err.keyValue.hasOwnProperty('accountInfo.email')){
-                throw `${err.keyValue['accountInfo.email']} has been used`;
-            }
-            if(err.keyValue.hasOwnProperty('accountInfo.mobileNumber')){
-                throw `${err.keyValue['accountInfo.mobileNumber']} has been used`;
-            }
-        } else {
-            console.log(err)
-            throw err.message;
-        }
+        // if(err.code == 11000){
+        //     if(err.keyValue.hasOwnProperty('accountInfo.username')){
+        //         throw TypeError (`${err.keyValue['accountInfo.username']} has been used`);
+        //     }
+        //     if(err.keyValue.hasOwnProperty('accountInfo.email')){
+        //         throw TypeError (`${err.keyValue['accountInfo.email']} has been used`);
+        //     }
+        //     if(err.keyValue.hasOwnProperty('accountInfo.mobileNumber')){
+        //         throw TypeError (`${err.keyValue['accountInfo.mobileNumber']} has been used`);
+        //     }
+        // } else {
+        //     console.log(err)
+        //     throw err.message;
+        // }
+        throw (err);
     }
 }
 
 const login = async (userIdentityVerification, password) => {
     try{
-        const query = await user.findOne({$or: [{"accountInfo.username": userIdentityVerification}, {"accountInfo.mobileNumber": userIdentityVerification}, {"accountInfo.email": userIdentityVerification}]});
-        if(query != null){
-            if(query.accountInfo.password == password) return query;
+        const userInfo = await user.findOne({$or: [
+                                                {"accountInfo.username": userIdentityVerification}, 
+                                                {"accountInfo.mobileNumber": userIdentityVerification}, 
+                                                {"accountInfo.email": userIdentityVerification}
+                                            ]});
+        
+        //if find atleast 1 user                                   
+        if(userInfo != null){
+            if(userInfo.accountInfo.password == password) return userInfo;
             else throw TypeError('wrong password');
         } else {
             throw TypeError('wrong username');
         }
     } catch (err) {
+        console.log(err);
         throw(err.message);
     }
 }

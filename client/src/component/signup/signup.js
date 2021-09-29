@@ -34,8 +34,25 @@ export default function Signup(){
     }
 
     const userInfoChangHandler = (e) => {
-        let {name, value} = e.target
+        let {name, value} = e.target;
         setUserProfile({...userProfile, userInfo:{ ...userProfile.userInfo, [name]: value}});
+    }
+
+    const userGenderChangeHandler = (e) => {
+        setUserProfile({...userProfile, userInfo:{ ...userProfile.userInfo, gender: e.target.value}});
+    }
+
+    const userPassionsChangeHandler = (e) => {
+        console.log(e.target.name)
+        // let checkExistIndex = passions.indexOf(e.target.value)
+        // if(checkExistIndex !== -1)
+        // {
+        //     setUserProfile({...userProfile, userInfo:{ ...userProfile.userInfo, passions: [...e.target.value]}});
+        // } 
+        // if (checkExistIndex === -1 ){
+        //     let newPassions = passions.splice(checkExistIndex, 1);
+        //     setUserProfile({...userProfile, userInfo:{ ...userProfile.userInfo, passions: newPassions}});
+        // }
     }
 
     //props send from router navigator (history)
@@ -50,7 +67,7 @@ export default function Signup(){
     useEffect(() => {
         email = 'taterazay98@gmail.com';
         if(email || mobile){
-            axios.get('https://cosmitto.herokuapp.com/api/passion')
+            axios.get('http://localhost:5000/api/passion')
                 .then((res) => {
                     setPassions(res.data);
                     setIsLoading(false);
@@ -59,6 +76,10 @@ export default function Signup(){
         }
         else history.push('/');
     }, []);
+
+    // const register = (data) => {
+    //     axios.post
+    // } 
 
     
 
@@ -87,7 +108,7 @@ export default function Signup(){
                                 <input name="fullName" placeholder="full name" type="text" onChange={userInfoChangHandler}/>
                                 <input name="DOB" placeholder="date of birth" type="date" onChange={userInfoChangHandler}/>
                                 <textarea name="description" placeholder="write something about yourself" onChange={userInfoChangHandler}/>
-                                <select>
+                                <select onClick={userGenderChangeHandler}>
                                     <option value="" disabled selected hidden>gender</option>
                                     <option value="unknown">prefer not saying</option>
                                     <option value="male">male</option>
@@ -97,7 +118,7 @@ export default function Signup(){
                             <p>passions</p>
                             <div className="checkBoxList">
                                 { passions.map((passion) => {
-                                    return <div><input type="checkbox" value={passion.name} onClick={() => {console.log('blin')}}/>{passion.name}</div>
+                                    return <div><input type="checkbox" name={passion.id} onClick={userPassionsChangeHandler}/>{passion.name}</div>
                                 })}
                             </div>
                             <div className="userProfileImage">

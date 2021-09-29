@@ -1,4 +1,4 @@
-const { Router } = require('express');
+const { Router, response } = require('express');
 const router = Router();
 
 const {login, register, findAccount, resetPassword} = require('../db/controller/account');
@@ -8,42 +8,50 @@ const {mailOptions, sendEmail} = require('../config/nodemailer')
 
 router.post('/login', async (req, res) => {
     try{
-        const userInfo = await login(req.body.identityVerification, req.body.password);
-        const holder = {
-            accountInfo: userInfo.accountInfo,
-            _id: userInfo._id
-        }
-        const token = await createToken(JSON.stringify(holder));
-        res.status(200).json({access_token: token, userInfo: userInfo});
+        //get user data from DB
+        const {identityVerification, password} = req.body
+        const user = await login(identityVerification, password);
+
+        //create token
+        const tokenInfo = { accountInfo: userInfo.accountInfo, _id: userInfo._id }
+        const token = await createToken(JSON.stringify(tokenInfo));
+
+        //return user info
+        res.status(200).json({access_token: token, user});
     } catch (err) {
-        res.status(404).json(err);
+        res.status(404).send(err);
     }
 })
 
 router.post('/signup', async(req, res) => {
     try{
-        let age = ageCalulator(new Date(req.body.userInfo.DateOfBirth))
-        if (!age) throw 'must enter user date of birth';
-        if(age < 18) throw 'you must be older than 18 to signup';
+        //check if user age < 18
+        const age = ageCalulator(new Date(req.body.userInfo.DateOfBirth))
+        if (!age) throw TypeError('user must enter date of birth');
+        if(age < 18) throw TypeError('user must be older than 18 to sign up');
+
+        //if user is > 18
         else {
-            let response = await register(req.body);
-            res.json({message: 'account created successfully', data: response});
+            const {accountInfo, _id} = await register(req.body);
+            const token = await createToken(JSON.stringify({accountInfo, _id}));
+
+            res.status(200).json({access_token: token});
         }
     } catch (err) {
-        res.json(err);
+        res.status(400).send(err.message);
     }
 })
 
 router.post('/emailVerificate', async(req, res) => {
     try{
-        if(req.body.email){
-            const checkAccountExist = await findAccount(req.body.email);
+        const {email} = req.body;
+        if(email){
+            const checkAccountExist = await findAccount(email);
             if(!checkAccountExist){
                 let code = generateCode(99999);
-                let mail = mailOptions(req.body.email, code);
-                const nodeMailerRes = await sendEmail(mail);
+                const nodeMailerRes = await sendEmail(mailOptions(email, code));
                 if(nodeMailerRes)
-                    res.status(200).json({code: code, status: nodeMailerRes});
+                    res.status(200).json({code});
                 else
                     res.json({message: 'idk, something wrong'});
             } else {
@@ -67,7 +75,7 @@ router.get('/:identityVerification', async(req, res) => {
             res.status(404).json({message: 'no user was found with given info'})
         }
     } catch(err) {
-        res.json(err.message)
+        res.status(400).send(err.message)
     }
 })
 
@@ -77,7 +85,7 @@ router.post('resetPassword', async(req, res) => {
         if(query != null){
             res.status(200).json({status: query, message: 'password updated successfully'})
         } else {
-            res.status(418).json('help? Me no brew coffee cuz me teapot')
+            res.status(418).send('help? Me no brew coffee cuz me teapot')
         }
     } catch(err) {
 
