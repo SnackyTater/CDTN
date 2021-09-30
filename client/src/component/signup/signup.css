@@ -1,83 +1,54 @@
-.signupForm{
+*{
+    margin: 0;
+    padding: 0;
+}
+.background{
     height: 100vh;
     width: 100vw;
     background-image: url('../../assets/couple-silhouette-evening-5k-2j-1920x1080.jpg');
 }
-.formContainer{
+.signup-form{
     background-color: white;
     width: 50vw;
-    height: auto;
+    height: 80vh;
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 24px;
-}
-.InfoHolder{
-    display: flex;
-    height: auto;
-}
-.accountInfoOuter, .userInfoOuter{
-    flex: 50%;
-}
-.accountInfoInner, .userInfoInner{
-    text-align: center;
-}
-.accountInfoInner p, .userInfoInner p{
-    margin-top: 30px;
-    font-size: 40px;
-    color: black;
-}
-.accountInfoInner form, .userInfoInner form{
-    position: relative;
-    top: 5px;
-    left: 50%;
-    transform: translate(-45%);
-}
-input, textarea, select{
-    display: block;
-    width: 20vw;
-    height: 4vh;
-    margin: 20px;
-    text-align: center;
-    border: 0.5px solid rgba(0,0,0,0.7);
-    border-radius: 24px;
-    resize: none;
-}
-.userInfoOuter{
-    flex: 50%;
-}
-.checkBoxList{
-    position: relative;
-    left: 50%;
-    transform: translate(-50%);
-    border: 1px solid rgba(0,0,0,0.7);
-    width: 20vw; 
-    height: 10vh; 
+    border-radius: 0px;
     overflow-y: scroll;
-    text-align: left;
 }
-.checkBoxList div input{
-    margin: 10px;
-    width: 15px;
-    height: 15px;
-    display: inline;
-    border: 1px solid black;
-    border-radius: 24px;
+.title{
+    font-size: 30px;
+    text-align: center;
 }
-.image__holder{
-    position: relative;
-    left: 50%;
-    transform: translate(-56%);
-    border: none
+.accountInfo{
+    flex: 50%;
 }
-.signup__button{
-    position: relative;
+.accountInfo__form__input{
+    display: block;
+    margin: 20px 0px;
     padding: 10px 30px;
-    background-image: linear-gradient(45deg,#ff7854,#fd267a);
+    width: 20vw;
+    border: 0.3px solid rgba(0, 0, 0, 0.3);
     border-radius: 24px;
-    border: none;
-    left: 50%;
-    transform: translate(-50%);
-    margin-bottom: 30px;
+    text-align: center;
+}
+.userInfo{
+    display: flex;
+}
+.userInfo-col{
+    flex: 50%;
+}
+.userInfo__form__input{
+    display: block;
+    margin: 20px 0px;
+    padding: 10px 30px;
+    width: 20vw;
+    border: 0.3px solid rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    text-align: center;
+}
+textarea{
+    resize: none;
 }

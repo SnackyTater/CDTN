@@ -1,7 +1,7 @@
 const { Router, response } = require('express');
 const router = Router();
 
-const {login, register, findAccount, resetPassword} = require('../db/controller/account');
+const {login, register, findAccount, resetPassword, updateAccount} = require('../db/controller/account');
 const {createToken} = require('../authorization/auth');
 const {ageCalulator, generateCode} = require('../utils/utils');
 const {mailOptions, sendEmail} = require('../config/nodemailer')
@@ -13,11 +13,11 @@ router.post('/login', async (req, res) => {
         const user = await login(identityVerification, password);
 
         //create token
-        const tokenInfo = { accountInfo: userInfo.accountInfo, _id: userInfo._id }
+        const tokenInfo = { accountInfo: user.accountInfo, _id: user._id }
         const token = await createToken(JSON.stringify(tokenInfo));
 
         //return user info
-        res.status(200).json({access_token: token, user});
+        res.status(200).json({access_token: token});
     } catch (err) {
         res.status(404).send(err);
     }
@@ -76,6 +76,15 @@ router.get('/:identityVerification', async(req, res) => {
         }
     } catch(err) {
         res.status(400).send(err.message)
+    }
+})
+
+router.put('/:identityVerification', async(req, res) => {
+    try{
+        const query = await updateAccount(req.params.identityVerification, req.body);
+        res.status(200).json(query);
+    } catch(err) {
+        res.status(400).send(err.message);
     }
 })
 

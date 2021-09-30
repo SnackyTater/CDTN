@@ -88,7 +88,7 @@ export default function Signup(){
         <div className="background">
             <div className="signup-form">
                 <div className="accountInfo">
-                    <p className="title">account info</p>
+                    <p>account info</p>
                     <form className="accountInfo__form">
                         <input className="accountInfo__form__input" type="text"     placeholder="username"                  onChange={accountInfoChangeHandler}/>
                         <input className="accountInfo__form__input" type="text"     placeholder={email?(email):('email')}   onChange={accountInfoChangeHandler} disabled={email? "disabled" : ""}/>
@@ -98,32 +98,28 @@ export default function Signup(){
                     </form>
                 </div>
                 <div className="userInfo">
-                    <div className="userInfo-col">
-                        <p className="title">user info</p>
-                        <form className="userInfo__form">
-                            <input className="userInfo__form__input" type="text"    placeholder="fullname"/>
-                            <input className="userInfo__form__input" type="date"    placeholder="date of birth"/>
-                            <select className="userInfo__form__input">
-                                <option value="" disabled selected hidden>gender</option>
-                                <option value="unknown">prefer not saying</option>
-                                <option value="male">male</option>
-                                <option value="female">female</option>
-                            </select>
-                            <textarea className="userInfo__form__input" placeholder="tell us about your self"/>
-                            <div className="userInfo__form__input">
+                    <p>user info</p>
+                    <form className="userInfo__infoForm">
+                        <input className="userInfo__infoForm__input" type="text"    placeholder="fullname"/>
+                        <input className="userInfo__infoForm__input" type="date"    placeholder="date of birth"/>
+                        <select className="userInfo__infoForm__input">
+                            <option value="" disabled selected hidden>gender</option>
+                            <option value="unknown">prefer not saying</option>
+                            <option value="male">male</option>
+                            <option value="female">female</option>
+                        </select>
+                        <textarea className="userInfo__infoForm__input" placeholder="tell us about your self"/>
+                        <div className="userInfo__infoForm__input">
 
-                            </div>
-                        </form>
-                    </div>
-                    <div className="userInfo-col">
-                        <p className="title">user avatar</p>
-                        <p>please select atleast 1 image for your avatar</p>
-                        <form className="userInfo__avatar">
-                            <input className="userInfo__avatar__input" type="file"/>
-                            <input className="userInfo__avatar__input" type="file"/>
-                            <input className="userInfo__avatar__input" type="file"/>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
+                    <p>user avatar</p>
+                    <p>please select atleast 1 image for your avatar</p>
+                    <form className="userInfo__avatar">
+                        <input className="userInfo__avatar__input" type="file"/>
+                        <input className="userInfo__avatar__input" type="file"/>
+                        <input className="userInfo__avatar__input" type="file"/>
+                    </form>
                 </div>
             </div>
         </div>

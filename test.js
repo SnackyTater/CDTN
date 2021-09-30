@@ -1,6 +1,6 @@
-const {mailOptions} = require('./server/config/nodemailer')
-const mail = mailOptions('taterazay98@gmail.com', '12345678');
-function getRandomInt(max) {
-    return Math.floor(Math.random() * 99999);
+let data = {
+    username: undefined,
+    password: 'tater123'
 }
-console.log(getRandomInt(10));
+
+console.log(data.username && data.password)

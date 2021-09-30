@@ -14,7 +14,7 @@ const getUserBioByID = async (userID) => {
 
 const updateUserBio = async (userID, userData) => {
     try{
-        let query = await user.findByIdAndUpdate({_id: userID}, {$set: userData}, {new: true, select: {"userInfo": 1}});
+        let query = await user.findByIdAndUpdate({_id: userID}, {$set: {userInfo: userData}}, {new: true, select: {"userInfo": 1}});
         if(query != null){
             return query;
         } else {

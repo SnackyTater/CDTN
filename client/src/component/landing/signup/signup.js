@@ -48,9 +48,7 @@ export default function Login({isOpen, closeSignupForm}) {
             <div className="signup-form">
                 <button className="signup-form-close-button" onClick={closeSignupForm}>x</button>
                 <div className="form-send-code-holder">
-                    <form>
-                        <input type="text" id="email" placeholder="email" onChange={(e) => {setEmail(e.target.value)}}/>
-                    </form>
+                    <input type="text" id="email" placeholder="email" onChange={(e) => {setEmail(e.target.value)}}/>
                     <button onClick={sendVerificationCodeToEmail}>Send code</button>
                 </div>
                 {
