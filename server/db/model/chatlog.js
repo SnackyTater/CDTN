@@ -7,10 +7,8 @@ const chatLog = new Schema({
         default: '',
     },
     participant: [{
-        user: { 
             type: mongoose.Types.ObjectId,
             ref: 'user',
-        }
     }],
     log: [{
         from: { type: mongoose.Types.ObjectId },
@@ -18,18 +16,9 @@ const chatLog = new Schema({
             type: Date,
             default: Date.now
         },
-        content: {
-            text: {
-                type: String,
-                default: '',
-            }, 
-            image: {
-                type: String,
-                default: '',
-            }
-        }
+        message:{ type: String }
     }]
 })
 
-const tag = mongoose.model('Tags', Tag);
-module.exports = tag;
+const ChatLog = mongoose.model('chatLogs', chatLog);
+module.exports = ChatLog;

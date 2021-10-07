@@ -20,7 +20,7 @@ export default function Landing() {
             <header className="nav-holder">
                 <Navbar openLoginForm={openLoginForm}/>
             </header>
-            <div className="banner">
+            <div className="banner" style={{backgroundImage: 'url("/assets/couple-silhouette-evening-5k-2j-1920x1080.jpg")'}}>
                 <div className="landing-signup-button-holder">
                     <p>Swipe right</p>
                     <button className="landing-signup-button" onClick={openSignupForm}>Signup</button>

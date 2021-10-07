@@ -1,10 +1,11 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Landing from './component/landing/landing';
-import Signup from './component/signup/signup';
-import Profile from './component/profile/profile'
+import Landing from '../layout/page/landing/landing';
+import Signup from '../layout/page/signup/signup';
+import Profile from '../layout/page/profile/profile';
 
-function App() {
+export default function route() {
     return (
         <Router>
             <div className="App">
@@ -23,5 +24,3 @@ function App() {
         </Router>
     )
 }
-
-export default App; 

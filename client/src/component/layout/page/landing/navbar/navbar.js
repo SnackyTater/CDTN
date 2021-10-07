@@ -1,15 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import './navbar.css'
-import logo from '../../../assets/logo.png'
+import Logo from '../../../../common/logo/logo';
+import './navbar.css';
 
 export default function Navbar({openLoginForm}) {
     return (
         <div className="Navbar">
-            <div className="logo">
-                <img src={logo} alt="logo"/>
-                <p>Cosmitto</p>
-            </div>
+            <Logo/>
             <nav className="navigator">
                 <ul>
                     <li><Link to="/product">Product</Link></li>

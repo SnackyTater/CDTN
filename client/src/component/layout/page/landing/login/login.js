@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import { useHistory, Link } from 'react-router-dom';
 
+import Input from '../../../../common/input/input';
 import './login.css';
 
 export default function Login({isOpen, closeLoginForm}) {
@@ -36,12 +37,9 @@ export default function Login({isOpen, closeLoginForm}) {
                 <div className="login-form">
                     <button className="login-form-close-button" onClick={closeLoginForm}>x</button>
                     <div className="login-form-holder">
-                        {displayError && <p>{error}</p>}
                         <form>
-                            <input type="text" id="username" placeholder="username" onChange={(e) => {setIdentityVerification(e.target.value)}}/>
-                            <br/>
-                            <input type="password" id="password" placeholder="password" onChange={(e) => {setPassword(e.target.value)}}/>
-                            <br/>
+                            <Input name="username" type="text" placeholder={"username"} disableStatus={false} onChange={(e) => {setIdentityVerification(e.target.value)}} error={error.username}/>
+                            <Input name="password" type="password" placeholder={"password"} disableStatus={false} onChange={(e) => {setPassword(e.target.value)}} error={error.username}/>
                         </form>
                         <Link to="/forgot-password" className="forgot-password">forgot password ?</Link>
                         <br/>

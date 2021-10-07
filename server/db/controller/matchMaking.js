@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const user = require('../model/user');
 const {dobCalculator} = require('../../utils/utils')
-const {} = require('../controller/chatLog');
+const {createChatRoom} = require('../controller/chatLog');
 const { getUserBioByID } = require('./user');
 
 const toggleLikeUser = async(userID, targetID) => {
@@ -29,11 +29,10 @@ const toggleLikeUser = async(userID, targetID) => {
                 await user.updateOne({_id: targetID}, {$push:{"matchMakingStatus.liked": userID}})  //add userID to target's liked list
 
                 if(userIndex != -1){
-
-                    return {message: `match with user ${targetInfo.userInfo.fullName}`} //check if user is in target's like list
+                    const chatRoom = createChatRoom(userID, targetID);
+                    return {message: `match with user ${targetInfo.userInfo.fullName}`, chatRoom} //check if user is in target's like list
                 }
                 
-
                 return {message: `like ${targetInfo.userInfo.fullName} successfully`};
             }
         } else {
@@ -96,7 +95,7 @@ const recommend = async(userID) => {
         ) : (
             [{"userInfo.gender": userInfo.matchMakingConfig.gender}]
         )
-        console.log(gender)
+        
         //all user which are liked, noped, matched, blocked, self
         let nin = [...userInfo.matchMakingStatus.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
         nin.push(userInfo._id)

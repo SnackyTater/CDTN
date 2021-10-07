@@ -131,6 +131,10 @@ const User = new Schema({
             ref: 'user',
         }]
     },
+    chatLog:[{
+        type: mongoose.Types.ObjectId,
+        ref: 'chatLogs'
+    }]
 })
 
 User.index({"matchMakingConfig.location": '2dsphere'})
