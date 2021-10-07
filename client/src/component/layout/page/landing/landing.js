@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Navbar from "./navbar/navbar";
-import Login from "./login/login";
+import Login from "../../form/login/login";
 import Signup from './signup/signup';
 import './landing.css';
 
