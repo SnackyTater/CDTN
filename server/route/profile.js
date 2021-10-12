@@ -6,16 +6,11 @@ const {authenticateToken} = require('../authorization/auth');
 const {getUserBioByID, updateUserBio, addUserImage} = require('../db/controller/user');
 const {upload} = require('../config/multerConfig');
 const cloudinary = require('../config/cloudinary');
-const { resolveSoa } = require('dns');
 
-router.get('/:id', authenticateToken, async(req, res) => {
+router.get('/', authenticateToken, async(req, res) => {
     try{
-        if(req.accountInfo._id == req.params.id){
-            let data = await getUserBioByID(req.params.id);
-            res.status(200).json(data);
-        } else {
-            res.status(403).send('login required');
-        }
+        let data = await getUserBioByID(req.accountInfo._id);
+        res.status(200).json(data);
     } catch(err) {
         res.status(400).send(err);
     }

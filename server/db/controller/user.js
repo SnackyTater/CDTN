@@ -3,7 +3,7 @@ const user = require('../model/user');
 const getUserBioByID = async (userID) => {
     try{
         console.log(userID)
-        let data = await user.findById(userID).populate("userInfo.passions", "name");
+        let data = await user.findOne({_id: userID}, {userInfo: 1, matchMakingConfig: 1}).populate("userInfo.passions", "name");
         if(data != null) {return data}
         else {throw new Error ('no data was found with given userID')}
     } catch (err) {
