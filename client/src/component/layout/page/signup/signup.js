@@ -1,11 +1,12 @@
 import { useHistory, useLocation } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 import './signup.css';
 import Input from '../../../common/input/input';
 import Select from '../../../common/select/select';
 import Textarea from "../../../common/textarea/textarea";
+import FileInput from '../../../common/input/file/input-file';
 
 import Account from '../../../../common/user/accountInfo/account';
 import User from '../../../../common/user/userInfo/user';
@@ -14,6 +15,7 @@ export default function Signup(){
     //form for user's account & user's info
     const {account, SetAccount, error: accountError, SetError: SetAccountError} = Account();
     const {user, SetUser, error: userError, SetError: SetUserError} = User();
+    const {image, setImage} = useState(null);
     
     //for render
     const [passions, setPassions] = useState([]);
@@ -59,6 +61,10 @@ export default function Signup(){
         SetUser(e, true);
     }
 
+    //image handler
+
+
+
     if(isLoading) return null;
     return (
         <div className="background">
@@ -93,12 +99,9 @@ export default function Signup(){
                         </div>
                         <div>
                             <p className="user-info__title">user avatar</p>
-                            <p>please select atleast 1 image for your avatar</p>
-                            <form className="user-info__avatar">
-                                <input className="userInfo__avatar__input" type="file"/>
-                                <input className="userInfo__avatar__input" type="file"/>
-                                <input className="userInfo__avatar__input" type="file"/>
-                            </form>
+                            <div className="user-info__avatar">
+                                <FileInput onChange={userChangeHandler}/>
+                            </div>
                         </div>
                     </div>
                 </div>
