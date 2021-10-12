@@ -19,8 +19,8 @@ router.post('/login', async (req, res) => {
         //return user info
         res.status(200).json({access_token: token});
     } catch (err) {
-        console.log(err);
-        res.status(404).json({message: err.message});
+        
+        res.status(404).json(err.message);
     }
 })
 

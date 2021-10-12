@@ -35,12 +35,12 @@ const login = async (userIdentityVerification, password) => {
         //if find atleast 1 user                                   
         if(userInfo != null){
             if(userInfo.accountInfo.password == password) return userInfo;
-            else throw TypeError('wrong password');
+            else throw new Error('wrong password');
         } else {
-            throw TypeError('wrong username');
+            throw new Error('wrong username');
         }
     } catch (err) {
-        throw TypeError(err);
+        throw new Error(err);
     }
 }
 
