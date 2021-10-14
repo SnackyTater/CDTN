@@ -7,13 +7,13 @@ const register = async (account) => {
     } catch(err) { 
         if(err.code == 11000){
             if(err.keyValue.hasOwnProperty('accountInfo.username')){
-                throw TypeError(`${err.keyValue['accountInfo.username']} has been used`);
+                throw TypeError(`username ${err.keyValue['accountInfo.username']} has been used`);
             }
             if(err.keyValue.hasOwnProperty('accountInfo.email')){
-                throw TypeError(`${err.keyValue['accountInfo.email']} has been used`);
+                throw TypeError(`email ${err.keyValue['accountInfo.email']} has been used`);
             }
             if(err.keyValue.hasOwnProperty('accountInfo.mobileNumber')){
-                throw TypeError(`${err.keyValue['accountInfo.mobileNumber']} has been used`);
+                throw TypeError(`mobile number ${err.keyValue['accountInfo.mobileNumber']} has been used`);
             }
         } else {
             throw TypeError(err.message);

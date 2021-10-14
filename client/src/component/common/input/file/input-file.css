@@ -10,9 +10,26 @@
     height: 100%;
     border-radius: 24px;
     border: 1px solid rgba(0, 0, 0, 0.3);
+    overflow:hidden;
     cursor: pointer;
+    margin: 0;
+    padding: 0;
 }
-.file__pick-button-content{
+.file__pick-button__content{
     color: rgba(0, 0, 0, 0.3);
     font-size: 36px;
+}
+.file__pick-button__image-holder{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.file__pick-button__image{
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
 }

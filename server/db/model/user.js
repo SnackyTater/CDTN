@@ -43,7 +43,7 @@ const User = new Schema({
             type: Date,
         },
         gender: {
-            enum: ['male', 'female', 'unkown'],
+            enum: ['male', 'female', 'unknown'],
             type: String,
             default: 'unknown',
         },

@@ -1,8 +1,8 @@
 //check if username have any special character (yes => false)
 const checkUsername = (username) => {
     const checker=/^[a-zA-Z0-9]+$/;
-    if(username.match(checker)) return {status: false, message: 'username must not contain special character'};
     if(username.length < 8) return {status: false, message: 'username must be atleast 8 characters'};
+    if(!username.match(checker)) return {status: false, message: 'username must not contain special character'};
     return {status: true, message: ''};
 }
 
@@ -17,10 +17,16 @@ const checkPassword = (password) => {
     return {status: true, message: ''};
 }
 
+const checkPasswordMatch = (password, password2) => {
+    if(password !== password2) return {status: false, message: 'password does not match'}
+        return {status: true, message: ''}
+}
+
 const checkFullName = (fullName) => {
     const checker = /^[a-zA-Z\s]+$/;
-    if(fullName.match(checker)) return {status: false, message: 'full name must not contain special character'}; 
-    if(fullName.length <= 0) return {status: false, message: 'must enter full name'};
+    if(fullName.length == 0) return {status: false, message: 'must enter full name'};
+    if(!fullName.match(checker)) return {status: false, message: 'full name must not contain special character'}; 
+    
     return {status: true, message: ''};
 }
 
@@ -37,9 +43,15 @@ const checkPassions = (passios) => {
 }
 
 const ageCalulator = (dob) => {
-    let diff_ms = Date.now() - dob.getTime();
+    let DOB =  new Date(dob)
+    let diff_ms = Date.now() - DOB;
     let age_dt = new Date(diff_ms); 
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
 
-export {checkUsername, checkEmail, checkPassword, ageCalulator, checkDOB, checkFullName, checkPassions};
+const checkMobileNumber = (mobileNumber) => {
+    if(mobileNumber === 0) return {status: false, message: 'must enter mobile number'};
+    return {status: true, message: ''}
+}
+
+export {checkUsername, checkEmail, checkPassword, checkPasswordMatch, ageCalulator, checkDOB, checkFullName, checkPassions, checkMobileNumber};

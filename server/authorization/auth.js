@@ -15,8 +15,13 @@ const authenticateToken = (req, res, next) => {
     }     
 }
 
-const createToken = async (data) => {
+const createToken = async (id) => {
     try{
+        const data = {
+            _id: id,
+            iat: Date.now(),
+            exp: Date.now() + (24*60*60*1000)
+        }
         return await jwt.sign(data, process.env.ACCESS_TOKEN);
     } catch (err){
         return err;

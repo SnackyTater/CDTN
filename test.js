@@ -1,6 +1,3 @@
-let data = {
-    username: undefined,
-    password: 'tater123'
-}
-
-console.log(data.username && data.password)
+let time = Date.now();
+console.log(time+(24*60*60*1000));
+console.log(typeof(time));

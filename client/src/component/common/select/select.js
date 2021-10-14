@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import './select.css';
 
-export default function Select(select, name, onClick) {
+export default function Select({name, type, onChange}) {
     const [gender, setGender] = useState([
         {value: 'gender', disabled: true, selected: true, hidden: true, name: 'gender'},
         {value: 'unknown', disabled: false, selected: false, hidden: false, name: 'prefer not saying'},
@@ -12,11 +12,11 @@ export default function Select(select, name, onClick) {
     const [optionArray, setOptionArray]=useState([]);
 
     useEffect(()=> {
-        if(select.type === 'gender') setOptionArray(gender);
-    }, [select, optionArray])
+        if(type === 'gender') setOptionArray(gender);
+    }, [optionArray])
 
     return (
-        <select name={name} onClick={onClick}>
+        <select name={name} onChange={onChange}>
             {
                 optionArray?.map((option) => {
                     return <option value={option?.value} disabled={option?.disabled} selected={option.selected} hidden={option.hidden}>{option?.name}</option>

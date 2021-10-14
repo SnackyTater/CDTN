@@ -6,7 +6,7 @@ export default function input({name, type, placeholder, disableStatus, onChange,
     return (
         <div>
             <input className="input-text" name={name} type={type} placeholder={placeholder} onChange={onChange} disabled={disableStatus? "disable" : ""}/>
-            {(error?.status) ? (<p style={{color: 'red', textAlign: 'center'}}>{error?.message}</p>):(null)}
+            {(error?.status) ? (null):(<p style={{color: 'red', textAlign: 'center'}}>{error?.message}</p>)}
         </div>
     )
 }

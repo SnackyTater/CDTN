@@ -33,8 +33,8 @@ router.post('/signup', async(req, res) => {
 
         //if user is > 18
         else {
-            const {accountInfo, _id} = await register(req.body);
-            const token = await createToken(JSON.stringify({accountInfo, _id}));
+            const {_id} = await register(req.body);
+            const token = await createToken(_id);
 
             res.status(200).json({access_token: token});
         }

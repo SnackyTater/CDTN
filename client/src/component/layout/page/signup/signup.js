@@ -1,5 +1,5 @@
 import { useHistory, useLocation } from "react-router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import './signup.css';
@@ -13,9 +13,10 @@ import User from '../../../../common/user/userInfo/user';
 
 export default function Signup(){
     //form for user's account & user's info
-    const {account, SetAccount, error: accountError, SetError: SetAccountError} = Account();
-    const {user, SetUser, error: userError, SetError: SetUserError} = User();
-    const {image, setImage} = useState(null);
+    const { account, SetAccount, error: accountError, setError: setAccountError, accountSubmitChecker} = Account();
+    const { user, SetUser, SetPassions, setToken, error: userError, userSubmitHandler} = User();
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState(null);
     
     //for render
     const [passions, setPassions] = useState([]);
@@ -27,21 +28,10 @@ export default function Signup(){
     let email = location?.state?.email;
     let mobile = location?.state?.mobile;
 
-    // const userPassionsChangeHandler = (e) => {
-    //     let passionsList = userProfile.userInfo.passions;
-    //     let checkPassionIndex = passionsList.indexOf(e.target.value);
-
-    //     //if passion not exist in userInfo push in
-    //     if(checkPassionIndex === -1) passionsList.push(e.target.value);
-    //     //if exist splice it out
-    //     else passionsList.splice(checkPassionIndex, 1);
-
-    //     setUserProfile({...userProfile, userInfo:{...userProfile.userInfo, passions: passionsList}});
-    // }
-
+    //get passions list from server
     useEffect(() => {
         email = 'taterazay98@gmail.com';
-        if(email || mobile){
+        if(email || mobile || isLoading){
             axios.get('http://localhost:5000/api/passion')
                 .then((res) => {
                     setPassions(res.data);
@@ -61,7 +51,56 @@ export default function Signup(){
         SetUser(e, true);
     }
 
+    const userPassionsChangeHandler = (e) => {
+        SetPassions(e);
+    }
+
     //image handler
+    const imageHandler = (e) => {
+        const image = e.target.files[0];
+        setImage(image);
+        setPreview(URL.createObjectURL(image))
+    }
+
+    //signup handler
+    const signupHandler = async (e) => {
+        e.preventDefault();
+        const accountChecker = accountSubmitChecker();
+        const userChecker = userSubmitHandler();
+        console.log(user)
+        if(accountChecker && userChecker){
+            const signupInfo = {accountInfo: account, userInfo: user.userInfo, matchMakingConfig: {location: {coordinates: [0,0]}}};
+            try{
+                //create account
+                const response = await axios.post('http://localhost:5000/api/account/signup', signupInfo);
+                const token = response.data.access_token;
+                setToken(token);
+
+                //upload image to new account
+                const fd = new FormData();
+                fd.append('image', image)
+                const uploadImage = await fetch('http://localhost:5000/api/profile/image', {
+                    method: 'POST',
+                    body: fd,
+                    headers: {
+                        'Accept': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if(uploadImage)
+                    history.push('/home');
+                
+            }catch (err){
+                const message = err?.response?.data;
+                const error = {username:{status: true, message: ''}, email: {status: true, message: ''}, mobileNumber: {status: true, message: ''}}
+                if(message.includes('username')) error.username = {status: false, message: 'username has been used'}
+                if(message.includes('email')) error.email = {status: false, message: 'email has been used'}
+                if(message.includes('mobile')) error.mobileNumber = {status: false, message: 'mobile has been used'}
+
+                setAccountError({...accountError, ...error})
+            }
+        }
+    }
 
 
 
@@ -86,12 +125,12 @@ export default function Signup(){
                             <form className="user-info__form">
                                 <Input      name="fullName"     type="text"     placeholder={"fullname"}                onChange={userChangeHandler}    error={userError.fullName}/>
                                 <Input      name="DateOfBirth"  type="date"     placeholder={"date of birth"}           onChange={userChangeHandler}    error={userError.DateOfBirth}/>
-                                <Select     name="gender"       type={"gender"}                                         onClick={userChangeHandler}/>
+                                <Select     name="gender"       type={"gender"}                                         onChange={userChangeHandler}/>
                                 <Textarea   name="description"                  placeholder={"tell use about yourself"} onChange={userChangeHandler}/>
                                 <div className="checkBoxList">
                                     {
                                         passions.map((passion) => {
-                                            return <label><input type="checkbox" value={passion._id} onClick={userChangeHandler}/><span>{passion.name}</span></label>
+                                            return <label><input name="passions" type="checkbox" value={passion._id} onClick={userPassionsChangeHandler}/><span>{passion.name}</span></label>
                                         })
                                     }
                                 </div>
@@ -100,12 +139,13 @@ export default function Signup(){
                         <div>
                             <p className="user-info__title">user avatar</p>
                             <div className="user-info__avatar">
-                                <FileInput onChange={userChangeHandler}/>
+                                <FileInput onChange={imageHandler} image={image} preview={preview}/>
                             </div>
+                            <image src={image}/>
                         </div>
                     </div>
                 </div>
-                <button className="form__button" onClick={(e) => {console.log('blin')}}>Sign up</button>
+                <button className="form__button" onClick={signupHandler}>Sign up</button>
             </div>
         </div>
     )

@@ -9,6 +9,7 @@
     position: relative;
     left: 50%;
     transform: translate(-50%);
+    margin: 20px 0px 0px 0px;
 }
 p{
     color: red;
