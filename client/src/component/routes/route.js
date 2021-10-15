@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Landing from '../layout/page/landing/landing';
 import Signup from '../layout/page/signup/signup';
 import Profile from '../layout/page/profile/profile';
+import Home from '../layout/page/home/home';
 
 export default function route() {
     return (
@@ -18,6 +19,9 @@ export default function route() {
                     </Route>
                     <Route exact path="/profile">
                         <Profile/>
+                    </Route>
+                    <Route exact path="/home">
+                        <Home/>
                     </Route>
                 </Switch>
             </div>

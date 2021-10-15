@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import './select.css';
 
 export default function Select({name, type, onChange}) {
-    const [gender, setGender] = useState([
+    const [gender] = useState([
         {value: 'gender', disabled: true, selected: true, hidden: true, name: 'gender'},
         {value: 'unknown', disabled: false, selected: false, hidden: false, name: 'prefer not saying'},
         {value: 'male', disabled: false, selected: false, hidden: false, name: 'male'},

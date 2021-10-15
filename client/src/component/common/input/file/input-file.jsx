@@ -1,4 +1,4 @@
-import {useRef, useState, useEffect} from 'react';
+import {useRef} from 'react';
 import './input-file.css';
 
 export default function Inputfile({onChange, preview, image}) {
@@ -12,7 +12,7 @@ export default function Inputfile({onChange, preview, image}) {
         <div className="file">
             <button className="file__pick-button" onClick={filePickHandler}>
                 {
-                    (image) ? (<div className="file__pick-button__image-holder"><img className="file__pick-button__image" src={preview}/></div>) : (<p className="file__pick-button__content">+</p>)
+                    (image) ? (<div className="file__pick-button__image-holder"><img className="file__pick-button__image" src={preview} alt=""/></div>) : (<p className="file__pick-button__content">+</p>)
                 }
             </button>
             <input type="file" style={{display: 'none'}} ref={filePickRef} onChange={onChange}/>

@@ -32,7 +32,7 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 - profile
 
 # todo
-- Làm front-end (tiến độ: 0.01%)
+- Làm front-end (đã làm xong login, signup và landing page) tiến độ: 40%
 - REFRACTOR KHI LÀM XONG CƠ BẢN (cả DB nếu cần)                                                                 DONE!
 - upload image lên cloud                                                                                        DONE!
 - chat app

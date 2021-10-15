@@ -11,10 +11,14 @@ import FileInput from '../../../common/input/file/input-file';
 import Account from '../../../../common/user/accountInfo/account';
 import User from '../../../../common/user/userInfo/user';
 
+import {getLocation} from '../../../../common/utils/utils';
+
 export default function Signup(){
     //form for user's account & user's info
     const { account, SetAccount, error: accountError, setError: setAccountError, accountSubmitChecker} = Account();
     const { user, SetUser, SetPassions, setToken, error: userError, userSubmitHandler} = User();
+
+    const [coordinates, setCoordinates] = useState(null);
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     
@@ -30,14 +34,17 @@ export default function Signup(){
 
     //get passions list from server
     useEffect(() => {
-        email = 'taterazay98@gmail.com';
-        if(email || mobile || isLoading){
+        email='taterazay98@gmail.com'
+        if(email || mobile){
+            //get passions list
             axios.get('http://localhost:5000/api/passion')
                 .then((res) => {
                     setPassions(res.data);
                     setIsLoading(false);
                 })
                 .catch((err) => {console.log(err)});
+
+            //
         }
         else history.push('/');
     }, []);
@@ -62,46 +69,67 @@ export default function Signup(){
         setPreview(URL.createObjectURL(image))
     }
 
-    //signup handler
-    const signupHandler = async (e) => {
-        e.preventDefault();
-        const accountChecker = accountSubmitChecker();
-        const userChecker = userSubmitHandler();
-        console.log(user)
-        if(accountChecker && userChecker){
-            const signupInfo = {accountInfo: account, userInfo: user.userInfo, matchMakingConfig: {location: {coordinates: [0,0]}}};
-            try{
-                //create account
-                const response = await axios.post('http://localhost:5000/api/account/signup', signupInfo);
-                const token = response.data.access_token;
-                setToken(token);
+    useEffect(async() => {
+        if(coordinates){
+            const userAccountChecker = accountSubmitChecker();
+            const userInfoChecker = userSubmitHandler();
+            if(userAccountChecker && userInfoChecker){
+                //setup payload for signup
+                const signupInfo = {
+                    accountInfo: account, 
+                    userInfo: user.userInfo,
+                    matchMakingConfig: {
+                        location: {
+                            coordinates: [coordinates.longitude, coordinates.latitude]
+                        }
+                    }
+                }
+                console.log(signupInfo)
 
-                //upload image to new account
-                const fd = new FormData();
-                fd.append('image', image)
-                const uploadImage = await fetch('http://localhost:5000/api/profile/image', {
-                    method: 'POST',
-                    body: fd,
+                //send signup info to server to create account
+                try{
+                    const createAccount = await axios.post('http://localhost:5000/api/account/signup', signupInfo);
+                    const token = createAccount.data.access_token;
+
+                    //send image to server
+                    //create payload for image
+                    const fd = new FormData();
+                    fd.append('image', image);
+
+                    //send image
+                    const uploadImage = await axios.post('http://localhost:5000/api/profile/image', fd, {
                     headers: {
                         'Accept': 'multipart/form-data',
                         'Authorization': `Bearer ${token}`
-                    }
-                })
-                if(uploadImage)
-                    history.push('/home');
-                
-            }catch (err){
-                const message = err?.response?.data;
-                const error = {username:{status: true, message: ''}, email: {status: true, message: ''}, mobileNumber: {status: true, message: ''}}
-                if(message.includes('username')) error.username = {status: false, message: 'username has been used'}
-                if(message.includes('email')) error.email = {status: false, message: 'email has been used'}
-                if(message.includes('mobile')) error.mobileNumber = {status: false, message: 'mobile has been used'}
+                    }})
 
-                setAccountError({...accountError, ...error})
+                    console.log(uploadImage)
+                    if(uploadImage){
+                        setToken(token);
+                        history.push('/home', {verified: true});
+                    }
+
+                } catch(err) {
+                    const message = err?.response?.data;
+                    const error = {}
+                    if(message?.includes('username')) error.username = {status: false, message: 'username has been used'}
+                    if(message?.includes('email')) error.email = {status: false, message: 'email has been used'}
+                    if(message?.includes('mobile')) error.mobileNumber = {status: false, message: 'mobile has been used'}
+
+                    message && setAccountError({...accountError, ...error})
+                }
+                
             }
         }
-    }
+    }, [coordinates])
 
+    const signup = (e) => {
+        e.preventDefault();
+        getLocation((location) => {
+            const {longitude, latitude} = location.coords
+            setCoordinates({latitude, longitude});
+        })
+    }
 
 
     if(isLoading) return null;
@@ -145,7 +173,7 @@ export default function Signup(){
                         </div>
                     </div>
                 </div>
-                <button className="form__button" onClick={signupHandler}>Sign up</button>
+                <button className="form__button" onClick={signup}>Sign up</button>
             </div>
         </div>
     )

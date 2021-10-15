@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {checkPassions, checkFullName, checkDOB} from '../../utils/utils';
+import {checkFullName, checkDOB} from '../../utils/utils';
 
 const User = () => {
     const [user, setUser] = useState({
@@ -63,7 +63,7 @@ const User = () => {
                 checker = checkFullName(value);
                 break;
             case 'DateOfBirth':
-                console.log('dob')
+                console.log(value);
                 checker = checkDOB(value);
                 break;
             default:

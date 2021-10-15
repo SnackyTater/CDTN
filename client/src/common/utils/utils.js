@@ -24,7 +24,7 @@ const checkPasswordMatch = (password, password2) => {
 
 const checkFullName = (fullName) => {
     const checker = /^[a-zA-Z\s]+$/;
-    if(fullName.length == 0) return {status: false, message: 'must enter full name'};
+    if(fullName.length === 0) return {status: false, message: 'must enter full name'};
     if(!fullName.match(checker)) return {status: false, message: 'full name must not contain special character'}; 
     
     return {status: true, message: ''};
@@ -54,4 +54,8 @@ const checkMobileNumber = (mobileNumber) => {
     return {status: true, message: ''}
 }
 
-export {checkUsername, checkEmail, checkPassword, checkPasswordMatch, ageCalulator, checkDOB, checkFullName, checkPassions, checkMobileNumber};
+const getLocation = (func) => {
+    return navigator.geolocation.getCurrentPosition(func);
+}
+
+export {checkUsername, checkEmail, checkPassword, checkPasswordMatch, ageCalulator, checkDOB, checkFullName, checkPassions, checkMobileNumber, getLocation};
