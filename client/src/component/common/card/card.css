@@ -1,0 +1,43 @@
+.card-image-holder{
+    width: 100%;
+    height: 80%;
+    background-color: yellow;
+    cursor: pointer;
+}
+.card-info{
+    position: fixed;
+    bottom: 20%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 20%;
+    display: flex;
+}
+.card-info__username, .card-info__age{
+    font-size: 3rem;
+    padding: 2% 10%;
+    color: white;
+}
+.card-info__description{
+    display: block;
+}
+.card-button-holder{
+    width: 100%;
+    height: 20%;
+    background-color: red;
+    display: flex;
+}
+.card-button{
+    flex: 1;
+}
+.card__button{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4vw;
+    height: 4vw;
+    border-radius: 100px;
+    border: none;
+    color: blue;
+    cursor: pointer;
+}

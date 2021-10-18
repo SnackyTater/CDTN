@@ -33,8 +33,8 @@ export default function Signup(){
     let mobile = location?.state?.mobile;
 
     //get passions list from server
+    //componentDidMount()
     useEffect(() => {
-        email='taterazay98@gmail.com'
         if(email || mobile){
             //get passions list
             axios.get('http://localhost:5000/api/passion')
@@ -69,6 +69,7 @@ export default function Signup(){
         setPreview(URL.createObjectURL(image))
     }
 
+    //componentShouldUpdate (location)
     useEffect(async() => {
         if(coordinates){
             const userAccountChecker = accountSubmitChecker();
