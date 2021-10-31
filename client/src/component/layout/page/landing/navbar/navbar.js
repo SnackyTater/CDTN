@@ -5,9 +5,9 @@ import './navbar.css';
 
 export default function Navbar({openLoginForm}) {
     return (
-        <div className="Navbar">
+        <div className="navbar">
             <Logo/>
-            <nav className="navigator">
+            <nav className="navbar__navigator">
                 <ul>
                     <li><Link to="/product">Product</Link></li>
                     <li><Link to="/about">About</Link></li>
@@ -15,7 +15,7 @@ export default function Navbar({openLoginForm}) {
                     <li><Link to="/services">Services</Link></li>
                 </ul>
             </nav>
-            <button className="login" onClick={openLoginForm}>Login</button>
+            <button className="navbar__login" onClick={openLoginForm}>Login</button>
         </div>
     )
 }

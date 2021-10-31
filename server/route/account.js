@@ -9,12 +9,13 @@ const {mailOptions, sendEmail} = require('../config/nodemailer')
 router.post('/login', async (req, res) => {
     try{
         //get user data from DB
-        const {identityVerification, password} = req.body
+        const {identityVerification, password} = req.body;
+        console.log(identityVerification)
+        console.log(password)
         const user = await login(identityVerification, password);
 
         //create token
-        const tokenInfo = { accountInfo: user.accountInfo, _id: user._id }
-        const token = await createToken(JSON.stringify(tokenInfo));
+        const token = await createToken(user._id);
 
         //return user info
         res.status(200).json({access_token: token});

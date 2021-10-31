@@ -1,32 +1,32 @@
-.card-image-holder{
+.card-upper-holder{
     width: 100%;
-    height: 80%;
-    background-color: yellow;
-    cursor: pointer;
+    height: 85%;
 }
-.card-info{
+.card-upper-content{
+    width: 100%;
+    height: 100%;
+}
+.card-lower-holder-outer{
+    width: 100%;
+    height: 15%;
+    display: flex;
+}
+.card-upper-content__info-holder{
     position: fixed;
-    bottom: 20%;
+    bottom: 15%;
+    background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    height: 20%;
+    height: auto;
+}
+.card-upper-content__info-holder div{
     display: flex;
 }
-.card-info__username, .card-info__age{
-    font-size: 3rem;
-    padding: 2% 10%;
-    color: white;
+.card-upper-content__info-holder div p {
+    color: whitesmoke;
+    margin: 5px 20px;
+    overflow-wrap: normal;
 }
-.card-info__description{
-    display: block;
-}
-.card-button-holder{
-    width: 100%;
-    height: 20%;
-    background-color: red;
-    display: flex;
-}
-.card-button{
+.card-button-holder-inner{
     flex: 1;
 }
 .card__button{
@@ -34,10 +34,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 4vw;
-    height: 4vw;
     border-radius: 100px;
     border: none;
-    color: blue;
+    height: 5rem;
+    width: 5rem;
+}
+.button__logo{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2.5rem;
+    width: 2.5rem;
     cursor: pointer;
 }
