@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const user = require('../model/user');
-const {dobCalculator} = require('../../utils/utils')
-const {createChatRoom} = require('../controller/chatLog');
-const { getUserBioByID } = require('./user');
+const { dobCalculator } = require('../../utils/utils')
+const { createChatRoom } = require('../controller/chatLog');
 
 const toggleLikeUser = async(userID, targetID) => {
     try {
@@ -28,9 +27,9 @@ const toggleLikeUser = async(userID, targetID) => {
                 await user.updateOne({_id: userID}, {$push:{"matchMakingStatus.likes": targetID}}); //add targetID to user's like list
                 await user.updateOne({_id: targetID}, {$push:{"matchMakingStatus.liked": userID}})  //add userID to target's liked list
 
+                //check if user is in target's like list
                 if(userIndex != -1){
-                    const chatRoom = createChatRoom(userID, targetID);
-                    return {message: `match with user ${targetInfo.userInfo.fullName}`, chatRoom} //check if user is in target's like list
+                    return {message: `match with user ${targetInfo.userInfo.fullName}`} 
                 }
                 
                 return {message: `like ${targetInfo.userInfo.fullName} successfully`};
@@ -86,7 +85,7 @@ const toggleBlockUser = async(userID, targetID) => {
 const recommend = async(userID) => {
     try{
         //get user match making info
-        let query = await getUserBioByID(userID);
+        let query = await user.findOne({_id: userID},{"matchMakingConfig": 1, "matchMakingStatus": 1});
         let userInfo = query.toJSON();
 
         //setup match-making config for searching based on user preferrence
@@ -124,6 +123,7 @@ const recommend = async(userID) => {
                      }
                 }
         },'userInfo');
+
         return recs;
     } catch(err) {
         console.log(err.message)
