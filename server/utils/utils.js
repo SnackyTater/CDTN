@@ -12,10 +12,6 @@ const dobCalculator = (dob) => {
 const generateCode = (maxValue) => {
     return Math.floor(Math.random() * maxValue);
 }
-
-const createToken = (data) => {
-    
-}
 module.exports = {
     ageCalulator,
     dobCalculator,

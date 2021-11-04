@@ -6,10 +6,11 @@ const {authenticateToken} = require('../authorization/auth');
 
 router.get('/recs', authenticateToken, async(req, res) => {
     try{
+        console.log(req.accountInfo._id);
         let data = await recommend(req.accountInfo._id);
         res.json(data);
     } catch(err) {
-        res.json(err);
+        res.status(400).send(err);
     }
 });
 

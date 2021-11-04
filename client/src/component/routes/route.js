@@ -5,6 +5,7 @@ import Landing from '../layout/page/landing/landing';
 import Signup from '../layout/page/signup/signup';
 import Profile from '../layout/page/profile/profile';
 import Home from '../layout/page/home/home';
+import Chat from '../layout/page/chat/chat';
 
 export default function route() {
     return (
@@ -22,6 +23,9 @@ export default function route() {
                     </Route>
                     <Route exact path="/home">
                         <Home/>
+                    </Route>
+                    <Route exact path="/chat">
+                        <Chat/>
                     </Route>
                 </Switch>
             </div>

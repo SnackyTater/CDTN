@@ -2,13 +2,21 @@ const user = require('../model/user');
 
 const getUserBioByID = async (userID) => {
     try{
-        console.log(userID)
         let data = await user.findOne({_id: userID}, {userInfo: 1, matchMakingConfig: 1}).populate("userInfo.passions", "name");
         if(data != null) {return data}
         else {throw new Error ('no data was found with given userID')}
     } catch (err) {
         // console.log(err)
         throw(err.message)
+    }
+}
+
+const getUserInfo = async(userID, config) => {
+    try{
+        const userInfo = await user.findOne({_id: userID}, config);
+        if(userInfo != null) return userInfo;
+    } catch(err) {
+        throw err.message;
     }
 }
 
@@ -42,5 +50,6 @@ const addUserImage = async(userID, imageURL) => {
 module.exports = {
     updateUserBio,
     getUserBioByID,
+    getUserInfo,
     addUserImage,
 }

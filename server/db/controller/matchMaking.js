@@ -113,16 +113,16 @@ const recommend = async(userID) => {
                 "_id": {$nin: nin},                                     //find user except for user which contained in this list
                 "userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo},   //find user born between age from & age to
                 "userInfo.relationship.status": "single",
-                "matchMakingConfig.location": {                         //find user within diameter of coordinates
-                    $nearSphere: {
-                        $geometry: {
-                           type : "Point",
-                           coordinates : [longtitude, latitude]
-                        },
-                        $maxDistance: maxDistance
-                     }
-                }
-        },'userInfo');
+                // "matchMakingConfig.location": {                         //find user within diameter of coordinates
+                //     $nearSphere: {
+                //         $geometry: {
+                //            type : "Point",
+                //            coordinates : [longtitude, latitude]
+                //         },
+                //         $maxDistance: maxDistance
+                //      }
+                // }
+        },{'userInfo': 1, '_id': 0});
 
         return recs;
     } catch(err) {
