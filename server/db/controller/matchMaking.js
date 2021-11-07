@@ -5,35 +5,43 @@ const { createChatRoom } = require('../controller/chatLog');
 
 const toggleLikeUser = async(userID, targetID) => {
     try {
-        let userInfo = await user.findOne({_id: userID})
-        let targetInfo = await user.findOne({_id: targetID});
+        let {matchMakingStatus: userMatchMakingSatus} = await user.findOne({_id: userID}, {matchMakingStatus: 1, _id: 0});
+        let {matchMakingStatus: targetMatchMakingSatus} = await user.findOne({_id: targetID}, {matchMakingStatus: 1, _id: 0});
 
-        if(userInfo != null && targetInfo != null){
-            //contain id of which has been liked by the user 
-            let userLikes = userInfo.matchMakingStatus.likes
-            let targetLikes = targetInfo.matchMakingStatus.likes
+        if(userMatchMakingSatus != null && userMatchMakingSatus != null){
+            let message = '';
+            //get list of user who user, target like
+            const userLikes = userMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
+            const targetLikes = targetMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
 
             //contain targetID index (-1 mean not exist, else)
-            let targetIndex = userLikes.indexOf(mongoose.Types.ObjectId(targetID))  //check if targetID is in user's like list
-            let userIndex = targetLikes.indexOf(mongoose.Types.ObjectId(userID))    //check if userID is in target's like list
+            let targetIndex = userLikes.indexOf(targetID)  //check if targetID is in user's like list
+            let userIndex = targetLikes.indexOf(userID)    //check if userID is in target's like list
 
-            //user unlike target but target doesnt like user
-            if(targetIndex != -1){
-                await user.updateOne({_id: userID}, {$pop: {"matchMakingStatus.likes": targetIndex-1}}) //remove targetID from user's like list
-                await user.updateOne({_id: targetID}, {$pop: {"matchMakingStatus.liked": userIndex-1}}) //remove userID from target's liked list
+            // target like user but user haven't like target
+            if(userIndex != -1){
+                targetMatchMakingSatus.splice(userIndex, 1);
+                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'match', status: 'confirmed'});
+                targetMatchMakingSatus.push({id: mongoose.Types.ObjectId(userID), type: 'match', status: 'confirmed'});
 
-                return {message: `unlike ${targetInfo.userInfo.fullName} successfully`};
-            } else {
-                await user.updateOne({_id: userID}, {$push:{"matchMakingStatus.likes": targetID}}); //add targetID to user's like list
-                await user.updateOne({_id: targetID}, {$push:{"matchMakingStatus.liked": userID}})  //add userID to target's liked list
-
-                //check if user is in target's like list
-                if(userIndex != -1){
-                    return {message: `match with user ${targetInfo.userInfo.fullName}`} 
-                }
-                
-                return {message: `like ${targetInfo.userInfo.fullName} successfully`};
+                message = `match with abczxyx`;
             }
+            //user have liked target
+            if(targetIndex != -1 && userIndex == -1){
+                userMatchMakingSatus.splice(targetIndex, 1);
+                message = `unlike successfully`;
+            }
+            //user haven't liked target
+            if(targetIndex === -1 && userIndex == -1){
+                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'like', status: 'confirmed'});
+                message = `like successfully`;
+            }
+
+            await user.updateOne({_id: userID}, {matchMakingStatus: userMatchMakingSatus});
+            await user.updateOne({_id: targetID}, {matchMakingStatus: targetMatchMakingSatus});
+
+            return message;
+
         } else {
             throw new Error("no user was found with given ID")
         }
@@ -96,7 +104,7 @@ const recommend = async(userID) => {
         )
         
         //all user which are liked, noped, matched, blocked, self
-        let nin = [...userInfo.matchMakingStatus.block, ...userInfo.matchMakingStatus.likes, ...userInfo.matchMakingStatus.nopes, ...userInfo.matchMakingStatus.matches];
+        let nin = userInfo.matchMakingStatus.map((user) => user.id);
         nin.push(userInfo._id)
         
         let ageFrom = dobCalculator(userInfo.matchMakingConfig.age.from);
@@ -122,7 +130,7 @@ const recommend = async(userID) => {
                 //         $maxDistance: maxDistance
                 //      }
                 // }
-        },{'userInfo': 1, '_id': 0});
+        },{'userInfo': 1});
 
         return recs;
     } catch(err) {

@@ -23,11 +23,6 @@ const User = new Schema({
             type: String,
             unique: [true, 'this mobile number has been used'],
             default: '',
-        },
-        status: {
-            enum: ['ban', 'normal'],
-            type: String,
-            default: 'normal'
         }
     },
     userInfo: {
@@ -65,6 +60,7 @@ const User = new Schema({
             related: {
                 type: mongoose.Types.ObjectId,
                 ref: 'user',
+                default: null,
             },
             since:{
                 type: Date,
@@ -109,28 +105,21 @@ const User = new Schema({
             }
         }
     },
-    matchMakingStatus: {
-        likes: [{ 
+    matchMakingStatus: [{
+        _id: false,
+        id: {
             type: mongoose.Types.ObjectId,
             ref: 'user',
-        }],
-        nopes: [{
-            type: mongoose.Types.ObjectId,
-            ref: 'user',
-        }],
-        liked: [{
-            type: mongoose.Types.ObjectId,
-            ref: 'user',
-        }],
-        matches: [{
-            type: mongoose.Types.ObjectId,
-            ref: 'user',
-        }],
-        block: [{
-            type: mongoose.Types.ObjectId,
-            ref: 'user',
-        }]
-    },
+        },
+        type: {
+            type: String,
+            enum: ['like', 'match', 'nope'],
+        },
+        status: {
+            type: String,
+            enum: ['confirmed', 'unconfirmed']
+        }
+    }],
     chatLog:[{
         type: mongoose.Types.ObjectId,
         ref: 'chatLogs'
