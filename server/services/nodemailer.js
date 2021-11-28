@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const {generateCode} = require('../scripts/utils')
+
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -7,17 +9,17 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const mailOptions = (sendTo, code) => {
+const mailOptions = (sendTo) => {
     return {
         from: 'Cosmitto Dating App',
         to: sendTo,
         subject: 'Account Verification',
-        text: `your account verification code is ${code}`,
+        text: `your account verification code is ${generateCode(5)}`,
     }
 };
 
-const sendEmail = async (mailOptions) => {
-    const res = await transporter.sendMail(mailOptions);
+const sendEmail = async (sendTo) => {
+    const res = await transporter.sendMail(mailOptions(sendTo));
     return res;
 };
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {addPassion, updatePassion, deletePassion, getPassionList, getOnePassion} = require('../db/controller/passion');
+const {addPassion, updatePassion, deletePassion, getPassionList, getOnePassion} = require('../controller/passion');
 
 router.get('/', async   (req, res) => {
     try{

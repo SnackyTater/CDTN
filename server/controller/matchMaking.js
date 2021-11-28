@@ -5,36 +5,55 @@ const { createChatRoom } = require('../controller/chatLog');
 
 const toggleLikeUser = async(userID, targetID) => {
     try {
-        let {matchMakingStatus: userMatchMakingSatus} = await user.findOne({_id: userID}, {matchMakingStatus: 1, _id: 0});
-        let {matchMakingStatus: targetMatchMakingSatus} = await user.findOne({_id: targetID}, {matchMakingStatus: 1, _id: 0});
+        const userInfo = await user.findOne({"account": userID});
+        const targetInfo = await user.findOne({"_id": targetID});
 
-        if(userMatchMakingSatus != null && userMatchMakingSatus != null){
+        if(userInfo && targetInfo){
             let message = '';
-            //get list of user who user, target like
-            const userLikes = userMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
-            const targetLikes = targetMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
 
-            //contain targetID index (-1 mean not exist, else)
-            let targetIndex = userLikes.indexOf(targetID)  //check if targetID is in user's like list
-            let userIndex = targetLikes.indexOf(userID)    //check if userID is in target's like list
+            let userLikes = [];
+            let targetLikes = [];
+
+            let userIndex = -1;
+            let targetIndex = -1;
+
+            [userInfo.matchMaking.status].forEach((user, index) => {
+                if(user.id == targetID) targetIndex = index; 
+                if(user.type === 'like') userLikes.push(user.id.toString());
+            })
+
+            [targetInfo.matchMaking.status].forEach((user, index) => {
+                if(user.id == targetID) userIndex = index; 
+                if(user.type === 'like') targetLikes.push(user.id.toString());
+            })
+            // //get list of user who user, target like
+            // const userLikes = userMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
+            // const targetLikes = targetMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
+
+            // //contain targetID index (-1 mean not exist, else)
+            // let targetIndex = userLikes.indexOf(targetID)  //check if targetID is in user's like list
+            // let userIndex = targetLikes.indexOf(userID)    //check if userID is in target's like list
 
             // target like user but user haven't like target
             if(userIndex != -1){
                 targetMatchMakingSatus.splice(userIndex, 1);
-                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'match', status: 'confirmed'});
-                targetMatchMakingSatus.push({id: mongoose.Types.ObjectId(userID), type: 'match', status: 'confirmed'});
+                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'match'});
+                targetMatchMakingSatus.push({id: mongoose.Types.ObjectId(userID), type: 'match'});
 
-                message = `match with abczxyx`;
+                //create chat room for match people
+                createChatRoom(userID, targetID);
+
+                message = `match with ${targetName}`;
             }
             //user have liked target
             if(targetIndex != -1 && userIndex == -1){
                 userMatchMakingSatus.splice(targetIndex, 1);
-                message = `unlike successfully`;
+                message = `unlike ${targetName} successfully`;
             }
             //user haven't liked target
             if(targetIndex === -1 && userIndex == -1){
-                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'like', status: 'confirmed'});
-                message = `like successfully`;
+                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'like'});
+                message = `like ${targetName} successfully`;
             }
 
             await user.updateOne({_id: userID}, {matchMakingStatus: userMatchMakingSatus});
@@ -93,14 +112,14 @@ const toggleBlockUser = async(userID, targetID) => {
 const recommend = async(userID) => {
     try{
         //get user match making info
-        let query = await user.findOne({_id: userID},{"matchMakingConfig": 1, "matchMakingStatus": 1});
+        let query = await user.findOne({_id: userID},{"matchMaking.config": 1, "matchMaking.status": 1}).lean();
         let userInfo = query.toJSON();
 
         //setup match-making config for searching based on user preferrence
         let gender = (userInfo.matchMakingConfig.gender == 'both') ? (
-            [{"userInfo.gender": 'female'}, {"userInfo.gender": 'male'}]
+            [{"info.gender": 'female'}, {"info.gender": 'male'}]
         ) : (
-            [{"userInfo.gender": userInfo.matchMakingConfig.gender}]
+            [{"info.gender": userInfo.matchMakingConfig.gender}]
         )
         
         //all user which are liked, noped, matched, blocked, self

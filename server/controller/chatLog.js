@@ -37,19 +37,10 @@ const sendChat = async(roomID, senderID, message) => {
     }
 }
 
-const changeChatRoomName = async (chatRoomID, newName) => {
-    try{
-        const chatRoom = await chatLog.updateOne({_id: chatRoomID}, {name: newName}, {new:true, fields:{name: 1}});
-        return chatRoom;
-    }catch(err){
-        throw new Error(err);
-    }
-}
 
 module.exports = {
     getChatList,
     getChatByRoomID,
     sendChat,
     createChatRoom,
-    changeChatRoomName
 }

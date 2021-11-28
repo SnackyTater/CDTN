@@ -9,8 +9,12 @@ const dobCalculator = (dob) => {
     return diff.toISOString();
 }
 
-const generateCode = (maxValue) => {
-    return Math.floor(Math.random() * maxValue);
+const generateCode = (stringLength) => {
+    let code = ''
+    for(let index = 0; index <= stringLength; index++){
+        code += Math.floor(Math.random() * 9);
+    }
+    return code;
 }
 module.exports = {
     ageCalulator,

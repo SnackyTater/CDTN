@@ -1,8 +1,10 @@
-const passion = require('../model/passion');
+const passion = require('../models/passion');
+
+const passionList = require('../models/script/passions.json');
 
 const addPassion = async(passionName) => {
     try{
-        let res = await passion.create(passionName);
+        let res = await passion.create(passionList);
         return res;
     } catch(err) { 
         console.log(err)

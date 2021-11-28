@@ -8,5 +8,5 @@ const Passion = new Schema({
     }
 })
 
-const passion = mongoose.model('passions', Passion);
+const passion = mongoose.model('passion', Passion);
 module.exports = passion;
