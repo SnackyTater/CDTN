@@ -23,7 +23,7 @@ const getUser = async(id) => {
                 {"_id": id},
                 {"account": id}
             ]
-        },{"_id": 0, "matchMaking.status": 0})
+        },{"_id": 0})
         .lean();
     
     if(!userInfo) throw new Error ('no user was found with given id');
@@ -52,8 +52,8 @@ const addNotification = async(id, notification) => {
                 {"account": id}
             ]
         },{
-            $push: {"notification": {content: notification}
-        }})
+            $push: {"notification": {"content": notification}}
+        })
         .lean();
     
     return userNotification;
@@ -86,8 +86,7 @@ const createUser = async (accountID, userInfo) => {
     return userQuery;
 }
 
-const updateUser = async(id, userInfo) => {
-    console.log(id, userInfo)
+const updateUserInfo = async(id, userInfo) => {
     const userQuery = await
         user.updateOne({
             $or: [
@@ -98,6 +97,20 @@ const updateUser = async(id, userInfo) => {
             info: userInfo,
         }, {new: true})
         .lean();
+    
+    return userQuery;
+}
+
+const updateUser = async(id, userInfo) => {
+    const userQuery = await
+        user.updateOne({
+            $or: [
+                {"_id": id},
+                {"account": id}
+            ]
+        }, {
+            userInfo,
+        }, {new: true})
     
     return userQuery;
 }
@@ -118,11 +131,12 @@ const deleteUser = async(id) => {
 
 module.exports = {
     getUser,
+    getUserInfo,
     getNotification,
     addNotification,
     deleteNotification,
     createUser,
-    getUserInfo,
     updateUser,
+    updateUserInfo,
     deleteUser,
 }

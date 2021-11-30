@@ -1,156 +1,209 @@
-const mongoose = require('mongoose');
-const user = require('../model/user');
-const { dobCalculator } = require('../../utils/utils')
-const { createChatRoom } = require('../controller/chatLog');
+const user = require('../models/user');
+const { dobCalculator } = require('../scripts/utils');
+
+const addUserMatchMakingStatus = async(userID, targetID, type) => {
+    return await user.updateOne({
+        $or: [
+            {"_id": userID},
+            {"account": userID}
+        ]
+    }, {
+        $push: {
+            "matchMaking.status": {
+                "id": targetID,
+                "type": type
+            }
+        }
+    })
+}
+
+const removeUserMatchMakingStatus = async(userID, targetID, type) => {
+    return await user.updateOne({
+        $or: [
+            {"_id": userID},
+            {"account": userID}
+        ]
+
+    }, {
+        $pull: {
+            "matchMaking.status": {
+                "id": targetID,
+                "type": type
+            }
+        }
+    })
+}
+
+const updateUserMatchMakingStatus = async(userID, targetID, type) => {
+    return await user.updateOne({
+        $or: [
+            {"_id": userID},
+            {"account": userID},
+        ],
+        "matchMaking.status.id": targetID
+    },{
+        $set: {
+            "matchMaking.status.$.type": type
+        }
+    })
+}
 
 const toggleLikeUser = async(userID, targetID) => {
-    try {
-        const userInfo = await user.findOne({"account": userID});
-        const targetInfo = await user.findOne({"_id": targetID});
+    //userID in receive parameter is actually user's account id
+    const { matchMaking: {status: userLikes}, _id } = await user.findOne({
+        $or: [
+            {"account": userID}, 
+            {"_id": userID}
+        ]
+    });
+    
+    const { matchMaking: {status: targetLikes}, info: {fullName: targetFullName}, info: targetInfo} = await user.findOne({
+        $or: [
+            {"account": targetID}, 
+            {"_id": targetID}
+        ]
+    });
+    
+    if(userLikes && targetLikes){
+        userID = _id.toString();
 
-        if(userInfo && targetInfo){
-            let message = '';
+        const targetIndex = userLikes.findIndex((user) => user.id == targetID && user.type == 'like');
+        const userIndex = targetLikes.findIndex((user) => user.id == userID && user.type == 'like');
 
-            let userLikes = [];
-            let targetLikes = [];
+        //match with target
+        if(userIndex != -1){
+            const targetStatus = await updateUserMatchMakingStatus(targetID, userID, 'match');
+            const userStatus = await addUserMatchMakingStatus(userID, targetID, 'match');
 
-            let userIndex = -1;
-            let targetIndex = -1;
-
-            [userInfo.matchMaking.status].forEach((user, index) => {
-                if(user.id == targetID) targetIndex = index; 
-                if(user.type === 'like') userLikes.push(user.id.toString());
-            })
-
-            [targetInfo.matchMaking.status].forEach((user, index) => {
-                if(user.id == targetID) userIndex = index; 
-                if(user.type === 'like') targetLikes.push(user.id.toString());
-            })
-            // //get list of user who user, target like
-            // const userLikes = userMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
-            // const targetLikes = targetMatchMakingSatus.filter((user) => user.type === 'like').map((user) => user.id.toString());
-
-            // //contain targetID index (-1 mean not exist, else)
-            // let targetIndex = userLikes.indexOf(targetID)  //check if targetID is in user's like list
-            // let userIndex = targetLikes.indexOf(userID)    //check if userID is in target's like list
-
-            // target like user but user haven't like target
-            if(userIndex != -1){
-                targetMatchMakingSatus.splice(userIndex, 1);
-                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'match'});
-                targetMatchMakingSatus.push({id: mongoose.Types.ObjectId(userID), type: 'match'});
-
-                //create chat room for match people
-                createChatRoom(userID, targetID);
-
-                message = `match with ${targetName}`;
-            }
-            //user have liked target
-            if(targetIndex != -1 && userIndex == -1){
-                userMatchMakingSatus.splice(targetIndex, 1);
-                message = `unlike ${targetName} successfully`;
-            }
-            //user haven't liked target
-            if(targetIndex === -1 && userIndex == -1){
-                userMatchMakingSatus.push({id: mongoose.Types.ObjectId(targetID), type: 'like'});
-                message = `like ${targetName} successfully`;
-            }
-
-            await user.updateOne({_id: userID}, {matchMakingStatus: userMatchMakingSatus});
-            await user.updateOne({_id: targetID}, {matchMakingStatus: targetMatchMakingSatus});
-
-            return message;
-
-        } else {
-            throw new Error("no user was found with given ID")
+            if(userStatus.modifiedCount && targetStatus.modifiedCount){
+                return {
+                    status: {userStatus, targetStatus},
+                    info: targetInfo,
+                    message: `match with ${targetFullName}`
+                }
+            }  
         }
-    } catch(err) {
-        throw (err.message)
+        //like target
+        if(targetIndex == -1){
+            const status = await addUserMatchMakingStatus(userID, targetID, 'like');
+            console.log('b')
+            if(status.modifiedCount && status.matchedCount)
+                return {
+                    status: status,
+                    info: {},
+                    message: `like ${targetFullName} sucessfully`
+                }
+        }
+        //unlike target
+        if(targetIndex != -1){
+            const status = await removeUserMatchMakingStatus(userID, targetID, 'like');
+            
+            if(status.modifiedCount && status.matchedCount)
+                return {
+                    status: status,
+                    info: {},
+                    message: `unlike ${targetFullName} sucessfully`
+                }
+        }
+
+        return new Error('something gone wrong');
     }
+    return new Error('no user was found with given ID')
 }
 
 //same shit like toggle like (u too block)
 const toggleNopeUser = async(userID, targetID) => {
-    try {
-        let userInfo = await user.findOne({_id: userID})
-        
-        if(userInfo != null){
-            //contain id of which has been liked by the user 
-            let userNopes = userInfo.matchMakingStatus.likes 
+    const { matchMaking: {status: userNopes} } = await user.findOne({
+        $or: [
+            {"account": userID}, 
+            {"_id": userID}
+        ]
+    });
 
-            //contain targetID index (-1 mean not exist, else)
-            let targetIndex = userNopes.indexOf(mongoose.Types.ObjectId(targetID))
+    if(userNopes){
+        const targetIndex = userNopes.findIndex((user) => user.id == targetID && user.type == 'nope');
 
-            if(targetIndex != -1){
-                let query = await user.updateOne({_id: userID}, {$pop: {"matchMakingStatus.nopes": targetIndex-1}})
-                return {status: query, message: `un-nope ${targetID} successfully`};
-            } else {
-                let query = await user.updateOne({_id: userID}, {$push:{ "matchMakingStatus.nopes": targetID }});
-                return {status: query, message: `nope ${targetID} successfully`};
+        //nope target
+        if(targetIndex == -1){
+            const status = await addUserMatchMakingStatus(userID, targetID, 'nope');
+            if(status.modifiedCount && status.matchedCount){
+                return {message: `nope user sucessfully`}
+            } 
+        }
+        //un-nope target
+        if(targetIndex != -1){
+            const status = await removeUserMatchMakingStatus(userID, targetID, 'nope');
+            
+            if(status.modifiedCount && status.matchedCount){
+                return {message: `un-nope user sucessfully`}
             }
-        } else {
-            throw new Error("no user was found with given ID")
         }
-    } catch(err) {
-        throw (err.message)
-    }
-}
 
-const toggleBlockUser = async(userID, targetID) => {
-    try {
-        let status = await user.updateOne({_id: userID}, {$push:{ "userInfo.block": targetID }});
-        if(status != null){
-            return {status: status, message: `block ${targetID} successfully`};
-        } else {
-            throw new Error("there's something wrong");
-        }
-    } catch(err) {
-        throw (err.message)
+        return new Error('something gone wrong');
     }
+    return new Error('no user was found with given ID')
 }
 
 const recommend = async(userID) => {
     try{
         //get user match making info
-        let query = await user.findOne({_id: userID},{"matchMaking.config": 1, "matchMaking.status": 1}).lean();
-        let userInfo = query.toJSON();
+        let {matchMaking, _id} = await 
+            user.findOne({
+                $or: [
+                    {"_id": userID},
+                    {"account": userID}
+                ]
+            },{
+                "matchMaking": 1, 
+                "_id": 1,
+            })
+            .lean();
 
-        //setup match-making config for searching based on user preferrence
-        let gender = (userInfo.matchMakingConfig.gender == 'both') ? (
-            [{"info.gender": 'female'}, {"info.gender": 'male'}]
-        ) : (
-            [{"info.gender": userInfo.matchMakingConfig.gender}]
-        )
-        
-        //all user which are liked, noped, matched, blocked, self
-        let nin = userInfo.matchMakingStatus.map((user) => user.id);
-        nin.push(userInfo._id)
-        
-        let ageFrom = dobCalculator(userInfo.matchMakingConfig.age.from);
-        let ageTo = dobCalculator(userInfo.matchMakingConfig.age.to);
-        
-        let longtitude = userInfo.matchMakingConfig.location.coordinates[0];
-        let latitude = userInfo.matchMakingConfig.location.coordinates[1];
-        let maxDistance = userInfo.matchMakingConfig.zoneLimit.diameter;
+        const exclude = matchMaking.status.map((item) => {
+            return item.id.toString();
+        });
+
+        const gender = (matchMaking.config.gender === 'both') ? ([
+            {"info.gender": 'female'}, 
+            {"info.gender": 'male'}, 
+            {"info.gender": 'unknown'}
+        ]) : ([
+            {"info.gender": matchMaking.config.gender}
+        ]);
+
+        const DOBFrom = dobCalculator(matchMaking.config.age.from);
+        const DOBTo = dobCalculator(matchMaking.config.age.to);
+
+        const longtitude = matchMaking.config.location.coordinates[0];
+        const latitude = matchMaking.config.location.coordinates[1];
+        const maxDistance = matchMaking.config.zoneLimit.diameter;
+
 
         //query
-        let recs = await user.find({
-                //"accountInfo.status": true,                           //find user which their account has been verified
-                $or: gender,                                            //find user based on gender male || female || both
-                "_id": {$nin: nin},                                     //find user except for user which contained in this list
-                "userInfo.DateOfBirth": {$lte: ageFrom, $gte: ageTo},   //find user born between age from & age to
-                "userInfo.relationship.status": "single",
-                // "matchMakingConfig.location": {                         //find user within diameter of coordinates
-                //     $nearSphere: {
-                //         $geometry: {
-                //            type : "Point",
-                //            coordinates : [longtitude, latitude]
-                //         },
-                //         $maxDistance: maxDistance
-                //      }
-                // }
-        },{'userInfo': 1});
-
+        let recs = await 
+            user.find({
+                $or: gender,
+                "_id": {
+                    $nin: exclude,
+                    $ne: _id,
+                },
+                "info.DateOfBirth": {
+                    $lte: DOBFrom,
+                    $gte: DOBTo
+                },
+                "info.relationship.status": "single",
+                "matchMaking.config.location": {
+                    $nearSphere: {
+                        $geometry: {
+                           type : "Point",
+                           coordinates : [longtitude, latitude]
+                        },
+                        $maxDistance: maxDistance
+                     }
+                }
+            },{'info': 1})
+            .limit(50);
+        console.log(recs)
         return recs;
     } catch(err) {
         console.log(err.message)
@@ -162,6 +215,5 @@ const recommend = async(userID) => {
 module.exports = {
     toggleLikeUser,
     toggleNopeUser,
-    toggleBlockUser,
     recommend,
 }

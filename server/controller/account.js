@@ -1,5 +1,5 @@
 const account = require('../models/account');
-const {createUser} = require('./user')
+const {createUser, deleteUser} = require('./user')
 
 const createAccount = async (accountInfo, userInfo) => {
     const accountQuery = await account.create(accountInfo);
@@ -46,13 +46,14 @@ const findAccount = async(identityVerification) => {
 }
 
 const updateAccount = async(id, newAccountInfo) => {
-        const query = await account.findByIdAndUpdate(id, {$set: {accountInfo: newAccountInfo}}, {new: true, fields:{"accountInfo": 1}});
+        const query = await account.updateOne(id, newAccountInfo);
         if(query) return query;
         throw TypeError('no account was found with given ID');
 }
 
 const deleteAccount = async (accountID) => {
     const query = await account.deleteOne({_id: accountID});
+    await deleteUser(accountID);
     if(query != null) return {message: `delete account ${accountID} successfully`}
     throw TypeError('no account was found with given ID');
 }

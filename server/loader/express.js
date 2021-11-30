@@ -5,7 +5,7 @@ const accountAPI = require('../api/account');
 const mediaAPI = require('../api/media');
 const userAPI = require('../api/user');
 const passionAPI = require('../api/passion');
-// const matchMakingAPI = require('../api/matchMaking');
+const matchMakingAPI = require('../api/matchMaking');
 // const chatAPI = require('../api/chat');
 
 module.exports = () => {
@@ -20,7 +20,7 @@ module.exports = () => {
     app.use('/media', mediaAPI);
     app.use('/user', userAPI);
     app.use('/passion', passionAPI);
-    // app.use('/matchMaking', matchMakingAPI);
+    app.use('/matchMaking', matchMakingAPI);
     // app.use('/chat', chatAPI);
 
     //use front-end build

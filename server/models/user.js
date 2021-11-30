@@ -124,6 +124,6 @@ const userSchema = new Schema({
     }
 })
 
-userSchema.index({"matchMakingConfig.location": '2dsphere'})
+userSchema.index({"matchMaking.config.location": '2dsphere'})
 const user = mongoose.model('user', userSchema);
 module.exports = user;

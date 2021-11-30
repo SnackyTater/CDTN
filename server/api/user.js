@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 
 const {authenticateToken} = require('../authorization/auth');
-const {getUserInfo, getNotification, deleteNotification, updateUser} = require('../controller/user');
+const {getUserInfo, getNotification, deleteNotification, updateUserInfo} = require('../controller/user');
 
 router.get('/', authenticateToken, async(req, res) => {
     try{
@@ -34,7 +33,7 @@ router.put('/notification', authenticateToken, async(req, res) => {
 
 router.put('/', authenticateToken, async(req, res) => {
     try{
-        let query = await updateUser(req.tokenInfo._id, req.body);
+        let query = await updateUserInfo(req.tokenInfo._id, req.body);
         res.status(200).json(query);
     }catch(err){
         res.status(400).send(err);
