@@ -1,14 +1,14 @@
-    const { Router } = require('express');
+const { Router } = require('express');
 const router = Router();
 
-const {getAccountInfo, updateAccount, createAccount, login} = require('../controller/account');
+const {updateAccount, createAccount, login, getAccountInfo, resetPassword} = require('../controller/account');
+const {getRequest, createRequest, deleteRequest} = require('../controller/resetRequest');
 const {createToken, authenticateToken} = require('../authorization/auth');
 const {sendEmail} = require('../services/nodemailer')
 
 router.get('/', authenticateToken, async(req, res) => {
     try{
-        const {_id} = req.tokenInfo;
-        const accountInfo = await getAccountInfo(_id);
+        const accountInfo = await getAccountInfo(req.tokenInfo.AID);
         
         res.status(200).json(accountInfo);
     } catch(err) {
@@ -19,8 +19,8 @@ router.get('/', authenticateToken, async(req, res) => {
 router.post('/', async(req, res) => {
     try{
         const {accountInfo, userInfo} = req.body;
-        const {_id} = await createAccount(accountInfo, userInfo);
-        const token = await createToken(_id);
+        const {userID, accountID} = await createAccount(accountInfo, userInfo);
+        const token = await createToken(userID, accountID);
 
         res.status(200).json({access_token: token});
     } catch (err) {
@@ -30,8 +30,7 @@ router.post('/', async(req, res) => {
 
 router.put('/', authenticateToken, async(req, res) => {
     try{
-        const {_id} = req.tokenInfo;
-        await updateAccount(_id, req.body);
+        await updateAccount(req.tokenInfo.AID, req.body);
 
         res.status(200).send('account updated successfully')
     } catch(err) {
@@ -41,8 +40,7 @@ router.put('/', authenticateToken, async(req, res) => {
 
 router.delete('/', authenticateToken, async(req, res) => {
     try{
-        const {_id} = req.tokenInfo;
-        await updateAccount(_id);
+        await updateAccount(req.tokenInfo.AID);
 
         res.status(200).send('account deleted successfully')
     } catch(err) {
@@ -53,8 +51,8 @@ router.delete('/', authenticateToken, async(req, res) => {
 router.post('/login', async (req, res) => {
     try{
         const {identityVerification, password} = req.body;
-        const userID = await login(identityVerification, password);
-        const token = await createToken(userID);
+        const {accountID, userID} = await login(identityVerification, password);
+        const token = await createToken(accountID, userID);
 
         res.status(200).json({access_token: token});
     } catch (err) {
@@ -62,13 +60,17 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/emailVerificate', async(req, res) => {
+router.post('/email-verificate', async(req, res) => {
     try{
         const {email} = req.body;
         if(email){
             const checkAccountExist = await findAccount(email);
             if(!checkAccountExist){
-                const nodeMailerRes = await sendEmail(mailOptions(email, code));
+                const nodeMailerRes = await sendEmail({
+                    email, 
+                    option: {type: 'verificate'}
+                });
+
                 if(nodeMailerRes) res.status(200).json({code});
             } else {
                 res.status(406).send('this email has been used for another account');
@@ -77,6 +79,35 @@ router.post('/emailVerificate', async(req, res) => {
         res.status(204).send('please enter email');
     }catch(err){
         res.status(400).send(err.message)
+    }
+})
+
+router.post('/reset-password', async(req, res) => {
+    try{
+        const {email} = req.body;
+        const {_id: requestID} = await createRequest(email);
+
+        const result = await sendEmail({
+            email: email,
+            option: {
+                type: 'reset-password',
+                requestID: requestID
+            }
+        });
+
+        res.status(200).json(result);
+    } catch(err) {
+        res.status(400).send(err.message);
+    }
+})
+
+router.post('/reset-password/:id', async(req, res) => {
+    try{
+        const requestID = req.params.id
+        const status = await resetPassword(requestID, req.body.password);
+        res.status(200).json(status);
+    } catch(err) {
+        res.status(400).send(err.message);
     }
 })
 

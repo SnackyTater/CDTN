@@ -86,7 +86,7 @@ const toggleLikeUser = async(userID, targetID) => {
         //like target
         if(targetIndex == -1){
             const status = await addUserMatchMakingStatus(userID, targetID, 'like');
-            console.log('b')
+
             if(status.modifiedCount && status.matchedCount)
                 return {
                     status: status,

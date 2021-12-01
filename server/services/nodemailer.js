@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const mailOptions = (sendTo) => {
+const mailVerificate = (sendTo) => {
     return {
         from: 'Cosmitto Dating App',
         to: sendTo,
@@ -18,13 +18,27 @@ const mailOptions = (sendTo) => {
     }
 };
 
-const sendEmail = async (sendTo) => {
-    const res = await transporter.sendMail(mailOptions(sendTo));
-    return res;
+const mailResetPassword = (sendTo, id) => {
+    return {
+        from: 'Cosmitto Dating App',
+        to: sendTo,
+        subject: 'Reset Password',
+        text: `click this link bellow to reset password ${process.env.HOST + '/' + process.env.PORT + '/' + id}`,
+    }
+}
+
+const sendEmail = async ({email, option}) => {
+    try{
+        const mailOptions = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
+        const res = await transporter.sendMail(mailOptions);
+        return res;
+    } catch(err) {
+        console.log(err);
+        return new Error(err.message)
+    }
 };
 
 module.exports = {
     sendEmail,
-    mailOptions,
 }
 

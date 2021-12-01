@@ -15,13 +15,15 @@ const authenticateToken = (req, res, next) => {
     }     
 }
 
-const createToken = async (id) => {
+const createToken = async (userID, accountID, payload) => {
     try{
         const data = {
-            _id: id,
+            AID: accountID,
+            UID: userID,
             iat: Date.now(),
             exp: Date.now() + (24*60*60*1000)
         }
+        console.log(data);
         return await jwt.sign(data, process.env.ACCESS_TOKEN);
     } catch (err){
         return err;

@@ -23,6 +23,14 @@ router.post('/like', authenticateToken, async(req, res) => {
     }
 })
 
+router.post('/unmatch', authenticateToken, async(req, res) => {
+    try{
+        let status = await unmatch();
+    } catch(err) {
+        res.status(400).send(err.message);
+    }
+})
+
 //nope
 router.post('/nope', authenticateToken, async(req, res) => {
     try{
