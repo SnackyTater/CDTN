@@ -8,14 +8,14 @@ const authenticateToken = (req, res, next) => {
     } else {
         jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
             if(err)
-                return res.sendStatus(403)
+                return res.sendStatus(403).send(err.message);
             req.tokenInfo = data
             next();
         })
     }     
 }
 
-const createToken = async (userID, accountID, payload) => {
+const createToken = async ({userID, accountID}) => {
     try{
         const data = {
             AID: accountID,
@@ -30,7 +30,13 @@ const createToken = async (userID, accountID, payload) => {
     }
 }
 
+const verifyToken = async(token) => {
+    const tokenInfo = await jwt.verify(token, process.env.ACCESS_TOKEN);
+    return tokenInfo;
+}
+
 module.exports = {
     authenticateToken,
     createToken,
+    verifyToken
 }
