@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {updateAccount, createAccount, login, getAccountInfo, resetPassword} = require('../controller/account');
+const {updateAccount, createAccount, login, getAccountInfo, resetPassword, deleteAccount} = require('../controller/account');
 const {getRequest, createRequest, deleteRequest} = require('../controller/resetRequest');
 const {createToken, authenticateToken} = require('../authorization/auth');
 const {sendEmail} = require('../services/nodemailer')
@@ -20,7 +20,7 @@ router.post('/', async(req, res) => {
     try{
         const {accountInfo, userInfo} = req.body;
         const {userID, accountID} = await createAccount(accountInfo, userInfo);
-        const token = await createToken(userID, accountID);
+        const token = await createToken({userID, accountID});
 
         res.status(200).json({access_token: token});
     } catch (err) {
@@ -30,9 +30,9 @@ router.post('/', async(req, res) => {
 
 router.put('/', authenticateToken, async(req, res) => {
     try{
-        await updateAccount(req.tokenInfo.AID, req.body);
+        const result = await updateAccount(req.tokenInfo.AID, req.body);
 
-        res.status(200).send('account updated successfully')
+        res.status(200).send(result);
     } catch(err) {
         res.status(400).send(err.message);
     }
@@ -40,9 +40,9 @@ router.put('/', authenticateToken, async(req, res) => {
 
 router.delete('/', authenticateToken, async(req, res) => {
     try{
-        await updateAccount(req.tokenInfo.AID);
+        const result = await deleteAccount(req.tokenInfo.AID);
 
-        res.status(200).send('account deleted successfully')
+        res.status(200).send(result)
     } catch(err) {
         res.status(400).send(err.message);
     }
@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     try{
         const {identityVerification, password} = req.body;
         const {accountID, userID} = await login(identityVerification, password);
-        const token = await createToken(accountID, userID);
+        const token = await createToken({accountID, userID});
 
         res.status(200).json({access_token: token});
     } catch (err) {
@@ -103,8 +103,12 @@ router.post('/reset-password', async(req, res) => {
 
 router.post('/reset-password/:id', async(req, res) => {
     try{
-        const requestID = req.params.id
-        const status = await resetPassword(requestID, req.body.password);
+        const requestID = req.params.id;
+        const newPassword = req.body;
+
+        const request = await getRequest(requestID);
+        await deleteRequest(requestID);
+        const status = await updateAccount(request.id, newPassword);
         res.status(200).json(status);
     } catch(err) {
         res.status(400).send(err.message);

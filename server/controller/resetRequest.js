@@ -2,19 +2,20 @@ const request = require('../models/request');
 const {getAccount} = require('./account');
 
 const createRequest = async(userVerificate) => {
+    console.log(userVerificate)
     const accountInfo = await getAccount(userVerificate);
-
+    console.log(accountInfo);
     if(accountInfo){
         const requestInfo = request.create({"id": accountInfo._id});
         return requestInfo;
     }
-    return new Error('no account was found with given info')
+    throw new Error('no account was found with given info')
 }
 
 const getRequest = async(requestID) => {
     const requestInfo = await request.findOne({"_id": requestID});
     if(requestInfo) return requestInfo;
-    return new Error('no request was found');
+    throw new Error('no request was found');
 }
 
 const deleteRequest = async(requestID) => {

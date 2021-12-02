@@ -23,7 +23,7 @@ const mailResetPassword = (sendTo, id) => {
         from: 'Cosmitto Dating App',
         to: sendTo,
         subject: 'Reset Password',
-        text: `click this link bellow to reset password ${process.env.HOST + '/' + process.env.PORT + '/' + id}`,
+        text: `click this link bellow to reset password http://${process.env.HOST + '/' + id}`,
     }
 }
 

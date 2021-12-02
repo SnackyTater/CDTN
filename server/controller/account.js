@@ -1,6 +1,5 @@
 const account = require('../models/account');
 const {createUser, deleteUser, getUser} = require('./user');
-const {getRequest, deleteRequest} = require('./resetRequest');
 
 const createAccount = async (accountInfo, userInfo) => {
     const {_id: accountID} = await account.create(accountInfo);
@@ -17,21 +16,20 @@ const getAccountInfo = async(accountID) => {
 }
 
 const getAccount = async(accountIdentityVerification) => {
-    const accountInfo = await account.findOne({
+    return await account.findOne({
         $or:[
             {username: accountIdentityVerification}, 
             {mobile: accountIdentityVerification}, 
             {email: accountIdentityVerification}
         ]
     });
-
-    return accountInfo;
 }
 
-const updateAccount = async(id, accountInfo) => {
-        const query = await account.updateOne({"_id": id}, accountInfo);
-        if(query) return query;
-        throw TypeError('no account was found with given ID');
+const updateAccount = async(id, updateInfo) => {
+    console.log(id, updateInfo)
+    const query = await account.updateOne({"_id": id}, updateInfo);
+    if(query) return query;
+    throw TypeError('no account was found with given ID');
 }
 
 const deleteAccount = async (accountID) => {
@@ -63,28 +61,6 @@ const login = async (accountIdentityVerification, password) => {
     }
 }
 
-const resetPassword = async(requestID, password) => {
-    const requestInfo = await getRequest(requestID);
-    
-    if(!requestInfo)
-        return new Error('no request was found with given ID');
-    // console.log('pass 0.5')
-    // console.log(Date.now())
-    // console.log(Date.parse(requestInfo.expire) > Date.now())
-    // if(Date.parse(requestInfo.expire) > Date.now())
-    //     return new Error('request was expire');
-
-    await deleteRequest(requestID);
-
-    const result = await account.updateOne({
-        "_id": requestInfo.id
-    },{
-        "password": password
-    })
-
-    return result;
-}
-
 module.exports = {
     createAccount,
     getAccountInfo,
@@ -92,5 +68,4 @@ module.exports = {
     updateAccount,
     deleteAccount,
     login,
-    resetPassword,
 }

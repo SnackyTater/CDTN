@@ -1,4 +1,4 @@
-const chatLog = require('../model/chatlog');
+const chatLog = require('../models/chatlog');
 
 const getChatList = async (userID) => {
     try{
