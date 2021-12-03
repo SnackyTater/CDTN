@@ -52,6 +52,7 @@ router.post('/login', async (req, res) => {
     try{
         const {identityVerification, password} = req.body;
         const {accountID, userID} = await login(identityVerification, password);
+        console.log(accountID, userID)
         const token = await createToken({accountID, userID});
 
         res.status(200).json({access_token: token});

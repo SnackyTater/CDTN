@@ -7,10 +7,12 @@ const passionAPI = require('../api/passion');
 const matchMakingAPI = require('../api/matchMaking');
 // const chatAPI = require('../api/chat');
 
-module.exports = (app) => {
+module.exports = (express) => {
+    const app = express();
+
     app.use(cors());
-    // app.use(express.json());    //parsing raw json
-    // app.use(express.urlencoded({ extended: true })); //parsing application/x-www-form-urlencoded
+    app.use(express.json());    //parsing raw json
+    app.use(express.urlencoded({ extended: true })); //parsing application/x-www-form-urlencoded
 
     //use route
     app.use('/account', accountAPI);

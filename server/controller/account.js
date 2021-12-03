@@ -52,12 +52,13 @@ const login = async (accountIdentityVerification, password) => {
 
     const {_id: userID} = await getUser(accountID, {"_id": 1});
 
+    console.log('in account controller',accountID, userID)
     //if find atleast 1 account                                   
     if(accountInfo != null){
         if(accountPassword == password) return {accountID, userID};
-        return new Error('wrong password');
+        throw new Error('wrong password');
     } else {
-        return new Error('wrong accountname');
+        throw new Error('wrong accountname');
     }
 }
 
