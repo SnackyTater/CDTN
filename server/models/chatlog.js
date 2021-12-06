@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const chatLog = new Schema({
+const chatSchema = new Schema({
     name: {
         type: String,
         default: '',
@@ -11,7 +11,10 @@ const chatLog = new Schema({
             ref: 'user',
     }],
     log: [{
-        from: { type: mongoose.Types.ObjectId },
+        from: { 
+            type: mongoose.Types.ObjectId,
+            ref: 'user',
+        },
         time: {
             type: Date,
             default: Date.now
@@ -20,5 +23,5 @@ const chatLog = new Schema({
     }]
 })
 
-const ChatLog = mongoose.model('chatLogs', chatLog);
-module.exports = ChatLog;
+const chat = mongoose.model('chat', chatSchema);
+module.exports = chat;

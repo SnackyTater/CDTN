@@ -28,6 +28,14 @@ const createChatRoom = async(userID1, userID2) => {
     }
 }
 
+const deleteChatRoom = async(userID1, userID2) => {
+    return await chatLog.deleteOne({
+        "participant": {
+            $in: [userID1, userID2]
+        }
+    })
+}
+
 const sendChat = async(roomID, senderID, message) => {
     try{
         const chatRoom = await chatLog.updateOne({_id: roomID}, {$push: {log: {from: senderID, message}}}, {new: true, fields:{log: 1}});

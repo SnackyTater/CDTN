@@ -30,9 +30,11 @@ const createToken = async ({userID, accountID}) => {
     }
 }
 
-const verifyToken = async(token) => {
-    const tokenInfo = await jwt.verify(token, process.env.ACCESS_TOKEN);
-    return tokenInfo;
+const verifyToken = (token) => {
+    return jwt.verify(token, process.env.ACCESS_TOKEN, (err, tokenInfo) => {
+        if(err) throw new Error('fail to authenthicate token');
+        return tokenInfo;
+    });
 }
 
 module.exports = {

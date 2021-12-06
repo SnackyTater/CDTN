@@ -2,16 +2,29 @@ const {sendChat} = require('../controller/chat');
 const {verifyToken} = require('../authorization/auth');
 
 module.exports = (io) => {
-    io.on('connection', (socket) => {
-        socket.on("sendMessage", async(payload) => {
-            const {token, room, message} = payload;
-            // io.room(room).emit(message);
-            // const messageStatus = await sendChat();
-            // if(messageStatus.modifiedCount)
-            //     io.room(room).emit(Error("message can't be sent"));
-            // else
-            //     io.room(room).emit(message)
+    io
+    .use(async(socket, next) => {
+        if(socket.handshake.query && socket.handshake.query.token){
+            try{
+                const tokenInfo = await verifyToken(socket.handshake.query.token);
+                socket.tokenInfo = tokenInfo;
+                next();
+            } catch(err) {
+                next(err);
+            }
+        } else {
+            next(new Error('no token'));
+        }
+    })
+    .on('connection', (socket) => {
+        console.log('user connect to socket');
+
+        socket.on('message', (payload) => {
+            console.log(payload);
+            socket.emit('message', {
+                message: payload,
+                from: socket.tokenInfo.UID
+            });
         })
-        console.log('connect to socket');
-    });
+    })
 }

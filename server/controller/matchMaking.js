@@ -1,108 +1,114 @@
 const user = require('../models/user');
+const {createChatRoom, } = require('./chat');
 const { dobCalculator } = require('../scripts/utils');
 
-const addUserMatchMakingStatus = async(userID, targetID, type) => {
+const matchUser = async(userID, targetID) => {
+    const userStatus = await user.updateOne({
+        "_id": userID
+    }, {
+        "matchMaking.status": {
+            "id": targetID,
+            "type": 'match'
+        }
+    })
+    const targetStatus = await user.updateOne({
+        "_id": targetID
+    }, {
+        $set: {
+            "matchMaking.status": {
+                "id": userID,
+                "type": 'match'
+            }
+        }
+    })
+
+    const chatRoom = await createChatRoom(userID, targetID)
+
+    return {userStatus, targetStatus, chatRoom}
+}
+
+const likeUser = async(userID, targetID) => {
     return await user.updateOne({
-        $or: [
-            {"_id": userID},
-            {"account": userID}
-        ]
+        "_id": userID
     }, {
         $push: {
             "matchMaking.status": {
                 "id": targetID,
-                "type": type
+                "type": 'like'
             }
         }
     })
 }
 
-const removeUserMatchMakingStatus = async(userID, targetID, type) => {
+const unlikeUser = async(userID, targetID) => {
     return await user.updateOne({
-        $or: [
-            {"_id": userID},
-            {"account": userID}
-        ]
-
+        "_id": userID
     }, {
         $pull: {
             "matchMaking.status": {
                 "id": targetID,
-                "type": type
+                "type": 'like'
             }
-        }
-    })
-}
-
-const updateUserMatchMakingStatus = async(userID, targetID, type) => {
-    return await user.updateOne({
-        $or: [
-            {"_id": userID},
-            {"account": userID},
-        ],
-        "matchMaking.status.id": targetID
-    },{
-        $set: {
-            "matchMaking.status.$.type": type
         }
     })
 }
 
 const toggleLikeUser = async(userID, targetID) => {
     //userID in receive parameter is actually user's account id
-    const { matchMaking: {status: userLikes}, _id } = await user.findOne({
-        $or: [
-            {"account": userID}, 
-            {"_id": userID}
-        ]
-    });
+    const userInfo = await user.findOne({"_id": userID});
     
-    const { matchMaking: {status: targetLikes}, info: {fullName: targetFullName}, info: targetInfo} = await user.findOne({
-        $or: [
-            {"account": targetID}, 
-            {"_id": targetID}
-        ]
-    });
+    const targetInfo = await user.findOne({"_id": targetID});
     
-    if(userLikes && targetLikes){
-        userID = _id.toString();
+    if(userInfo && targetInfo){
+        const userMatchMakingStatus = userInfo.matchMaking.status;
+        const targetMatchMakingStatus = targetInfo.matchMaking.status;
 
-        const targetIndex = userLikes.findIndex((user) => user.id == targetID && user.type == 'like');
-        const userIndex = targetLikes.findIndex((user) => user.id == userID && user.type == 'like');
+        const targetIndex = userMatchMakingStatus.findIndex((user) => user.id == targetID && user.type == 'like');
+        const userIndex = targetMatchMakingStatus.findIndex((user) => user.id == userID && user.type == 'like');
+        const userIsMatch = userMatchMakingStatus.findIndex((user) => user.id == targetID && user.type == 'match');
 
         //match with target
+        if(userIsMatch != -1){
+            return {
+                status: {},
+                info: {},
+                message: `already match with ${targetInfo.info.fullName}`
+            }
+        }
         if(userIndex != -1){
-            const targetStatus = await updateUserMatchMakingStatus(targetID, userID, 'match');
-            const userStatus = await addUserMatchMakingStatus(userID, targetID, 'match');
+            const {userStatus, targetStatus, chatRoom} = await matchUser(userID, targetID)
 
             if(userStatus.modifiedCount && targetStatus.modifiedCount){
                 return {
                     status: {userStatus, targetStatus},
-                    info: targetInfo,
-                    message: `match with ${targetFullName}`
+                    info: {
+                        user: targetInfo,
+                        chat: chatRoom
+                    },
+                    message: `match with ${targetInfo.info.fullName}`
                 }
             }  
         }
         //like target
         if(targetIndex == -1){
-            const status = await addUserMatchMakingStatus(userID, targetID, 'like');
+            const status = await likeUser(userID, targetID);
 
             if(status.modifiedCount && status.matchedCount)
                 return {
                     status: status,
                     info: {},
-                    message: `like ${targetFullName} sucessfully`
+                    message: `like ${targetInfo.info.fullName} sucessfully`
                 }
         }
         //unlike target
         if(targetIndex != -1){
-            const status = await removeUserMatchMakingStatus(userID, targetID, 'like');
+            const status = await unlikeUser(userID, targetID);
             
             if(status.modifiedCount && status.matchedCount)
                 return {
                     status: status,
                     info: {},
-                    message: `unlike ${targetFullName} sucessfully`
+                    message: `unlike ${targetInfo.info.fullName} sucessfully`
                 }
         }
 
@@ -111,7 +117,29 @@ const toggleLikeUser = async(userID, targetID) => {
     return new Error('no user was found with given ID')
 }
 
-//same shit like toggle like (u too block)
+const nopeUser = async(userID, targetID) => {
+    return await user.updateOne({
+        "_id": userID
+    }, {
+        $push: {
+            "id": targetID,
+            "type": 'nope'
+        }
+    })
+}
+
+const unnopeUser = async(userID, targetID) => {
+    return await user.updateOne({
+        "_id": userID
+    }, {
+        $pull: {
+            "matchMaking.status": {
+                "id": targetID,
+                "type": 'nope'
+            }
+        }
+    })
+}
 const toggleNopeUser = async(userID, targetID) => {
     const { matchMaking: {status: userNopes} } = await user.findOne({
         $or: [
@@ -125,14 +153,14 @@ const toggleNopeUser = async(userID, targetID) => {
 
         //nope target
         if(targetIndex == -1){
-            const status = await addUserMatchMakingStatus(userID, targetID, 'nope');
+            const status = await nope(userID, targetID);
             if(status.modifiedCount && status.matchedCount){
                 return {message: `nope user sucessfully`}
             } 
         }
         //un-nope target
         if(targetIndex != -1){
-            const status = await removeUserMatchMakingStatus(userID, targetID, 'nope');
+            const status = await unnopeUser(userID, targetID);
             
             if(status.modifiedCount && status.matchedCount){
                 return {message: `un-nope user sucessfully`}
