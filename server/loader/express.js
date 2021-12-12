@@ -1,11 +1,12 @@
 const cors = require('cors');
+const path = require('path');
 
 const accountAPI = require('../api/account');
 const mediaAPI = require('../api/media');
 const userAPI = require('../api/user');
 const passionAPI = require('../api/passion');
 const matchMakingAPI = require('../api/matchMaking');
-// const chatAPI = require('../api/chat');
+const chatAPI = require('../api/chat');
 
 module.exports = (express) => {
     const app = express();
@@ -20,13 +21,13 @@ module.exports = (express) => {
     app.use('/user', userAPI);
     app.use('/passion', passionAPI);
     app.use('/matchMaking', matchMakingAPI);
-    // app.use('/chat', chatAPI);
+    app.use('/chat', chatAPI);
 
     //use front-end build
-    // app.use(express.static(path.resolve(__dirname, '..', 'client/build')));
-    // app.get('*', (req, res) => {
-    //     res.sendFile(path.resolve(__dirname, '..','client/build', 'index.html'));
-    // })
+    app.use(express.static(path.resolve(__dirname, '../../client/build')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../../client/build', 'index.html')); 
+    })
 
     return app;
 }

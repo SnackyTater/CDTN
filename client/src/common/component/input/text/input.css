@@ -1,0 +1,15 @@
+.input-text {
+    display: block;
+    width: 100%;
+    margin: 10px 0px;
+    padding: 10px 30px;
+    border-radius: 5px;
+    border: 0.3px solid rgba(0, 0, 0, 0.3);
+    margin-top: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.input-text:focus, .input-text:hover {
+    outline: none;
+    border: 0.3px solid rgba(0, 0, 0, 0.7);
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+}

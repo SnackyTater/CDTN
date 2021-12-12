@@ -1,17 +1,48 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import io from 'socket.io-client';
-const socket = io('localhost:5000');
-export default function Chat() {
 
-    useEffect(() => {
-        socket.on('connection', (data) => {
-            console.log('blin')
+export default function Chat() {
+    const [data, setData] = useState([])
+
+    const host = 'localhost:5000';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBSUQiOiI2MWEyZGQzMjM3NmJhNjJlNGZhNzE1NmIiLCJVSUQiOiI2MWEyZGQzMjM3NmJhNjJlNGZhNzE1NmQiLCJpYXQiOjE2Mzg1MTE3OTAxODAsImV4cCI6MTYzODU5ODE5MDE4MH0.pRjspRtA18EFsODebFw9PJIIlW8EFCQQin__BYBURA0'
+
+    const socket = useRef();
+
+    useEffect(async() => {
+        //componentDidMount
+        socket.current = await io.connect(host, {
+            query: `token=${token}`
         })
+
+        await socket.current.emit('join', 'a');
+
+        await socket.current.on('message', (message) => {
+            console.log(message)
+        })
+
+        // return () => {
+        //     socket.current.emit('something');
+        // }
+
     }, [])
+
+    const sendMessage = (e) => {
+        socket.current.emit('message', {room: 'a', message: 'sasdasd'});
+    }
 
     return (
         <div>
-            chat
+            <div>
+                aaaa
+            </div>
+            <div>
+                {data.map((message) => <div>{message}</div>)}
+            </div>
+            
+            <button onClick={() => {
+                sendMessage();
+            }}>press me</button>
         </div>
     )
 }

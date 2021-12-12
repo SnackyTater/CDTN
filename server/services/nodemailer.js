@@ -10,11 +10,15 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailVerificate = (sendTo) => {
+    const code = generateCode(5);
     return {
-        from: 'Cosmitto Dating App',
-        to: sendTo,
-        subject: 'Account Verification',
-        text: `your account verification code is ${generateCode(5)}`,
+        mail: {
+            from: 'Cosmitto Dating App',
+            to: sendTo,
+            subject: 'Account Verification',
+            text: `your account verification code is ${code}`,
+        },
+        code: code
     }
 };
 
@@ -29,9 +33,9 @@ const mailResetPassword = (sendTo, id) => {
 
 const sendEmail = async ({email, option}) => {
     try{
-        const mailOptions = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
-        const res = await transporter.sendMail(mailOptions);
-        return res;
+        const {mail, code} = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
+        const res = await transporter.sendMail(mail);
+        if(res) return code;
     } catch(err) {
         console.log(err);
         return new Error(err.message)

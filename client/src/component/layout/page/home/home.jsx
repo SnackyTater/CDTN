@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import { useState, useEffect} from 'react';
+import { useHistory } from 'react-router';
 
 import Card from '../../../common/card/card';
 
@@ -7,13 +8,18 @@ import './home.css';
 export default function Home() {
     const [message] = useState(undefined)
     const [image] = useState("https://images-ssl.gotinder.com/614c0042ce39c601005fa4fc/172x216_7edff9c9-42fc-4ec4-ba68-52cb0649362a.jpg");
-    const [show, setShowNoti] = useState("matches")
+
+    const [show, setShowNoti] = useState("matches");
+
+    const history = useHistory();
     
     return (
         <div className="home-container">
             <div className="side-bar">
                 <div className="home-nav">
-                    <a className="home-nav__profile">
+                    <a className="home-nav__profile" onClick={() => {
+                        history.push('/profile', {token: ''});
+                    }}>
                         <div className="home-nav__profile-avatar" style={{ "backgroundImage": `url(${image})`, "backgroundPosition": "50% 50%", "backgroundSize": "auto 125.581%"}}/>
                         <p style={{"fontSize": "20px", "color": "white"}}>My profile</p>
                     </a>

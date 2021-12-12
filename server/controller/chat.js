@@ -2,7 +2,14 @@ const chatLog = require('../models/chatlog');
 
 const getChatList = async (userID) => {
     try{
-        const list = await chatLog.find({participant: {$in: [userID]}});
+        const list = await chatLog.find({
+            "participant": {
+                $in: [userID]
+            }
+        }).populate({
+            "path": 'participant',
+            "select": 'info.fullName info.profileImage -_id'
+        }).lean();
         return list;
     } catch(err){
         throw new Error(err);
@@ -37,12 +44,21 @@ const deleteChatRoom = async(userID1, userID2) => {
 }
 
 const sendChat = async(roomID, senderID, message) => {
-    try{
-        const chatRoom = await chatLog.updateOne({_id: roomID}, {$push: {log: {from: senderID, message}}}, {new: true, fields:{log: 1}});
-        return chatRoom;
-    }catch(err){
-        throw new Error(err);
-    }
+        return await chatLog.updateOne({
+            "_id": roomID
+        }, {
+            $push: {
+                "log": {
+                    "from": senderID, 
+                    message
+                }
+            }
+        }, {
+            new: true, 
+            fields: {
+                log: 1
+            }
+        });
 }
 
 

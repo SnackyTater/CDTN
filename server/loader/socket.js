@@ -19,12 +19,21 @@ module.exports = (io) => {
     .on('connection', (socket) => {
         console.log('user connect to socket');
 
+        socket.on('join', (room) => {
+            console.log(`user has join room ${room}`)
+            socket.join(room)
+        })
+
         socket.on('message', (payload) => {
-            console.log(payload);
-            socket.emit('message', {
-                message: payload,
-                from: socket.tokenInfo.UID
+            const {room, message} = payload;
+            io.to(room).emit('message', {
+                from: socket.tokenInfo.UID,
+                message: message
             });
+        })
+
+        socket.on('disconnect', () => {
+            console.log('user has disconnect');
         })
     })
 }

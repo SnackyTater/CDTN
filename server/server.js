@@ -14,7 +14,11 @@ const expressConfig = expressLoader(express);
 const server = http.createServer(expressConfig);
 
 //setup socket
-const io = socketIO(server);
+const io = socketIO(server, {
+    cors: {
+        origin: '*'
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 

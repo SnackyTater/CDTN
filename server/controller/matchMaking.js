@@ -6,9 +6,11 @@ const matchUser = async(userID, targetID) => {
     const userStatus = await user.updateOne({
         "_id": userID
     }, {
-        "matchMaking.status": {
-            "id": targetID,
-            "type": 'match'
+        $push: {
+            "matchMaking.status": {
+                "id": targetID,
+                "type": 'match'
+            }
         }
     })
     const targetStatus = await user.updateOne({
@@ -25,6 +27,31 @@ const matchUser = async(userID, targetID) => {
     const chatRoom = await createChatRoom(userID, targetID)
 
     return {userStatus, targetStatus, chatRoom}
+}
+
+const unmatchUser = async(userID, targetID) => {
+    const userStatus = await user.updateOne({
+        "_id": userID
+    }, {
+        $pull: {
+            "matchMaking.status": {
+                "id": targetID,
+                "type": 'match'
+            }
+        }
+    })
+    const targetStatus = await user.updateOne({
+        "_id": targetID
+    }, {
+        $set: {
+            "matchMaking.status": {
+                "id": userID,
+                "type": 'like'
+            }
+        }
+    })
+
+    const chatRoom = await deleteChatRoom(userID, targetID)
 }
 
 const likeUser = async(userID, targetID) => {

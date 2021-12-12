@@ -2,10 +2,10 @@ const { Router } = require('express');
 const { authenticateToken } = require('../authorization/auth');
 const router = Router();
 
-const {getChatList, getChatByRoomID} = require('../db/controller/chatLog');
+const {getChatList, getChatByRoomID} = require('../controller/chat');
 
 router.get('/', authenticateToken, async (req, res) => {
-    const list = await getChatList(req.tokenInfo._id)
+    const list = await getChatList(req.tokenInfo.UID);
     res.status(200).json(list);
 })
 

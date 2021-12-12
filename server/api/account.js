@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {updateAccount, createAccount, login, getAccountInfo, resetPassword, deleteAccount} = require('../controller/account');
+const {updateAccount, createAccount, login, getAccountInfo, resetPassword, deleteAccount, getAccount} = require('../controller/account');
 const {getRequest, createRequest, deleteRequest} = require('../controller/resetRequest');
 const {createToken, authenticateToken} = require('../authorization/auth');
 const {sendEmail} = require('../services/nodemailer')
@@ -65,19 +65,19 @@ router.post('/email-verificate', async(req, res) => {
     try{
         const {email} = req.body;
         if(email){
-            const checkAccountExist = await findAccount(email);
+            const checkAccountExist = await getAccount(email);
             if(!checkAccountExist){
                 const nodeMailerRes = await sendEmail({
                     email, 
                     option: {type: 'verificate'}
                 });
-
-                if(nodeMailerRes) res.status(200).json({code});
+                if(nodeMailerRes) res.status(200).json({code: nodeMailerRes});
             } else {
                 res.status(406).send('this email has been used for another account');
             }
-        } 
-        res.status(204).send('please enter email');
+        } else {
+            throw new Error('please enter email');
+        }
     }catch(err){
         res.status(400).send(err.message)
     }

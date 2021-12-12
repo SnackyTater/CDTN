@@ -1,0 +1,6 @@
+.side-bar{
+    max-width: 375px;
+    min-width: 325px;
+    height: 100%;
+    flex-basis: 25%;
+}
