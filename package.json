@@ -7,7 +7,6 @@
     "server": "cd server && nodemon server.js",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
     "client": "cd client && npm run start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
