@@ -145,12 +145,15 @@ const toggleLikeUser = async(userID, targetID) => {
 }
 
 const nopeUser = async(userID, targetID) => {
+    console.log('in nope')
     return await user.updateOne({
         "_id": userID
     }, {
         $push: {
-            "id": targetID,
-            "type": 'nope'
+            "matchMaking.status": {
+                "id": targetID,
+                "type": 'nope'
+            }
         }
     })
 }
@@ -168,19 +171,20 @@ const unnopeUser = async(userID, targetID) => {
     })
 }
 const toggleNopeUser = async(userID, targetID) => {
-    const { matchMaking: {status: userNopes} } = await user.findOne({
+    const { matchMaking: {status: userNopes}, info } = await user.findOne({
         $or: [
             {"account": userID}, 
             {"_id": userID}
         ]
     });
-
+    console.log(targetID)
     if(userNopes){
         const targetIndex = userNopes.findIndex((user) => user.id == targetID && user.type == 'nope');
-
+        console.log('im in')
         //nope target
         if(targetIndex == -1){
-            const status = await nope(userID, targetID);
+            const status = await nopeUser(userID, targetID);
+            console.log('noppe')
             if(status.modifiedCount && status.matchedCount){
                 return {message: `nope user sucessfully`}
             } 
@@ -188,7 +192,7 @@ const toggleNopeUser = async(userID, targetID) => {
         //un-nope target
         if(targetIndex != -1){
             const status = await unnopeUser(userID, targetID);
-            
+            console.log('unnope')
             if(status.modifiedCount && status.matchedCount){
                 return {message: `un-nope user sucessfully`}
             }
@@ -233,6 +237,14 @@ const recommend = async(userID) => {
         const latitude = matchMaking.config.location.coordinates[1];
         const maxDistance = matchMaking.config.zoneLimit.diameter;
 
+        const priority = await
+            user.find({
+                "matchMaking.status": {
+                    "id": _id,
+                    "type": 'like'
+                }
+            })
+            .lean();
 
         //query
         let recs = await 
@@ -247,28 +259,54 @@ const recommend = async(userID) => {
                     $gte: DOBTo
                 },
                 "info.relationship.status": "single",
-                "matchMaking.config.location": {
-                    $nearSphere: {
-                        $geometry: {
-                           type : "Point",
-                           coordinates : [longtitude, latitude]
-                        },
-                        $maxDistance: maxDistance
-                     }
-                }
-            },{'info': 1})
-            .limit(50);
-        console.log(recs)
+                // "matchMaking.config.location": {
+                //     $nearSphere: {
+                //         $geometry: {
+                //            type : "Point",
+                //            coordinates : [longtitude, latitude]
+                //         },
+                //         $maxDistance: maxDistance
+                //      }
+                // }
+            },{
+                'info': 1
+            })
+            .populate({
+                path: 'info.passions'
+            })
+            .limit(20);
         return recs;
     } catch(err) {
-        console.log(err.message)
         throw(err.message);
     }
 }
 
+const getMatches = async(userID) => {
+
+    const userData = await user.findOne({
+        "_id": userID,
+        "matchMaking.status.type": 'match'
+    },{
+        "matchMaking.status": 1,
+        "_id": 0
+    })
+    .populate({
+        path: 'matchMaking.status',
+        populate: {
+            path: 'id',
+            select: 'info _id '
+        }
+    });
+
+    const newData = (!userData) ? [] : userData && userData.matchMaking.status.map((user) => user.id.info);
+
+    return newData;
+    
+}
 
 module.exports = {
     toggleLikeUser,
     toggleNopeUser,
     recommend,
+    getMatches,
 }
