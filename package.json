@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-    "node": "12.18.3"
+    "node": "12.18.3",
+    "npm": "7.23.0"
   },
   "main": "index.js",
   "scripts": {
     "server": "cd server && nodemon server.js",
     "build": "cd client && npm run build",
     "install-client": "cd client && npm install",
+    "heroku-postbuild": "echo This runs after Heroku installs dependencies, but before Heroku prunes and caches dependencies.",
     "client": "cd client && npm run start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
