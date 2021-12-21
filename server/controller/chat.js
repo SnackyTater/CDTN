@@ -8,7 +8,6 @@ const getChatList = async (userID) => {
             }
         }).populate({
             "path": 'participant',
-            "select": 'info.fullName info.profileImage _id'
         }).lean();
         return list;
     } catch(err){
@@ -18,11 +17,18 @@ const getChatList = async (userID) => {
 
 const getChatByRoomID = async (roomID) => {
     try{
-        const chatRoom = await chatLog.findOne({_id: roomID})
-        if(chatRoom.length != 0) return chatRoom;
-        else throw new Error('cant find any chat room with given ID');
+        const chatRoom = await chatLog.findOne({
+            "_id": roomID
+        })
+        .populate({
+            "path": 'participant'
+        })
+        .lean();
+        
+        return chatRoom;
+
     }catch(err){
-        throw new Error(err);
+        throw new Error(err.message);
     }
 }
 

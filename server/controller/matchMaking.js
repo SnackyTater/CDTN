@@ -237,6 +237,7 @@ const recommend = async(userID) => {
         const latitude = matchMaking.config.location.coordinates[1];
         const maxDistance = matchMaking.config.zoneLimit.diameter;
 
+        //wil priority these people to appear first in array
         const priority = await
             user.find({
                 "matchMaking.status": {
@@ -244,9 +245,12 @@ const recommend = async(userID) => {
                     "type": 'like'
                 }
             })
+            .populate({
+                path: 'info.passions'
+            })
             .lean();
 
-        //query
+        //find additional people 
         let recs = await 
             user.find({
                 $or: gender,
@@ -268,14 +272,13 @@ const recommend = async(userID) => {
                 //         $maxDistance: maxDistance
                 //      }
                 // }
-            },{
-                'info': 1
             })
             .populate({
                 path: 'info.passions'
             })
-            .limit(20);
-        return recs;
+            .limit(20-priority.length);
+
+        return [...priority, ...recs];
     } catch(err) {
         throw(err.message);
     }

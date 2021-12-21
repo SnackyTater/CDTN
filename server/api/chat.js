@@ -5,14 +5,24 @@ const router = Router();
 const {getChatList, getChatByRoomID} = require('../controller/chat');
 
 router.get('/', authenticateToken, async (req, res) => {
-    const list = await getChatList(req.tokenInfo.UID);
-    res.status(200).json(list);
+    try{
+        const list = await getChatList(req.tokenInfo.UID);
+
+        res.status(200).json(list);
+    } catch(err) {
+        res.status(400).send(err.message);
+    }
+    
 })
 
 router.get('/:id', authenticateToken, async(req, res) => {
-    const chatLog = await getChatByRoomID(req.params.id);
-    if(chatLog != null) res.status(200).json(chatLog)
-    if(chat == null) res.status(404).send('no conversation was found with given id');
+    try{
+        const chatLog = await getChatByRoomID(req.params.id);
+        if(chatLog != null) res.status(200).json(chatLog);
+        if(chatLog == null) res.status(404).send('no conversation was found with given id');
+    } catch(err) {
+        res.status(400).send(err.message);
+    }
 })
 
 module.exports = router;
