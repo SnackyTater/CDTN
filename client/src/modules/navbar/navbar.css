@@ -19,7 +19,7 @@ ul li{
 ul li {
     font-size: 20px;
 }
-li, a, .navbar__login{
+li, .navigator__button, .navbar__login{
     font-weight: 500;
     font-size: 1vw;
     text-decoration: none;

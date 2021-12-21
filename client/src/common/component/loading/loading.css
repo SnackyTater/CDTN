@@ -1,15 +1,15 @@
 .loading{
     position: fixed;
     z-index: 1;
-    width: 100vw;
-    height: 100vh;
+    height: inherit;
+    width: inherit;
     opacity: 0.2;
     background-color: black;
 }
 .loading__image{
     position: relative;
-    left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
-    height: 4vw;
+    left: 50%;
+    transform: translate(-50%);
+    height: 100px;
 }

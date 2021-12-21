@@ -23,14 +23,12 @@
     padding: 30px 20px;
     color: whitesmoke;
 }
-.landing-signup-button{
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 10px 80px;
-    background-image: linear-gradient(45deg,#fd267a,#ff7854);
-    font-size: 30px;
-    cursor: pointer;
+.button__container{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    width: 20vw;
+    height: 5vh;
 }
 .landing-signup-button:hover{
     background-image: linear-gradient(45deg,#ff7854,#fd267a);

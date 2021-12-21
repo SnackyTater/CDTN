@@ -1,11 +1,11 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {checkUsername, checkPassword, checkEmail, checkPasswordMatch, checkMobileNumber} from '../../../utils/utils';
 
 const Account = () => {
     const [account, setAccount] = useState({
         username: '',
         email: '',
-        mobileNumber: '',
+        mobile: '',
         password: '',
         password2: ''
     })
@@ -13,14 +13,10 @@ const Account = () => {
     const [error, setError] = useState({
         username: {status: true, message: ''},
         email: {status: true, message: ''},
-        mobileNumber: {status: true, message: ''},
+        mobile: {status: true, message: ''},
         password: {status: true, message: ''},
         password2: {status: true, message: ''}
     })
-
-    useEffect(() => {
-        console.log(error)
-    }, [account, error])
 
     //set account (if want validate when typing pass true, else false)
     const SetAccount = (event, validate) => {
@@ -45,7 +41,7 @@ const Account = () => {
                 break;
             case 'password':
                 checker = checkPassword(value);
-                if(account.password2.length !== 0){
+                if(account?.password2?.length !== 0){
                     checker = checkPasswordMatch(value, account.password2);
                     field = 'password2';
                 }         
@@ -62,10 +58,10 @@ const Account = () => {
     }
 
     //check every field in account before submit (if something is wrong it will return false else return true)
-    const accountSubmitChecker = () => {
+    const accountSubmitChecker = (ignore) => {
         const {username, email, mobileNumber, password, password2} = account
         let accountError = {}
-        accountError.username = checkUsername(username);
+        if(!ignore === 'username') accountError.username = checkUsername(username);
         accountError.email = checkEmail(email);
         accountError.mobileNumber = checkMobileNumber(mobileNumber);
         accountError.password = checkPassword(password);
@@ -73,7 +69,7 @@ const Account = () => {
 
         setError({...error, ...accountError});
 
-        let checker = [accountError.username.status, accountError.email.status, accountError.mobileNumber.status, accountError.password.status, accountError.password2.status];
+        let checker = [accountError?.username?.status, accountError.email.status, accountError.mobileNumber.status, accountError.password.status, accountError.password2.status];
         if(checker.includes(false)) return false;
         return true;
     }

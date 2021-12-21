@@ -1,11 +1,16 @@
 import React from 'react';
 
+import { Backdrop, CircularProgress } from '@mui/material'
+
 import './loading.css';
 
-export default function loading() {
+export default function loading({config, isLoading}) {
     return (
-        <div className='loading'>
-            <img className='loading__image' src={process.env.PUBLIC_URL + '/assets/loading.gif'}/>
-        </div>
+        <Backdrop
+            sx={config || {color: '#fff'}}
+            open={isLoading}
+        >
+            <CircularProgress color='inherit'/>
+        </Backdrop>
     )
 }

@@ -5,6 +5,7 @@ module.exports = (io) => {
     io
     .use(async(socket, next) => {
         if(socket.handshake.query && socket.handshake.query.token){
+            
             try{
                 const tokenInfo = await verifyToken(socket.handshake.query.token);
                 socket.tokenInfo = tokenInfo;

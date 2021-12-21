@@ -1,0 +1,12 @@
+.logout__container{
+    padding: 50px;
+    width: 300px;
+    text-align: center;
+}
+.logout__button__container{
+    display: flex;
+}
+.logout__button{
+    flex: 1;
+    margin: 5px;
+}

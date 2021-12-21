@@ -16,7 +16,7 @@ export default function PassionPickerForm({isOpen, closeForm, passions, selectPa
             <div className="form">
                 <p className='form__title'>select your passions</p>
                 <button className="form__close-button" onClick={closeForm}>x</button>
-                <div className='form__content'>
+                <div>
                     {passions.map((passion) => 
                         <Tag 
                             className={

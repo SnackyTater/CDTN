@@ -9,12 +9,10 @@ const getUser = async(id, config) => {
             ]
         }, (config) ? config : {
             "info": 1,
-            "_id": 0,
+            "_id": 1,
             "matchMaking.config": 1,
         })
         .lean();
-
-    console.log(userInfo)
     
     if(!userInfo) throw new Error ('no user was found with given id');
 

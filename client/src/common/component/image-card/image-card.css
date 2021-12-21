@@ -1,7 +1,7 @@
 .image-card__container{
     margin-right: 20px;
-    width: 7vw;
-    height: 18vh;
+    width: 150px;
+    height: 200px;
 }
 .image-card__button{
     cursor: pointer;

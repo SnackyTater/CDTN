@@ -5,7 +5,7 @@ import './genderPicker.css';
 import Button from '../../common/component/button/button';
 import {gender} from '../../const/gender';
 
-export default function GenderPicker({onClick}) {
+export default function GenderPicker({genderArray, onClick, selected}) {
     const [hightlight, setHighlight] = useState('');
 
     const clickHandler = (gender) => {
@@ -13,11 +13,18 @@ export default function GenderPicker({onClick}) {
         onClick(gender);
     }
 
+    const options = genderArray || gender;
+
     return (
         <div className='gender-picker'>
             {
-                gender.map((gender) => 
-                    <Button key={gender} className={(hightlight === gender) ? 'button active-button' : 'button'} content={gender} onClick={() => {clickHandler(gender)}}/>
+                options.map((gender) => 
+                    <Button 
+                        key={gender} 
+                        className={(hightlight === gender || selected === gender) ? 'button active-button' : 'button'} 
+                        content={gender} 
+                        onClick={() => {clickHandler(gender)}}
+                    />
                 )
             }
         </div>

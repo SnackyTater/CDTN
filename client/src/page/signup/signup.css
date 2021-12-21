@@ -2,26 +2,20 @@
     padding: 10em 10em 8em 10em;
 }
 .signup__form{
-    background-color: white;
     display: flex;
 }
-.form__account, .form__info{
+.form__container{
     flex: 50%;
-    padding: 0 3vw 0 3vw;
-    justify-content: center;
+    padding: 20px 30px;
+}
+.form__content{
 }
 .form__field-name{
     color: rgba(0, 0, 0, 0.5);
 }
 .signup__button{
-    position: relative;
+    display: flex;
     top: 3vh;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    padding: 10px 20px;
-    font-size: 1vw;
-    color: white;
-    background-image: linear-gradient(45deg,#fd267a,#ff7854);
-    border-radius: 50px;
-    border: none;
+    align-items: center;
+    justify-content: center;
 }

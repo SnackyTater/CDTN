@@ -1,4 +1,4 @@
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ import './signup.css';
 import ErrorMessage from '../../common/component/error-message/error';
 import Loading from "../../common/component/loading/loading";
 import CustomTextInput from '../../common/component/input/text/input';
-import CustomTextArea from '../../common/component/input/text-area/textArea';
+import LoadingButton from "../../common/component/button/loading-button/loading-button";
 
 //load module
 import GenderPicker from '../../modules/gender-picker/genderPicker';
@@ -23,8 +23,11 @@ import {getLocation} from '../../utils/utils';
 import accountHook from '../../common/hooks/accountInfo/account';
 import userHook from '../../common/hooks/userInfo/user';
 
+import {getPassion} from '../../api/common/passion';
+
 export default function Signup(){
     const [isLoading, setLoading] = useState(true);
+    const [isButtonLoading, setButtonLoading] = useState(false);
     const [coordinates, setCoordinates] = useState(null);
     const [passions, setPassions] = useState([]);
 
@@ -33,24 +36,22 @@ export default function Signup(){
 
     const history = useHistory();
 
-    useEffect(async() => {
-        try{
-            if(isLoading){
-                //get location
-                const location = await getLocation();
+    useEffect(() => {
+        if(isLoading){
+            //get location
+            getLocation().then((location) => {
                 setCoordinates({
                     longitude: location.coords.longitude,
                     latitude: location.coords.latitude
                 })
                 
-                //get passions list
-                const result = await axios.get('http://localhost:5000/passion');
-                setPassions(result.data);
-                setLoading(false);
-            }
-        } catch(err) {
-            console.log(err);
-            alert(`${err.message}, please reload page and allow it`)
+                getPassion().then((passionList) => {
+                    setPassions(passionList);
+                    setLoading(false);
+                })
+            }).catch((error) => {
+                alert(`${error.message}, please reload page and allow it`)
+            })
         }
     }, []);
 
@@ -112,42 +113,88 @@ export default function Signup(){
             {isLoading && <Loading/>}
             <div className="signup__container">
                 <div className="signup__form">
-                    <div className="form__account">
-                        <h2 className="form__field-name">username</h2>
-                        <CustomTextInput name={'username'} onChange={accountChangeHandler} error={accountError.username}/>
-                        <h2 className="form__field-name">email</h2>
-                        <CustomTextInput name={'email'} onChange={accountChangeHandler} error={accountError.email}/>
-                        <h2 className="form__field-name">mobile</h2>
-                        <CustomTextInput name={'mobileNumber'} onChange={accountChangeHandler} error={accountError.mobileNumber}/>
-                        <h2 className="form__field-name">password</h2>
-                        <CustomTextInput name={'password'} type={'password'} onChange={accountChangeHandler} error={accountError.password}/>
-                        <h2 className="form__field-name">re-enter password</h2>
-                        <CustomTextInput name={'password2'} type={'password'} onChange={accountChangeHandler} error={accountError.password2}/>
+                    <div className="form__container">
+                        <div className="form__content">
+                            <CustomTextInput
+                                label={'username'}
+                                name={'username'} 
+                                onChange={accountChangeHandler} 
+                                error={accountError.username}
+                            />
+                            <CustomTextInput
+                                label={'email'}
+                                name={'email'} 
+                                onChange={accountChangeHandler} 
+                                error={accountError.email}
+                            />
+                            <CustomTextInput
+                                label={'mobile'}
+                                name={'mobileNumber'} 
+                                onChange={accountChangeHandler} 
+                                error={accountError.mobileNumber}
+                            />
+                            <CustomTextInput
+                                label={'password'}
+                                name={'password'} 
+                                type={'password'} 
+                                onChange={accountChangeHandler} 
+                                error={accountError.password}
+                            />
+                            <CustomTextInput
+                                label={'re-enter password'}
+                                name={'password2'} 
+                                type={'password'} 
+                                onChange={accountChangeHandler} 
+                                error={accountError.password2}
+                            />
+                        </div>
                     </div>
-                    <div className="form__info">
-                        <h2 className="form__field-name">image</h2>
-                        <ImageCardList limit={[1,2,3]} onChange={(imageInfo) => {userImageChangeHandler(imageInfo)}}/>
-                        {(!userError.profileImage.status) ? <ErrorMessage message={userError.profileImage.message}/> : null}
-                        <br/>
-                        <h2 className="form__field-name">full name</h2>
-                        <CustomTextInput name={'fullName'} onChange={userChangeHandler} error={userError.fullName}/>
-                        <h2 className="form__field-name">gender</h2>
-                        <GenderPicker onClick={(gender) => {userChangeHandler({target: {name: 'gender', value: gender}})}}/>
-                        <h2 className="form__field-name">date of birth</h2>
-                        <CustomTextInput name={'DateOfBirth'} type={'date'} onChange={userChangeHandler} error={userError.DateOfBirth}/>
-                        <h2 className="form__field-name">tell us about yourself</h2>
-                        <CustomTextArea name={'description'} onChange={userChangeHandler}/>
-                        <h2 className="form__field-name">passions</h2>
-                        <PassionPicker 
-                            passions={passions} 
-                            selectPassion={(passion) => {userPassionsChangeHandler(passion)}} 
-                            selectedPassion={user.userInfo.passions}
-                        />
-                        {(!userError.passions.status) ? <ErrorMessage message={userError.passions.message}/> : null}
+                    <div className="form__container">
+                        <div className="form__contents">
+                            <h2 className="form__field-name">image</h2>
+                            <ImageCardList row={[1,2,3]} column={[1]} onChange={(imageInfo) => {userImageChangeHandler(imageInfo)}}/>
+                            {(!userError.profileImage.status) ? <ErrorMessage message={userError.profileImage.message}/> : null}
+                            <br/>
+
+                            <h2 className="form__field-name">gender</h2>
+                            <GenderPicker onClick={(gender) => {userChangeHandler({target: {name: 'gender', value: gender}})}}/>
+                            <br/>
+
+                            <h2 className="form__field-name">passions</h2>
+                            <PassionPicker 
+                                passions={passions} 
+                                selectPassion={(passion) => {userPassionsChangeHandler(passion)}} 
+                                selectedPassion={user.info.passions}
+                            />
+                            <br/>
+
+                            <CustomTextInput
+                                label={'full name'}
+                                name={'fullName'} 
+                                onChange={userChangeHandler} 
+                                error={userError.fullName}
+                            />
+
+                            <CustomTextInput name={'DateOfBirth'} type={'date'} onChange={userChangeHandler} error={userError.DateOfBirth}/>
+                            <CustomTextInput
+                                label={'tell us about yourself'} 
+                                name={'description'} 
+                                onChange={userChangeHandler}
+                            />
+
+                            
+                            {(!userError.passions.status) ? <ErrorMessage message={userError.passions.message}/> : null}
+                        </div>
                     </div>
                 </div>
                 <br/>
-                <button className="signup__button" onClick={signupHandler}>sign up</button>
+                <div className="signup__button">
+                    <LoadingButton 
+                        onClick={signupHandler} 
+                        isLoading={isButtonLoading} 
+                        placeholder={'sign up'}
+                    />
+                </div>
             </div>
         </div>
     )

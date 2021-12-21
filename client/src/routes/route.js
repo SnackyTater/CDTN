@@ -1,10 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Landing from '../page/landing/landing';
-import Home from '../page/home/home';
-import Profile from '../page/profile/profile';
-import Signup from '../page/signup/signup';
+import {LandingPage, HomePage, ProfilePage, SignupPage, ChatPage} from '../page'
 
 export default function route() {
     return (
@@ -12,22 +9,27 @@ export default function route() {
             <div className='App'>
                 <Switch>
                     <Route exact path="/">
-                        <Landing/>
+                        <LandingPage/>
                     </Route>
                 </Switch>
                 <Switch>
                     <Route exact path="/home">
-                        <Home/>
+                        <HomePage/>
                     </Route>
                 </Switch>
                 <Switch>
                     <Route exact path="/profile">
-                        <Profile/>
+                        <ProfilePage/>
                     </Route>
                 </Switch>
                 <Switch>
                     <Route exact path="/signup">
-                        <Signup/>
+                        <SignupPage/>
+                    </Route>
+                </Switch>
+                <Switch>
+                    <Route exact path="/chat">
+                        <ChatPage/>
                     </Route>
                 </Switch>
             </div>

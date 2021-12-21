@@ -18,10 +18,10 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
     }
 
     return (
-        <div>
+        <div style={{"paddingBottom": '20px'}}>
             <div onClick={() => {setOpen(true)}}>
-                {(selectedPassion.length != 0) 
-                    ? selectedPassion.map((passionID) => <Tag className={`tag active`} content={getPassionName(passionID)} key={passionID}/>) 
+                {(selectedPassion.length !== 0) 
+                    ? selectedPassion.map((passionID) => <Tag className={`tag active`} content={getPassionName(passionID._id)} key={passionID}/>) 
                     : <Button content={'select passions'} onClick={() => {}}/>
                 }
             </div>

@@ -8,7 +8,7 @@ const getChatList = async (userID) => {
             }
         }).populate({
             "path": 'participant',
-            "select": 'info.fullName info.profileImage -_id'
+            "select": 'info.fullName info.profileImage _id'
         }).lean();
         return list;
     } catch(err){
