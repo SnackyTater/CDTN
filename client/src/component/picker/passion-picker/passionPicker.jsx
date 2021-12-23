@@ -46,7 +46,7 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
                 {passions.map((passion, index) => <Tag 
                     key={index}
                     name={'passions'}
-                    value={passion.name}
+                    value={passion._id}
                     content={passion.name}
                     isActive={
                         selectedPassion && _.includes(selectedPassion, passion._id)

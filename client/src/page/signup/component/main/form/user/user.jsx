@@ -32,9 +32,15 @@ export default function User() {
     }
 
     const passionChangeHandler = (e) => {
-        console.log(e);
-        const {value, name} = e.target;
-        console.log(value, name);
+        e.preventDefault();
+        const {value} = e.target;
+        console.log(value)
+        // dispatch({
+        //     type: SET_USER_PASSION,
+        //     payload: {
+        //         value: value
+        //     }
+        // })
     }
 
     return (

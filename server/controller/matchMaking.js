@@ -297,11 +297,14 @@ const getMatches = async(userID) => {
         path: 'matchMaking.status',
         populate: {
             path: 'id',
-            select: 'info _id '
+            select: '_id info matchMaking'
         }
-    });
+    })
+    .lean();
 
-    const newData = (!userData) ? [] : userData && userData.matchMaking.status.map((user) => user.id.info);
+    console.log(JSON.stringify(userData))
+
+    const newData = (!userData) ? [] : userData && userData.matchMaking.status.map((user) => user.id);
 
     return newData;
     

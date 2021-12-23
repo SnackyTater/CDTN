@@ -8,7 +8,7 @@ export default function GenderPicker({genderArray, onClick, selected}) {
 
     const clickHandler = (e) => {
         setHighlight(e.target.value);
-        onClick(e);
+        onClick(e.target.value);
     }
 
     const options = genderArray || gender;

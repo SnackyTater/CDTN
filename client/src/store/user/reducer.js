@@ -80,6 +80,14 @@ export const reducer = (state, action) => {
             break;
         }
         case SET_USER_PASSION: {
+            const userPassions = stateHolder.user.info.passions;
+            const passionIndex = _.findIndex(userPassions, action.payload);
+            console.log(passionIndex);
+            console.log(!passionIndex);
+            if(!passionIndex) userPassions.splice(passionIndex, 1);
+            else  userPassions.push(action.payload);
+            _.set(stateHolder, 'user.info.passions', userPassions);
+
             break;
         }
     }
