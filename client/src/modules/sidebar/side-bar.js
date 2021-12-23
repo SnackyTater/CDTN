@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AvatarIcon from '../../common/component/avatar-icon/avatar-icon';
+import { Avatar } from '../../component';
 import {Home} from '@mui/icons-material'
 import { IconButton } from '@mui/material';
 
@@ -13,7 +14,7 @@ export default function SideBar({header, content}) {
         <div className='side-bar__container'>
             <div className='side-bar__header'>
                 <a className='header__nav' href={'/profile'}>
-                    <AvatarIcon image={image}/>
+                    <Avatar image={image}/>
                     <span>bbbb</span>
                 </a>
                 <a className='header__nav' href={'/home'}>

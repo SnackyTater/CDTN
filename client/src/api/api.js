@@ -16,22 +16,23 @@ export const fetcher = {
             const {data} = await axios.get(`${host}/${url}`, config(token || ''));
             return data;
         } catch(error) {
-            throw error;
+            throw new Error(error.message);
         }
     },
     post: async({url, token, body}) => {
         try{
+            console.log(body);
             const {data} = await axios.post(`${host}/${url}`, body, config(token || ''));
             return data;
         } catch(error) {
-            return new Error(error.message);
+            throw new Error(error?.response?.data);
         }
     },
     put: async({url, token, body}) => {
         try{
 
         } catch(error) {
-            return new Error(error.message);
+            throw new Error(error.message);
         }
         const {data} = await axios.put(`${host}/${url}`, body, config(token || ''));
         return data;
@@ -40,7 +41,7 @@ export const fetcher = {
         try{
 
         } catch(error) {
-            return new Error(error.message);
+            throw new Error(error.message);
         }
         const {data} = await axios.delete(`${host}/${url}`, config(token || ''));
         return data;

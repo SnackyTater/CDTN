@@ -1,9 +1,13 @@
 import { useHistory } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 
 //css
 import './signup.css';
+
+import { userAction, userReducer, userInitialState } from '../../store';
+
+import UserForm from './component/main/form/user/user';
 
 //load component
 import ErrorMessage from '../../common/component/error-message/error';
@@ -26,91 +30,94 @@ import userHook from '../../common/hooks/userInfo/user';
 import {getPassion} from '../../api/common/passion';
 
 export default function Signup(){
-    const [isLoading, setLoading] = useState(true);
-    const [isButtonLoading, setButtonLoading] = useState(false);
-    const [coordinates, setCoordinates] = useState(null);
-    const [passions, setPassions] = useState([]);
+    // const [isLoading, setLoading] = useState(false);
+    // const [isButtonLoading, setButtonLoading] = useState(false);
+    // const [coordinates, setCoordinates] = useState(null);
+    // const [passions, setPassions] = useState([]);
 
-    const { account, SetAccount, error: accountError, setError: setAccountError, accountSubmitChecker} = accountHook();
-    const { user, SetUser, SetPassions, setToken, SetImage,error: userError, userSubmitHandler} = userHook();
+    // const [user, userDispatch] = useReducer(userReducer, userInitialState);
 
-    const history = useHistory();
+    // const { account, SetAccount, error: accountError, setError: setAccountError, accountSubmitChecker} = accountHook();
+    // const { user, SetUser, SetPassions, setToken, SetImage,error: userError, userSubmitHandler} = userHook();
 
-    useEffect(() => {
-        if(isLoading){
-            //get location
-            getLocation().then((location) => {
-                setCoordinates({
-                    longitude: location.coords.longitude,
-                    latitude: location.coords.latitude
-                })
+    // const history = useHistory();
+
+    // useEffect(() => {
+    //     if(isLoading){
+    //         //get location
+    //         getLocation().then((location) => {
+    //             setCoordinates({
+    //                 longitude: location.coords.longitude,
+    //                 latitude: location.coords.latitude
+    //             })
                 
-                getPassion().then((passionList) => {
-                    setPassions(passionList);
-                    setLoading(false);
-                })
-            }).catch((error) => {
-                alert(`${error.message}, please reload page and allow it`)
-            })
-        }
-    }, []);
+    //             getPassion().then((passionList) => {
+    //                 setPassions(passionList);
+    //                 setLoading(false);
+    //             })
+    //         }).catch((error) => {
+    //             alert(`${error.message}, please reload page and allow it`)
+    //         })
+    //     }
+    // }, []);
 
-    const accountChangeHandler = (e) => {
-        SetAccount(e, true);
-    }
+    // const accountChangeHandler = (e) => {
+    //     SetAccount(e, true);
+    // }
 
-    const userChangeHandler = (e) => {
-        SetUser(e, true);
-    }
+    // const userChangeHandler = (e) => {
+    //     SetUser(e, true);
+    // }
 
-    const userPassionsChangeHandler = (e) => {
-        SetPassions(e);
-    }
+    // const userPassionsChangeHandler = (e) => {
+    //     SetPassions(e);
+    // }
 
-    const userImageChangeHandler = (imageInfo) => {
-        console.log('aaaa')
-        SetImage(imageInfo);
-    }
+    // const userImageChangeHandler = (imageInfo) => {
+    //     console.log('aaaa')
+    //     SetImage(imageInfo);
+    // }
 
-    const signupHandler = async(e) => {
-        const accountChecker = accountSubmitChecker();
-        const userChecker = userSubmitHandler();
-        if(accountChecker && userChecker){
-            const payload = {
-                accountInfo: account,
-                userInfo: {
-                    info: user.userInfo,
-                    matchMaking:{
-                        config: {
-                            location: {
-                                coordinates: [coordinates.longitude, coordinates.latitude]
-                            }
-                        }
-                    }
-                }
-            }
+    // const signupHandler = async(e) => {
+    //     const accountChecker = accountSubmitChecker();
+    //     const userChecker = userSubmitHandler();
+    //     if(accountChecker && userChecker){
+    //         const payload = {
+    //             accountInfo: account,
+    //             userInfo: {
+    //                 info: user.userInfo,
+    //                 matchMaking:{
+    //                     config: {
+    //                         location: {
+    //                             coordinates: [coordinates.longitude, coordinates.latitude]
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            try{
-                const status = await axios.post('http://localhost:5000/account', payload);
-                setToken(status.data);
-                history.push('/home');
-            } catch(err) {
-                const message = err?.response?.data;
-                const error = {}
-                if(message?.includes('username')) error.username = {status: false, message: 'username has been used'}
-                if(message?.includes('email')) error.email = {status: false, message: 'email has been used'}
-                if(message?.includes('mobile')) error.mobileNumber = {status: false, message: 'mobile has been used'}
+    //         try{
+    //             const status = await axios.post('http://localhost:5000/account', payload);
+    //             setToken(status.data);
+    //             history.push('/home');
+    //         } catch(err) {
+    //             const message = err?.response?.data;
+    //             const error = {}
+    //             if(message?.includes('username')) error.username = {status: false, message: 'username has been used'}
+    //             if(message?.includes('email')) error.email = {status: false, message: 'email has been used'}
+    //             if(message?.includes('mobile')) error.mobileNumber = {status: false, message: 'mobile has been used'}
 
-                message && setAccountError({...accountError, ...error})
-            }
+    //             message && setAccountError({...accountError, ...error})
+    //         }
             
             
-        }
-    }
+    //     }
+    // }
 
     return (
         <div>
-            {isLoading && <Loading/>}
+            <UserForm />
+            {/* {isLoading && <Loading/>}
             <div className="signup__container">
                 <div className="signup__form">
                     <div className="form__container">
@@ -195,7 +202,7 @@ export default function Signup(){
                         placeholder={'sign up'}
                     />
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

@@ -1,0 +1,65 @@
+@mixin font {
+    font-weight: 500;
+    font-size: 1vw;
+    text-decoration: none;
+    color: #edf0f1;
+}
+
+.navbar{
+    &__container{
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 30px 5%;
+        background-color: transparent;
+    }
+
+    &__navigator{
+        margin-left: 40px;
+
+        &--dark{
+            ul{
+                list-style: none;
+    
+                li{
+                    display: inline-block;
+                    padding: 0px 30px;
+    
+                    a{
+                        font-weight: 500;
+                        font-size: 1vw;
+                        text-decoration: none;
+                        color: #edf0f1;
+                    }  
+                }
+            }
+        }
+
+        &--light{
+            ul{
+                list-style: none;
+    
+                li{
+                    display: inline-block;
+                    padding: 0px 30px;
+    
+                    a{
+                        font-weight: 500;
+                        font-size: 1vw;
+                        text-decoration: none;
+                        color: black;
+                    }  
+                }
+            }
+        }
+        
+
+        &__button{
+            &__container{
+                margin-left: auto;
+                font-size: 13px;
+            }
+        }
+    }
+}

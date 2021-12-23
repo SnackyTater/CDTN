@@ -4,6 +4,7 @@ const {verifyToken} = require('../authorization/auth');
 module.exports = (io) => {
     io
     .use(async(socket, next) => {
+        console.log('aaaa')
         if(socket.handshake.query && socket.handshake.query.token){
             
             try{

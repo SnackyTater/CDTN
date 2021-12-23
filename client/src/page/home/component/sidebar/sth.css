@@ -1,0 +1,9 @@
+.sth__form{
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    position: fixed;
+    border: 1px solid black;
+    left: calc(100px - 50px)
+
+}

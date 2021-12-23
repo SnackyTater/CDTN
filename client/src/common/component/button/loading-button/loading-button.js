@@ -4,14 +4,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 export default function loadingButton({isLoading, onClick, placeholder, width}) {
     return (
-        // <LoadingButton
-        //     loading={true}
-        //     loadingPosition="start"
-        //     onClick={onClick}
-        //     variant="contained"
-        // >
-        //     {placeholder}
-        // </LoadingButton>
         <LoadingButton
             onClick={onClick}
             loading={isLoading}

@@ -50,6 +50,7 @@ router.delete('/', authenticateToken, async(req, res) => {
 
 router.post('/login', async (req, res) => {
     try{
+        console.log(req.body)
         const {identityVerification, password} = req.body;
         const {accountID, userID} = await login(identityVerification, password);
         console.log(accountID, userID)
@@ -57,6 +58,7 @@ router.post('/login', async (req, res) => {
 
         res.status(200).json({access_token: token});
     } catch (err) {
+        console.log(err.message)
         res.status(404).json(err.message);
     }
 })

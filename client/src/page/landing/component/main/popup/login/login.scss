@@ -1,0 +1,33 @@
+.login{
+    &__container{
+        background-color: white;
+        position: fixed;
+        padding: 20px;
+        border-radius: 15px;
+    }
+    &__close{
+        &__container{
+            position: relative;
+            left: 92%;
+            padding-bottom: 20px;
+        }
+    }
+    &__input{
+        &__container{
+            display: flex;
+            flex-direction: column;
+
+            a{
+                text-decoration: none;
+                color: rgba($color: #000000, $alpha: 0.5);
+            }
+        }
+    }
+    &__button{
+        &__container{
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}

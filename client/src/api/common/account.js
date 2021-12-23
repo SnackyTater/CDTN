@@ -9,6 +9,14 @@ const login = ({username, password}) => {
         }
     })
 };
+const sendEmail = ({email}) => {
+    return fetcher.post({
+        url: 'account/email-verificate',
+        body: {
+            email: email
+        }
+    })
+}
 const getAccountInfo = ({token}) => {
     return fetcher.get({
         url: 'account',
@@ -34,4 +42,4 @@ const deleteAccount = ({token}) => {
     })
 }
 
-export {login, getAccountInfo, createAccount, updateAccount, deleteAccount}
+export {login, getAccountInfo, createAccount, updateAccount, deleteAccount, sendEmail}

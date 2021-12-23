@@ -2,7 +2,7 @@ import {useState} from 'react';
 
 import { Backdrop, CircularProgress } from '@mui/material'
 
-import MatchesList from './matchesList';
+import MatchesList from './list/matchesList';
 import ChatList from './chatList';
 
 export default function SidebarContent() {

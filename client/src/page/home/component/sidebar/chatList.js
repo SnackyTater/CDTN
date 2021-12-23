@@ -1,10 +1,13 @@
 import {useState, useEffect} from 'react';
 import {useCookies} from 'react-cookie';
 import {useHistory} from 'react-router-dom';
+import { List, ListItem, ListItemAvatar, ListItemText, IconButton } from '@mui/material';
+
+import CustomAvatar from '../../../../common/component/avatar-icon/avatar-icon';
 
 import {getChatList} from '../../../../api/common/chat';
 
-export default function chatList({setLoading}) {
+export default function ChatList({setLoading}) {
     const [cookies, setCookies] = useCookies('jwt');
     const [chatList, setChatList] = useState([]);
 
@@ -27,7 +30,7 @@ export default function chatList({setLoading}) {
                         </div>
                     </div>
                 : <List>
-                    {matchList.map((user) => <ListItem> 
+                    {chatList.map((user) => <ListItem> 
                         <ListItemAvatar>
                             <CustomAvatar 
                                 image={user.profileImage[0]} 
