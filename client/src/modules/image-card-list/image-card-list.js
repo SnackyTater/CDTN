@@ -9,14 +9,13 @@ export default function ImageCardList({column, row, onChange, inputImageList}) {
 
     return (
         <div className='image-card-list'>
-            {column.map((time) => <div key={time} style={{"display": 'flex', "padding": '20px 0px'}}>
-                {row.map((time) => {
-                    const display = <div key={time}>
-                        <ImageCard 
-                            onChange={onChange} 
-                            inputImage={inputImageList && inputImageList[index]}
-                        />
-                    </div>
+            {row.map((time) => <div key={time} style={{"display": 'flex'}}>
+                {column.map((time, index) => {
+                    const display = <ImageCard
+                        key={index}
+                        onChange={onChange} 
+                        inputImage={inputImageList && inputImageList[index]}
+                    />
                     index ++;
 
                     return display

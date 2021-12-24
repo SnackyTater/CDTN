@@ -1,0 +1,13 @@
+.user-form{
+    display: flex;
+
+    &__content{
+        flex: 1;
+        display: flex;
+
+        div{
+            
+            align-items: center;
+        }
+    }
+}

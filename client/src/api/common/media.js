@@ -1,15 +1,20 @@
 import {fetcher} from '../api';
 
-export default mediaAPI = {
-    addImage: ({body}) => {
-        return fetcher.post({
-            url: 'media',
-            body: body
-        })
-    },
-    deleteImage: ({id}) => {
-        return fetcher.delete({
-            url: `media/${id}`
-        })
-    }
+const addImage = ({image}) => {
+    const fd = new FormData();
+    fd.append('image', image);
+
+    return fetcher.post({
+        url: 'media',
+        body: fd,
+        type: 'multipart/form-data'
+    })
 }
+
+const deleteImage = ({id}) => {
+    return fetcher.delete({
+        url: `media/${id}`,
+    })
+}
+
+export {addImage, deleteImage}

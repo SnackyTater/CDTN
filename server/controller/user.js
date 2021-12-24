@@ -20,9 +20,21 @@ const getUser = async(id, config) => {
 }
 
 const createUser = async (accountID, userInfo) => {
+    const {coordinates, interestIn} = userInfo;
+    delete userInfo.coordinates;
+    delete userInfo.interestIn;
+
     const userData = {
         account: accountID,
-        info: userInfo
+        info: userInfo,
+        matchMaking: {
+            config: {
+                location: {
+                    coordinates: coordinates
+                },
+                gender: interestIn
+            }
+        }
     }
 
     const userQuery = await user.create(userData);

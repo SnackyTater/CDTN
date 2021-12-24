@@ -3,6 +3,8 @@ import {useState} from 'react';
 import { SimpleButton } from '../../';
 import { gender } from '../../../const/gender';
 
+import './genderPicker.scss'
+
 export default function GenderPicker({genderArray, onClick, selected}) {
     const [hightlight, setHighlight] = useState('');
 

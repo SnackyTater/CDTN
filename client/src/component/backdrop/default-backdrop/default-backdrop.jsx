@@ -8,7 +8,7 @@ import './default-backdrop.scss';
 export default function DefaultBackdrop({isOpen, config, children, closeForm, title}) {
     return (
         <Backdrop 
-            sx={config || {color: '#fff'}}
+            sx={config || {color: '#fff', zIndex: '2'}}
             open={isOpen}
         >
             <div className='backdrop__form__container'>

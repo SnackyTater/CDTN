@@ -16,6 +16,7 @@ export { default as IconButton } from './button/icon-button/icon-button';
 export { default as DefaultButton } from './button/button/button';
 
 //picker
+export { default as DatePicker } from './picker/date-picker/datePicker';
 export { default as GenderPicker } from './picker/gender-picker/genderPicker';
 export { default as PassionPicker } from './picker/passion-picker/passionPicker';
 

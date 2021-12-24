@@ -1,10 +1,12 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import _ from 'lodash';
 
 import { SimpleButton, Tag, DefaultBackdrop } from '../../index';
+import './passionPicker.scss'
 
 export default function PassionPicker({passions, selectPassion, selectedPassion}) {
     const [isOpen, setOpen] = useState(false);
+    const [activePassion, setActivePassion] = useState([]);
 
     const closeForm = () => setOpen(false);
     const openForm = () => setOpen(true);
@@ -18,7 +20,7 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
     }
 
     return (
-        <div>
+        <div className='passion-picker'>
             <div>
                 {
                     (selectedPassion.length === 0)
@@ -30,6 +32,7 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
                             <Tag
                                 key={index}
                                 name={'passions'}
+                                isActive={true}
                                 value={passionID || 'value'}
                                 content={getPassionName(passionID || passionID._id)}
                                 onClick={openForm}
@@ -45,13 +48,12 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
             > 
                 {passions.map((passion, index) => <Tag 
                     key={index}
-                    name={'passions'}
                     value={passion._id}
                     content={passion.name}
                     isActive={
-                        selectedPassion && _.includes(selectedPassion, passion._id)
+                        _.includes([...selectedPassion], passion._id)
                     }
-                    onClick={selectPassion}
+                    onClick={(e) => {selectPassion(e)}}
                 />)}
             </DefaultBackdrop>
         </div>

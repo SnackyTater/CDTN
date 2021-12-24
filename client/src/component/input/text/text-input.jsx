@@ -18,7 +18,6 @@ export default function Input({name, label, disableStatus, onChange, error, type
             sx={{
                 "width": '400px',
                 "alignSelf": 'center',
-                "paddingBottom": '15px',
             }}
         />
     )

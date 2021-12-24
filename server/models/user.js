@@ -56,22 +56,6 @@ const userSchema = new Schema({
             }
         }
     },
-    notification: [{
-        content: {
-            message: {
-                type: String,
-                default: '',
-            },
-            imageUrl: {
-                type: String,
-                default: '',
-            }
-        },
-        time: {
-            type: Date,
-            default: Date.now(),
-        }
-    }],
     matchMaking: {
         config: {
             location: {
