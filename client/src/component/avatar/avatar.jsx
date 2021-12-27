@@ -6,7 +6,7 @@ export default function avatarIcon({image, config, color}) {
         <Avatar 
             alt='avatar' 
             src={ image }
-            sx={ config || {bgcolor: 'white'}}
+            sx={ {bgcolor: 'white', ...config}}
         >
             {!image && <Person color={color || 'disabled'}/>}
         </Avatar>

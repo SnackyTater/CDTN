@@ -298,7 +298,12 @@ const getMatches = async(userID) => {
         path: 'matchMaking.status',
         populate: {
             path: 'id',
-            select: '_id info matchMaking'
+            select: '_id info matchMaking',
+            model: 'user',
+            populate: {
+                path: 'info.passions',
+                model: 'passion'
+            }
         }
     })
     .lean();

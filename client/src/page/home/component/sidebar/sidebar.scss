@@ -1,0 +1,30 @@
+.sidebar{
+    &__content{
+        width: 100%;
+        height: 100%;
+
+        &__message{
+            width: inherit;
+            height: inherit;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            div{
+                width: 250px * 0.75;
+                height: 250px;
+                background-color: white;
+                text-align: center;
+                color: rgba($color: #000000, $alpha: 0.5);
+                div{
+                    width: 60%;
+                    height: 60%;
+                    border: none;
+                    border-radius: 15px;
+                    margin: 15px auto;
+                    background-image: linear-gradient(225deg,#ff6036,#fd267a);
+                }
+            }
+        }
+    }
+}
