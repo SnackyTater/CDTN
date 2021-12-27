@@ -1,35 +1,43 @@
 import _ from 'lodash/fp';
-import { useReducer, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPassion } from '../../../../../../api/common/passion';
 import { TextInput, GenderPicker, PassionPicker, ImageCardList, TextAreaInput, DatePicker } from '../../../../../../component';
-import { userAction, userInitialState, userReducer } from '../../../../../../store';
+import { userAction } from '../../../../../../store';
+import { getLocation } from '../../../../../../utils/utils';
 
 import './user.scss'
 
-export default function User() {
+export default function User({state, dispatch, setLoading}) {
     const [passions, setPassion] = useState([]);
-    const [state, dispatch] = useReducer(userReducer, userInitialState);
     const { SET_USER_INFO, SET_USER_IMAGE, SET_USER_PASSION } = userAction;
 
     useEffect(() => {
-        getPassion().then((list) => {
-            console.log(list)
-            setPassion(list);
-        }).catch((err) => {
-            console.log(err);
-        })
+        Promise.all([getPassion(), getLocation()]).then((data) => {
+            const passionList = data[0];
+            const { coords } = data[1];
 
+            setPassion(passionList);
+            dispatch({
+                type: SET_USER_INFO,
+                payload: {
+                    name: 'coordinates',
+                    value: [coords.longitude, coords.latitude]
+                }
+            })
+            setLoading(false);
+        })
     }, [])
 
     const changeHanlder = (e) => {
-        e.preventDefault();
-
+        // e.preventDefault();
         const {name, value} = e.target;
         dispatch({
             type: SET_USER_INFO,
+            
             payload: {
                 name: name,
-                value: value
+                value: value,
+                validate: true,
             }
         })
     }
@@ -62,17 +70,28 @@ export default function User() {
     return (
         <div className='user-form'>
             <div className='user-form__content'>
-                <div style={{margin: ' 0 auto'}}>
+                <div style={{margin: ' 0 0'}}>
                     
+                    <h3>full name</h3>
                     <TextInput 
                         name={'fullName'}
-                        label={'full name'}
                         onChange={changeHanlder}
+                        error={state?.error?.fullName}
                     />
 
                     <h3>gender</h3>
-                    <GenderPicker 
+                    <GenderPicker
+                        name={'gender'}
                         onClick={changeHanlder}
+                        error={state?.error?.gender}
+                    />
+
+                    <h3>interest in</h3>
+                    <GenderPicker
+                        name={'interestIn'}
+                        onClick={changeHanlder}
+                        genderArray={['male', 'female', 'both']}
+                        error={state?.error?.interestIn}
                     />
 
                     <h3>select passion</h3>
@@ -80,6 +99,7 @@ export default function User() {
                         passions={passions}
                         selectPassion={passionChangeHandler}
                         selectedPassion={state.user.info.passions}
+                        error={state.error.passions}
                     />
 
                     <h3>date of birth</h3>
@@ -87,6 +107,7 @@ export default function User() {
                         label={'date of birth'}
                         name={'DateOfBirth'}
                         onChange={changeHanlder}
+                        error={state?.error?.DateOfBirth}
                     />
 
                     <h3>tell us about yourself</h3>
@@ -103,6 +124,7 @@ export default function User() {
                         row={[1,2]}
                         column={[1,2,3]}
                         onChange={imageChangeHandler}
+                        error={state?.error?.profileImage}
                     />
                 </div>
             </div>

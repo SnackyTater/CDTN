@@ -9,10 +9,10 @@ export default function MatchCardList({setLoading}) {
 
     useEffect(() => {
         setLoading(true);
-        getRecommend({token: cookies.jwt}).then((list) => {
-            setMatchCardList(list);
-            setLoading(false);
-        })
+        // getRecommend({token: cookies.jwt}).then((list) => {
+        //     setMatchCardList(list);
+        //     setLoading(false);
+        // })
     }, [])
 
     return (

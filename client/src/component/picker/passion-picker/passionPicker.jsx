@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { SimpleButton, Tag, DefaultBackdrop } from '../../index';
 import './passionPicker.scss'
 
-export default function PassionPicker({passions, selectPassion, selectedPassion}) {
+export default function PassionPicker({passions, selectPassion, selectedPassion, error}) {
     const [isOpen, setOpen] = useState(false);
     const [activePassion, setActivePassion] = useState([]);
 
@@ -39,7 +39,7 @@ export default function PassionPicker({passions, selectPassion, selectedPassion}
                             />
                         )
                 }
-                
+                {!error.status && <h3 className='passion-picker-error'>{error.message}</h3>}
             </div>
             <DefaultBackdrop
                 isOpen={isOpen}

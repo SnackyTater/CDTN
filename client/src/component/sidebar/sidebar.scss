@@ -12,6 +12,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        padding: 5px;
 
         &__nav{
             display: flex;
@@ -26,6 +27,7 @@
             span{
                 padding-left: 5px;
                 font-size: 1.6rem;
+                color: white;
             }
 
             &:hover{

@@ -5,12 +5,12 @@ import { gender } from '../../../const/gender';
 
 import './genderPicker.scss'
 
-export default function GenderPicker({genderArray, onClick, selected}) {
+export default function GenderPicker({genderArray, onClick, selected, name, error}) {
     const [hightlight, setHighlight] = useState('');
 
     const clickHandler = (e) => {
         setHighlight(e.target.value);
-        onClick(e.target.value);
+        onClick(e);
     }
 
     const options = genderArray || gender;
@@ -21,13 +21,15 @@ export default function GenderPicker({genderArray, onClick, selected}) {
                 options.map((gender, index) => 
                     <SimpleButton 
                         key={index}
-                        name={'gender'}
+                        name={name}
+                        value={gender}
                         className={(hightlight === gender || selected === gender) ? 'simple-button--active' : 'simple-button'} 
                         content={gender} 
                         onClick={clickHandler}
                     />
                 )
             }
+            {!error?.status && <h3 className='gender-picker-error'>{error?.message}</h3>}
         </div>
     )
 }

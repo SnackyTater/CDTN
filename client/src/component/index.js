@@ -24,6 +24,10 @@ export { default as PassionPicker } from './picker/passion-picker/passionPicker'
 export { default as ImageCard } from './card/image-card/image-card';
 export { default as MatchCard } from './card/match-card/match-card';
 
+//slider
+export { default as AgeSlider } from './slider/age-slider/age-slider';
+export { default as RangeSlider } from './slider/range-slider/range-slider';
+
 //popup
 export { default as ForgotPasswordPopup } from './popup/forgot-password/forgot-password';
 export { default as PassionPopup } from './popup/passion/passions';

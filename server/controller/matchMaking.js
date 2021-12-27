@@ -1,5 +1,5 @@
 const user = require('../models/user');
-const {createChatRoom, } = require('./chat');
+const {createChatRoom, getChatRoom} = require('./chat');
 const { dobCalculator } = require('../scripts/utils');
 
 const matchUser = async(userID, targetID) => {
@@ -81,6 +81,7 @@ const unlikeUser = async(userID, targetID) => {
 }
 
 const toggleLikeUser = async(userID, targetID) => {
+    console.log(userID, targetID);
     //userID in receive parameter is actually user's account id
     const userInfo = await user.findOne({"_id": userID});
     
@@ -302,11 +303,18 @@ const getMatches = async(userID) => {
     })
     .lean();
 
-    console.log(JSON.stringify(userData))
+    const matchList = (!userData) 
+        ? [] 
+        : userData.matchMaking.status
+        .filter((user) => user.id != null)
+        .map((user) => user.id);
 
-    const newData = (!userData) ? [] : userData && userData.matchMaking.status.map((user) => user.id);
-
-    return newData;
+    const matchListWithChat = Promise.all(matchList.map(async(user) => {
+        const chatRoom = await getChatRoom(userID, user._id);
+        return {...user._doc, chat: chatRoom}
+    })) 
+    console.log('s')
+    return matchListWithChat;
     
 }
 

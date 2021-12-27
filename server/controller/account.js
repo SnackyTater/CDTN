@@ -47,7 +47,7 @@ const login = async (accountIdentityVerification, password) => {
             {email: accountIdentityVerification}
         ]
     });
-
+    console.log(accountInfo)
     //if find atleast 1 account                                   
     if(accountInfo != null){
         const {password: accountPassword, _id: accountID} = accountInfo;

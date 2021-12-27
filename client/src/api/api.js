@@ -17,7 +17,7 @@ export const fetcher = {
             const {data} = await axios.get(`${host}/${url}`, config({token, type}));
             return data;
         } catch(error) {
-            throw new Error(error.message);
+            throw new Error(error?.response?.data);
         }
     },
     post: async({url, token, type, body}) => {
@@ -30,10 +30,11 @@ export const fetcher = {
     },
     put: async({url, token, type, body}) => {
         try{
+            console.log(config({token: token, type}))
             const {data} = await axios.put(`${host}/${url}`, body, config({token, type}));
             return data;
         } catch(error) {
-            throw new Error(error.message);
+            throw new Error(error?.response?.data);
         } 
     },
     delete: async({url, token, type}) => {

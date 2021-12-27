@@ -1,7 +1,7 @@
 import {ImageCard } from '../index';
 import './image-card-list.scss'
 
-export default function ImageCardList({column, row, onChange, inputImageList}) {
+export default function ImageCardList({column, row, onChange, inputImageList, error}) {
     let index = 0;
 
     return (
@@ -20,6 +20,7 @@ export default function ImageCardList({column, row, onChange, inputImageList}) {
 
                 })}
             </div>)}
+            {!error.status && <p className='image-card-list-error'>{error.message}</p>}
         </div>
     )
 }

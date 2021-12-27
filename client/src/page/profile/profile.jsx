@@ -1,30 +1,22 @@
 import { useState } from 'react';
 
-import './profile.css';
+import { LoadingBackdrop, Snackbar, Sidebar } from '../../component';
 
-//import component
-import Loading from '../../common/component/loading/loading';
-import SnackbarNotification from '../../common/component/snackbar-notification/snackbar-notification';
-import Overlay from '../../common/component/overlay/overlay';
+import SidebarContent from './component/sidebar/sidebar';
+import FormProfile from './component/main/form/user/user';
+import FormAccount from './component/main/form/account/account';
+import FormSetting from './component/main/form/config/config';
+import LogoutPopup from './component/main/popup/logout/logout';
+import DeleteAccountPopup from './component/main/popup/delete/delete';
 
-//import modules
-import SideBar from '../../modules/sidebar/side-bar';
-
-//import content
-import SidebarContent from './sidebar-content/sidebar-content';
-import FormProfile from './form/profile';
-import FormAccount from './form/account';
-import FormSetting from './form/setting';
-import LogoutPopup from './popup/logout/logout';
-import DeleteAccountPopup from './popup/deleteAccount/deleteAccount';
+import './profile.scss';
 
 export default function Profile() {
     const [isLoading, setLoading] = useState(false);
     const [form, setForm] = useState('profile');
     const [popup, setPopup] = useState(null);
-    const [snackbar, setSnackbar] = useState({severity: null, message: null});
-    const [avatar, setAvatar] = useState('');
-    const [fullName, setFullName] = useState('user');
+    const [snackbar, setSnackbar] = useState({severity: null, message: null, isOpen: false});
+    const [sidebarHeader, setSidebarHeader] = useState({avatar: '', name: ''});
 
     const formSwitch = (controller) => {
         switch(controller){
@@ -32,8 +24,7 @@ export default function Profile() {
                 return <FormProfile 
                     setLoading={(status) => {setLoading(status)}}
                     setSnackbar={(content) => {setSnackbar(content)}}
-                    setImage={(image) => {setAvatar(image)}}
-                    setName={(name) => {setFullName(name)}}
+                    setSidebarHeader={(content) => {setSidebarHeader(content)}}
                 />;
 
             case 'account': 
@@ -59,10 +50,15 @@ export default function Profile() {
     }
 
     return (
-        <div className="profile__container">
+        <div className="profile">
             <div className='profile__sidebar'>
-                <SideBar 
-                    header={{image: avatar, fullName}} 
+                <Sidebar 
+                    header={
+                        {
+                            image: sidebarHeader.avatar, 
+                            fullName: sidebarHeader.fullName
+                        }
+                    } 
                     content={
                         <SidebarContent 
                             navigateTo={setForm}
@@ -73,21 +69,29 @@ export default function Profile() {
             </div>
             
             <div className='profile__content'>
-                {(isLoading) ? <Loading /> : null}
-                <div className='profile__form__popup'>
+                {isLoading && <LoadingBackdrop 
+                    config={{
+                        width: '80%',
+                        marginLeft: 'auto'
+                    }}
+                />}
+                
+                <div className='profile__content__popup'>
                     {
                         popupSwitch(popup)
                     }
                 </div>
-                <div className='profile__content__container'>
+                <div className='profile__content__form'>
                     {
                         formSwitch(form)
                     }
                 </div>
             </div>
-            <SnackbarNotification 
+            <Snackbar
                 message={snackbar.message}
                 severity={snackbar.severity}
+                isOpen={snackbar.isOpen}
+                closeSnackbar={() => {setSnackbar({...snackbar, isOpen: false})}}
             />
         </div>
     )

@@ -2,18 +2,15 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 
-import './deleteAccount.css';
+import './logout.scss';
 
-import {deleteAccount} from '../../../../api/common/account';
-
-export default function DeleteAccount({closePopup}) {
+export default function Logout({closePopup}) {
     const [cookies, setCookie, removeCookie] = useCookies();
     const history = useHistory();
 
-    const deleteHandler = async(e) => {
-        await deleteAccount({token: cookies.jwt}).catch((err) => {console.log(err)})
-        // removeCookie('jwt');
+    const logoutHandler = (e) => {
         history.push('/');
+        // removeCookie('jwt');
     }
 
     const closePopupHandler = (e) => {
@@ -22,11 +19,11 @@ export default function DeleteAccount({closePopup}) {
 
     return (
         <div className='logout__container'>
-            <p>are you really sure you want to delete your account. once you've done it, there's no going back</p>
+            <p>you sure you want to logout</p>
             <div className='logout__button__container'>
                 <button 
                     className='logout__button'
-                    onClick={deleteHandler}
+                    onClick={logoutHandler}
                 >ok</button>
 
                 <button 

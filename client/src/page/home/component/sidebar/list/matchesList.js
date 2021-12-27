@@ -15,9 +15,10 @@ export default function MatchesList({setLoading}) {
     const [cookies, setCookies] = useCookies('jwt');
 
     useEffect(() => {
-        setLoading(true);
+        // setLoading(true);
         setCookies('jwt', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBSUQiOiI2MWEyZGQzMjM3NmJhNjJlNGZhNzE1NmIiLCJVSUQiOiI2MWEyZGQzMjM3NmJhNjJlNGZhNzE1NmQiLCJpYXQiOjE2Mzk5OTc4NTQzMDAsImV4cCI6MTY0MDA4NDI1NDMwMH0.UVfvR0suxlMQn5bT91YNAQqZwebK9WLxGFpBxjg4uV0');
         getMatches({ token: cookies.jwt }).then((list) => {
+            console.log(list)
             setMatchList([...list, ...list]);
             setLoading(false);
         }).catch((err) => {
@@ -34,12 +35,12 @@ export default function MatchesList({setLoading}) {
                         </div>
                     </div>
                 : <List>
-                    {
+                    {/* {
                         matchList.map((user, index) => 
                         <CustomListItem 
                             key={index}
-                            avatar={user.profileImage[0].imagePublicURL}
-                            mainText={user.fullName}
+                            avatar={user?.info.profileImage[0]?.imageURL}
+                            mainText={user?.info.fullName}
                             secondaryAction={
                                 <div>
                                     <CustomIconButton 
@@ -57,7 +58,7 @@ export default function MatchesList({setLoading}) {
                                 </div>
                             }
                         />)
-                    }
+                    } */}
                 </List>
             }
         </>

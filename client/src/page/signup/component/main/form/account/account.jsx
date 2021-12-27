@@ -1,13 +1,23 @@
-import { useReducer } from 'react';
-import { IconButton, InputAdornment } from '@mui/material';
+import { InputAdornment } from '@mui/material';
 import { Mail, PhoneAndroid, Person, Password } from '@mui/icons-material';
 
 import { TextInput } from '../../../../../../component';
-import { acccountAction, accountInitialState, accountReducer} from '../../../../../../store';
+import { acccountAction } from '../../../../../../store';
 
-export default function AccountForm() {
-    const [state, dispatch] = useReducer(accountReducer, accountInitialState);
-    const { SET_USER_INFO, SET_USER_IMAGE, SET_USER_PASSION } = acccountAction;
+export default function AccountForm({state, dispatch}) {
+    const { SET_ACCOUNT_INFO } = acccountAction;
+
+    const changeHanlder = (e) => {
+        const {value, name} = e.target;
+        dispatch({
+            type: SET_ACCOUNT_INFO,
+            payload: {
+                name: name,
+                value:  value,
+                validate: true
+            }
+        })
+    }
 
     const formList = [
         {
@@ -36,25 +46,32 @@ export default function AccountForm() {
     ]
 
     return (
-        <div>
-            {   
-                formList.map((item) => <TextInput
-                    key={item.name}
-                    placeholder={state.account[item.name]}
-                    label={item?.label ? item?.label : item?.name}
-                    name={item.name}
-                    type={item.type}
-                    error={state.error[item?.name]}
-                    onChange={() => {console.log('s')}}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                                {item?.iconStart}
-                            </InputAdornment>
+        <div className='account-form'>
+            <div className='account-content'>
+                {   
+                    formList.map((item, index) => <div
+                        key={index}
+                    >
+                        <h3>{item.label || item.name}</h3>
+
+                        <TextInput
+                            placeholder={state.account[item.name]}
+                            name={item.name}
+                            type={item.type}
+                            error={state.error[item?.name]}
+                            onChange={changeHanlder}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        {item?.iconStart}
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </div>
                         )
-                    }}
-                />)
-            }
+                }
+            </div>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import _ from 'lodash/fp';
-import { SET_USER_INFO, SET_USER_CONFIG, SET_USER_IMAGE, SET_USER_PASSION, SET_USER } from './action';
+import { SET_USER_INFO, SET_USER_CONFIG, SET_USER_IMAGE, SET_USER_PASSION, SET_USER, VALIDATE_USER_INFO } from './action';
 import { checkDOB, checkFullName, checkPassions } from '../../utils/utils';
 
 
@@ -35,26 +35,72 @@ export const initialState = {
             passions: [],
             profileImage:[]
         },
-        config: {
-            coordinates: [0, 0],
-            gender: 'others',
-            ageFrom: 18,
-            ageTo: 32,
-            diameter: 80000,
-            diameterStatus: false,
+        matchMaking: {
+            config: {
+                location: {
+                    coordinates: [0,0]
+                },
+                gender: '',
+                age: {
+                    from: 18,
+                    to: 32
+                },
+                zoneLimit:{
+                    diameter: 80000,
+                    isOn: true
+                }
+            }
         }
     }
 }
 
 const validateField = (name, value) => {
+    let checker = {status: true, message: ''}
     switch(name){
-        case 'fullName': 
-            return checkFullName(value);
-        case 'DateOfBirth': 
-            return checkDOB(value);
-        default: 
-            return {status: true, message: ''}
-}}
+        case 'fullName':{
+            checker = checkFullName(value);
+            break;
+        }
+        case 'DateOfBirth': {
+            checker = checkDOB(value);
+            break;
+        }
+        case 'gender': {
+            if(value === '')
+            checker={status: false, message: 'must pick one'}
+            break;
+        }
+        case 'interestIn': {
+            if(!value)
+            checker={status: false, message: 'must pick one'}
+            break;
+        }
+        case 'profileImage': {
+            if(value.length === 0)
+            checker={status: false, message: 'must add atleast one image'}
+            break;
+        }
+        case 'passions': {
+            if(value.length < 3)
+            checker={status: false, message: 'must add atleast three passion'}
+            if(value.length > 5)
+            checker={status: false, message: 'must not add more than five passion'}
+            break;
+        }
+        default: {}
+    }
+    return checker
+}
+
+const configPath = (name) => {
+    switch(name){
+        case 'coordinates': return 'location.coordinates'
+        case 'gender': return 'gender'
+        case 'diameter': return 'zoneLimit.diameter'
+        case 'disableDiameter': return 'zoneLimit.isOn'
+        case 'age': return 'age'
+    }
+}
 
 
 export const reducer = (state, action) => {
@@ -62,18 +108,15 @@ export const reducer = (state, action) => {
     let stateHolder = state;
     switch(type){
         case SET_USER: {
-            stateHolder = payload.value;
+            stateHolder = _.set('user', payload, stateHolder);
             break;
         }
         case SET_USER_INFO: {
+            console.log('set info')
             if(payload.validate){
                 stateHolder = _.set(`error.${payload.name}`, validateField(payload.name, payload.value), stateHolder);
             }
             stateHolder = _.set(`user.info.${payload.name}`, payload.value, stateHolder);
-            break;
-        }
-        case SET_USER_CONFIG: {
-            stateHolder = _.set(`user.config.${payload.name}`, payload.value, stateHolder);
             break;
         }
         case SET_USER_IMAGE: {
@@ -100,9 +143,28 @@ export const reducer = (state, action) => {
 
             break;
         }
+        case VALIDATE_USER_INFO: {
+            let error = {};
+            payload.value.forEach((field) => {
+                
+                error = _.set(field, validateField(field, state.user.info[field]), error);
+            })
+            stateHolder = _.set(`error`, error, stateHolder);
+            break;
+        }
+        case SET_USER_CONFIG: {
+            if(payload.name === 'age'){
+                payload.value = {
+                    from: payload.value[0],
+                    to: payload.value[1],
+                }
+            }
+            stateHolder = _.set(`user.matchMaking.config.${configPath(payload.name)}`, payload.value, stateHolder);
+            break;
+        }
         default: 
             return state;
     }
-    console.log(stateHolder)
+    console.log(stateHolder);
     return stateHolder;
 }

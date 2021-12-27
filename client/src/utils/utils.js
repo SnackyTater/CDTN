@@ -50,7 +50,9 @@ const ageCalulator = (dob) => {
 }
 
 const checkMobileNumber = (mobileNumber) => {
-    if(mobileNumber === 0) return {status: false, message: 'must enter mobile number'};
+    const checker = /^[0-9]*$/;
+    if(mobileNumber === '') return {status: false, message: 'must enter mobile number'};
+    if(!mobileNumber.match(checker)) return {status: false, message: 'invalid mobile number'}; 
     return {status: true, message: ''}
 }
 
@@ -60,4 +62,14 @@ const getLocation = async(func) => {
     })
 }
 
-export {checkUsername, checkEmail, checkPassword, checkPasswordMatch, ageCalulator, checkDOB, checkFullName, checkPassions, checkMobileNumber, getLocation};
+const checkError = (input) => {
+    let checker = true;
+    Object.keys(input).forEach((key) => {
+        console.log(key, input[key].status);
+        if(!input[key].status) checker = false
+        // console.log(key, input[key].status);
+    })
+    return checker;
+}
+
+export {checkUsername, checkEmail, checkPassword, checkPasswordMatch, ageCalulator, checkDOB, checkFullName, checkPassions, checkMobileNumber, getLocation, checkError};

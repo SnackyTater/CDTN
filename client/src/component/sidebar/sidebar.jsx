@@ -9,11 +9,11 @@ export default function SideBar({header, content}) {
     return (
         <div className='sidebar'>
             <div className='sidebar__header'>
-                <a className='header__nav' href={'/profile'}>
+                <a className='sidebar__header__nav' href={'/profile'}>
                     <Avatar image={image}/>
                     <span>{fullName}</span>
                 </a>
-                <a className='header__nav' href={'/home'}>
+                <a className='sidebar__header__nav' href={'/home'}>
                     <IconButton 
                         icon={<Home/>}
                     />

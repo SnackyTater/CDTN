@@ -1,13 +1,11 @@
 const chatLog = require('../models/chatlog');
 
-const getChatList = async (userID) => {
+const getChatRoom = async (userID, userID2) => {
     try{
-        const list = await chatLog.find({
+        const list = await chatLog.findOne({
             "participant": {
-                $in: [userID]
+                $in: [userID, userID2]
             }
-        }).populate({
-            "path": 'participant',
         }).lean();
         return list;
     } catch(err){
@@ -69,7 +67,7 @@ const sendChat = async(roomID, senderID, message) => {
 
 
 module.exports = {
-    getChatList,
+    getChatRoom,
     getChatByRoomID,
     sendChat,
     createChatRoom,

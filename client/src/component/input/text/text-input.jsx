@@ -16,8 +16,9 @@ export default function Input({name, label, disableStatus, onChange, error, type
             fullWidth
             value={placeholder}
             sx={{
-                "width": '400px',
+                "maxWidth": '400px',
                 "alignSelf": 'center',
+                "padding": '15px 0px'
             }}
         />
     )

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {List, ListItemButton, ListItemText, ListItemIcon} from '@mui/material';
 import {Person, AccountCircle, Settings, PowerSettingsNew, DeleteForever} from '@mui/icons-material';
 

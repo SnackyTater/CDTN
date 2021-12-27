@@ -29,8 +29,9 @@ const createAccount = ({accountInfo, userInfo}) => {
         body: { accountInfo, userInfo }
     })
 }
-const updateAccount = ({body}) => {
+const updateAccount = ({token, body}) => {
     return fetcher.put({
+        token: token,
         url: 'account',
         body: body
     })
