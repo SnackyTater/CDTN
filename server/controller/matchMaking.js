@@ -218,27 +218,7 @@ const recommend = async(userID) => {
                 "_id": 1,
             })
             .lean();
-
-        const exclude = matchMaking.status.map((item) => {
-            return item.id.toString();
-        });
-
-        const gender = (matchMaking.config.gender === 'both') ? ([
-            {"info.gender": 'female'}, 
-            {"info.gender": 'male'}, 
-            {"info.gender": 'unknown'}
-        ]) : ([
-            {"info.gender": matchMaking.config.gender}
-        ]);
-
-        const DOBFrom = dobCalculator(matchMaking.config.age.from);
-        const DOBTo = dobCalculator(matchMaking.config.age.to);
-
-        const longtitude = matchMaking.config.location.coordinates[0];
-        const latitude = matchMaking.config.location.coordinates[1];
-        const maxDistance = matchMaking.config.zoneLimit.diameter;
-
-        //wil priority these people to appear first in array
+        
         const priority = await
             user.find({
                 "matchMaking.status": {
@@ -251,29 +231,57 @@ const recommend = async(userID) => {
             })
             .lean();
 
+        //these id will be exclude in the main recommend query
+        const excludeIDs = matchMaking.status.map((user) => user.id.toString());
+        const priorityIDs = priority.map((user) => user._id.toString())
+
+        //gender
+        const gender = (matchMaking.config.gender === 'both') ? ([
+            {"info.gender": 'female'}, 
+            {"info.gender": 'male'}, 
+            {"info.gender": 'unknown'}
+        ]) : ([
+            {"info.gender": matchMaking.config.gender}
+        ]);
+
+        //DOB
+        const DOBFrom = dobCalculator(matchMaking.config.age.from);
+        const DOBTo = dobCalculator(matchMaking.config.age.to);
+
+        //geolocation
+        const findByGeoLocaton = matchMaking.config.zoneLimit.isOn;
+        const longtitude = matchMaking.config.location.coordinates[0];
+        const latitude = matchMaking.config.location.coordinates[1];
+        const maxDistance = matchMaking.config.zoneLimit.diameter;
+
+        //build query
+        const query = {
+            $or: gender,
+            "_id": {
+                $nin: [...excludeIDs, ...priorityIDs],
+                $ne: _id.toString(),
+            },
+            "info.DateOfBirth": {
+                $lte: DOBFrom,
+                $gte: DOBTo
+            },
+            "info.relationship.status": "single"
+        }
+        console.log(findByGeoLocaton);
+        if(findByGeoLocaton) query["matchMaking.config.location"] = {
+                $nearSphere: {
+                    $geometry: {
+                       type : "Point",
+                       coordinates : [longtitude, latitude]
+                    },
+                    $maxDistance: maxDistance
+                 }
+            }
+        console.log(longtitude, latitude)
+
         //find additional people 
         let recs = await 
-            user.find({
-                $or: gender,
-                "_id": {
-                    $nin: exclude,
-                    $ne: _id,
-                },
-                "info.DateOfBirth": {
-                    $lte: DOBFrom,
-                    $gte: DOBTo
-                },
-                "info.relationship.status": "single",
-                // "matchMaking.config.location": {
-                //     $nearSphere: {
-                //         $geometry: {
-                //            type : "Point",
-                //            coordinates : [longtitude, latitude]
-                //         },
-                //         $maxDistance: maxDistance
-                //      }
-                // }
-            })
+            user.find(query)
             .populate({
                 path: 'info.passions'
             })

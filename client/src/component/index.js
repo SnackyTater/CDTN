@@ -40,4 +40,5 @@ export { default as Avatar } from './avatar/avatar';
 export { default as Switch } from './switch/switch';
 export { default as Snackbar } from './snackbar/snackbar';
 export { default as Tag } from './tag/tag';
+export { default as Carousel } from './carousel/carousel';
 

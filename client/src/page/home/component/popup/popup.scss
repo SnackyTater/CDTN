@@ -5,13 +5,27 @@
 
     &__avatar{
         width: 30%;
-        height: 100%;
-        background-color: red;
+        height: inherit;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &__info{
         width: 70%;
         height: 100%;
-        background-color: blue;
+        color: rgba($color: #000000, $alpha: 0.7);
+
+        &__header{
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            width: 30%;
+        }
+
+        &__main{
+            padding: 20px;
+        }
     }
 }

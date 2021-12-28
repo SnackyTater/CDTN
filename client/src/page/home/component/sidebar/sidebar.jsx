@@ -14,9 +14,8 @@ export default function SidebarContent({setPopup}) {
     const history = useHistory();
 
     useEffect(() => {
-        console.log('aaaaaa')
         getMatches({token: cookies.jwt}).then((matchList) => {
-            setMatchList(matchList)
+            setMatchList([...matchList, ...matchList])
         })
     },[]);
 

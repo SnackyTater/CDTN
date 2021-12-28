@@ -5,6 +5,7 @@ import { getUserInfo } from '../../api/common/user';
 
 import SidebarContent from './component/sidebar/sidebar.jsx';
 import Popup from './component/popup/popup';
+import MatchCardList from './component/main/match-card-list/match-card-list';
 
 import './home.scss';
 
@@ -53,8 +54,7 @@ export default function Home() {
 
             <div className='home__content__container'>
                 <div className='home__content'>
-                    <div style={{width: '100px', height: '100px', backgroundColor: 'black', position: 'absolute'}}/>
-                    <div style={{width: '100px', height: '100px', backgroundColor: 'black', position: 'red'}}/>
+                    <MatchCardList />
                 </div>
 
                 <div className='home__popup'>
