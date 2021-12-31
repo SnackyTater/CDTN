@@ -11,20 +11,18 @@ import './home.scss';
 
 export default function Home() {
     const [isLoading, setLoading] = useState(false);
-    const [snackbar, setSnackbar] = useState({});
+    const [snackbar, setSnackbar] = useState({severity: '', message: '', isOpen: false});
     const [sidebar, setSidebar] = useState({});
-    const [alert, setAlert] = useState(false);
+    const [reloadSidebar, setReloadSidebar] = useState(true);
+    
     const [cookies, setCookie] = useCookies('jwt');
     const [popup, setPopup] = useState({
         content: '',
         status: false
     });
 
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBSUQiOiI2MWM2ZGQzYTAzZDI3NmZjZjMxOTc2MWQiLCJVSUQiOiI2MWM2ZGQzYjAzZDI3NmZjZjMxOTc2MWYiLCJpYXQiOjE2NDA0ODk4MTk4NzAsImV4cCI6MTY0MDU3NjIxOTg3MH0.WVsIecsL23RbGE4B4NIHimsTBlqqIQWMaDQ2gaFmS90'
-    setCookie('jwt', token);
-
     useEffect(() => {
-        getUserInfo({token: token}).then((data) => {
+        getUserInfo({token: cookies.jwt}).then((data) => {
             setSidebar({image: data.info.profileImage[0].imageURL, fullName: data.info.fullName});
         }).catch((error) => {
             setSnackbar({
@@ -47,6 +45,7 @@ export default function Home() {
                     content={
                         <SidebarContent 
                             setPopup={(config) => {setPopup(config)}}
+                            reload={reloadSidebar}
                         />
                     }
                 />
@@ -54,7 +53,10 @@ export default function Home() {
 
             <div className='home__content__container'>
                 <div className='home__content'>
-                    <MatchCardList />
+                    <MatchCardList 
+                        setReload={() => {}}
+                        setSnackbar={(content) => {setSnackbar(content)}}
+                    />
                 </div>
 
                 <div className='home__popup'>
@@ -65,7 +67,12 @@ export default function Home() {
                     />
                 </div>
             </div>
-            <Snackbar />
+            <Snackbar 
+                severity={snackbar.severity}
+                message={snackbar.message}
+                isOpen={snackbar.isOpen}
+                closeSnackbar={() => {setSnackbar({...snackbar, isOpen: false})}}
+            />
         </div>
     )
 }

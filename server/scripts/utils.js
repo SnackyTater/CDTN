@@ -16,8 +16,34 @@ const generateCode = (stringLength) => {
     }
     return code;
 }
+
+const calculateDistance = (userCoordinates, targetCoordinates) => {
+    const earthRadius = 6.317;
+
+    const userLong = userCoordinates[0];
+    const targetLong = targetCoordinates[0];
+
+    let userLat = userCoordinates[1];
+    let targetLat = targetCoordinates[1];
+    
+
+    //distance between lats & long
+    const deltaLat = (targetLat - userLat) * Math.PI / 180;
+    const deltaLong = (targetLong - userLong) * Math.PI / 180;
+
+    //conver lat to radian
+    userLat = userLat * Math.PI / 180;
+    targetLat = targetLat * Math.PI / 180;
+
+    const haversine = Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltaLong / 2), 2) * Math.cos(userLat) * Math.cos(targetLat);
+
+    const distance = 2 * Math.asin(Math.sqrt(haversine));
+
+    return distance * earthRadius;
+}
 module.exports = {
     ageCalulator,
     dobCalculator,
     generateCode,
+    calculateDistance
 }

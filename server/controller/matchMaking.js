@@ -1,6 +1,6 @@
 const user = require('../models/user');
 const {createChatRoom, getChatRoom} = require('./chat');
-const { dobCalculator } = require('../scripts/utils');
+const { dobCalculator, calculateDistance } = require('../scripts/utils');
 
 const matchUser = async(userID, targetID) => {
     const userStatus = await user.updateOne({
@@ -231,10 +231,8 @@ const recommend = async(userID) => {
             })
             .lean();
 
-        //these id will be exclude in the main recommend query
-        const excludeIDs = matchMaking.status.map((user) => user.id.toString());
-        const priorityIDs = priority.map((user) => user._id.toString())
-
+        //build query
+        //setup
         //gender
         const gender = (matchMaking.config.gender === 'both') ? ([
             {"info.gender": 'female'}, 
@@ -254,6 +252,24 @@ const recommend = async(userID) => {
         const latitude = matchMaking.config.location.coordinates[1];
         const maxDistance = matchMaking.config.zoneLimit.diameter;
 
+        //these id will be exclude in the main recommend query (p1)
+        const excludeIDs = matchMaking.status.map((user) => user.id.toString());
+        
+        //add distance field to return data
+        const priorityWithDistance = priority.map((user) => {
+            const distance = calculateDistance([longtitude, latitude], user.matchMaking.config.location.coordinates);
+            return {
+                info: user.info,
+                matchMaking: user.matchMaking,
+                _id: user._id,
+                account: user.account,
+                distance: distance * 1000,
+            }
+        })
+
+        //these id will be exclude in the main recommend query (p2)
+        const priorityIDs = priority.map((user) => user._id.toString())
+
         //build query
         const query = {
             $or: gender,
@@ -267,28 +283,46 @@ const recommend = async(userID) => {
             },
             "info.relationship.status": "single"
         }
-        console.log(findByGeoLocaton);
-        if(findByGeoLocaton) query["matchMaking.config.location"] = {
-                $nearSphere: {
-                    $geometry: {
-                       type : "Point",
-                       coordinates : [longtitude, latitude]
-                    },
-                    $maxDistance: maxDistance
-                 }
-            }
-        console.log(longtitude, latitude)
 
         //find additional people 
-        let recs = await 
-            user.find(query)
+        const recs = await user.find(query)
             .populate({
                 path: 'info.passions'
             })
             .limit(20-priority.length);
 
-        return [...priority, ...recs];
+        //check if user turn on maxdistance: (yes) => filter any user have distance < max distance
+        const recsWithDistanceFilter = findByGeoLocaton ? (
+            recs.filter((user) => {
+                const distance = calculateDistance([longtitude, latitude], user.matchMaking.config.location.coordinates);
+                if(distance * 1000 < maxDistance / 1000) return user;
+            }).map((user) => {
+                const distance = calculateDistance([longtitude, latitude], user.matchMaking.config.location.coordinates);
+                return {
+                    info: user.info,
+                    matchMaking: user.matchMaking,
+                    _id: user._id,
+                    account: user.account,
+                    distance: distance * 1000,
+                }
+            })
+        ) : (
+            recs.map((user) => {
+                const distance = calculateDistance([longtitude, latitude], user.matchMaking.config.location.coordinates);
+                return {
+                    info: user.info,
+                    matchMaking: user.matchMaking,
+                    _id: user._id,
+                    account: user.account,
+                    distance: distance * 1000,
+                }
+            })
+        ) 
+
+        
+        return [...priorityWithDistance, ...recsWithDistanceFilter];
     } catch(err) {
+        console.log(err);
         throw(err.message);
     }
 }

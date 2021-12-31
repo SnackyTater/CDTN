@@ -8,7 +8,7 @@ import { getMatches } from '../../../../api/common/matchMaking';
 
 import './sidebar.scss';
 
-export default function SidebarContent({setPopup}) {
+export default function SidebarContent({setPopup, reload}) {
     const [cookies, setCookie] = useCookies('jwt'); 
     const [matchList, setMatchList] = useState([]);
     const history = useHistory();
@@ -17,7 +17,7 @@ export default function SidebarContent({setPopup}) {
         getMatches({token: cookies.jwt}).then((matchList) => {
             setMatchList([...matchList, ...matchList])
         })
-    },[]);
+    },[reload]);
 
 
     return (

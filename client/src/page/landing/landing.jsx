@@ -19,7 +19,7 @@ export default function Landing() {
     return(
         <>
             <header className="landing__header__container">
-                <Navbar openLoginForm={openLoginForm}/>
+                <Navbar openLoginForm={openLoginForm} mode={'dark'}/>
             </header>
             <div className="landing__content__container" style={{backgroundImage: 'url("/assets/couple-silhouette-evening-5k-2j-1920x1080.jpg")'}}>
                 <div className="landing__content">

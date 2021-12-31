@@ -9,6 +9,7 @@ router.get('/recs', authenticateToken, async(req, res) => {
         let data = await recommend(req.tokenInfo.UID);
         res.status(200).json(data);
     } catch(err) {
+        console.log(err);
         res.status(400).send(err);
     }
 });

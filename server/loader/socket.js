@@ -4,7 +4,6 @@ const {verifyToken} = require('../authorization/auth');
 module.exports = (io) => {
     io
     .use(async(socket, next) => {
-        console.log('aaaa')
         if(socket.handshake.query && socket.handshake.query.token){
             
             try{
@@ -27,6 +26,7 @@ module.exports = (io) => {
         })
 
         socket.on('message', (payload) => {
+            console.log(payload)
             const {room, message} = payload;
             io.to(room).emit('message', {
                 from: socket.tokenInfo.UID,

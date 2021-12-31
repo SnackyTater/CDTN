@@ -13,6 +13,25 @@ const getChatRoom = async (userID, userID2) => {
     }  
 }
 
+const getChatList = async(userID) => {
+    const list = await chatLog.find({
+        "participant": {
+            $in: [userID]
+        }
+    })
+    .populate({
+        "path": 'participant',
+        "select": 'info.fullName info.profileImage _id'
+    })
+
+    const chatList = (!list) 
+        ? [] 
+        : list
+        .filter((chat) => chat != null);
+
+    return chatList
+}
+
 const getChatByRoomID = async (roomID) => {
     try{
         const chatRoom = await chatLog.findOne({
@@ -71,4 +90,5 @@ module.exports = {
     getChatByRoomID,
     sendChat,
     createChatRoom,
+    getChatList,
 }

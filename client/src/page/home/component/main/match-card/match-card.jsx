@@ -3,7 +3,7 @@ import { Close, Favorite, ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-ma
 import { ageCalulator } from '../../../../../utils/utils';
 
 import './match-card.scss';
-export default function MatchCard({info, like, nope, prev, next}) {
+export default function MatchCard({info, like, nope, prev, next, value}) {
     const userInfo = info?.info;
 
     const iconConfig = (color) => {
@@ -68,8 +68,9 @@ export default function MatchCard({info, like, nope, prev, next}) {
             <div className='match-card__button'>
                 {
                     buttonList.map((button, index) => <IconButton
+                        value={value}
                         key={index}
-                        onClick={(e) => button.onClick(e)}
+                        onClick={(e) => button.onClick(value)}
                         config={{
                             width: '70px',
                             height: '70px',
