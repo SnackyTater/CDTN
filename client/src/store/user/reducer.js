@@ -46,7 +46,7 @@ export const initialState = {
                     to: 32
                 },
                 zoneLimit:{
-                    diameter: 80000,
+                    diameter: 8000,
                     isOn: true
                 }
             }
@@ -165,6 +165,5 @@ export const reducer = (state, action) => {
         default: 
             return state;
     }
-    console.log(stateHolder);
     return stateHolder;
 }

@@ -1,5 +1,6 @@
 import {useState, useEffect, useReducer} from 'react';
 import { useCookies } from 'react-cookie';
+import { useHistory } from 'react-router-dom';
 
 //load component
 import { LoadingButton, TextInput, TextAreaInput, ImageCardList, GenderPicker, PassionPicker, DatePicker } from '../../../../../../component';
@@ -12,26 +13,24 @@ export default function FormProfile({setLoading, setSnackbar, setSidebarHeader})
     const [state, dispatch] = useReducer(userReducer, userInitialState);
     const [cookies, setCookies] = useCookies('jwt');
     const [passions, setPassion] = useState([]);
+    const history = useHistory();
 
     const {SET_USER_INFO, SET_USER_IMAGE, SET_USER_PASSION, SET_USER} = userAction;
 
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBSUQiOiI2MWM2ZGQzYTAzZDI3NmZjZjMxOTc2MWQiLCJVSUQiOiI2MWM2ZGQzYjAzZDI3NmZjZjMxOTc2MWYiLCJpYXQiOjE2NDA0ODk4MTk4NzAsImV4cCI6MTY0MDU3NjIxOTg3MH0.WVsIecsL23RbGE4B4NIHimsTBlqqIQWMaDQ2gaFmS90'
+    const token = cookies.jwt;
     
     useEffect(() => {
         setLoading(true);
+        if(!token) history.push('/')
         Promise.all([getUserInfo({token}), getPassion()]).then((data) => {
             setPassion(data[1]);
             dispatch({
                 type: SET_USER,
                 payload: data[0]
             })
-            setSidebarHeader({
-                fullName: data[0].info.fullName,
-                avatar: data[0].info.profileImage[0].imageURL
-            })
+            setSidebarHeader(data[0])
             setLoading(false);
         }).catch((error) => {
-            // console.dir(error);
             setSnackbar({
                 isOpen: true,
                 severity: 'error',
@@ -101,7 +100,7 @@ export default function FormProfile({setLoading, setSnackbar, setSidebarHeader})
                 setSnackbar({
                     isOpen: true,
                     severity: 'error',
-                    message: `cant load user info due to ${error.message}`
+                    message: `cant save user info due to ${error.message}`
                 })
             }
             
@@ -109,7 +108,7 @@ export default function FormProfile({setLoading, setSnackbar, setSidebarHeader})
     }
 
     return (
-        <div className='profile__form__container'>
+        <div className='profile__form'>
             <div className='profile__form__content'>
                 <h2 className="form__field-name">image</h2>
                 <ImageCardList
@@ -140,8 +139,8 @@ export default function FormProfile({setLoading, setSnackbar, setSidebarHeader})
                 <PassionPicker 
                     passions={passions}
                     selectPassion={passionChangeHandler}
-                    selectedPassion={state.user.info.passions}
-                    error={state.error.passions}
+                    selectedPassion={state?.user?.info?.passions}
+                    error={state?.error?.passions}
                 />
 
                 <h3>date of birth</h3>

@@ -1,10 +1,8 @@
-$backgroundTinder1: #ff6036;
-$backgroundTinder2: #fd267a;
+$tinderColor1: #ff6036;
+$tinderColor2: #fd267a;
 
 $textColorLight: black;
 $textColorDark: white;
 
-@mixin BackgroundTinder {
-    background-image: linear-gradient(225deg, $backgroundTinder1, $backgroundTinder2);
-}
+$tinderGradient: linear-gradient(225deg, $tinderColor1, $tinderColor2);
 

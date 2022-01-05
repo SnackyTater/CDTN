@@ -28,11 +28,10 @@ export default function Sidebar({userID, setRoom}) {
         let name = '';
         chat.participant.map((user) => {
             if(user._id === lastMessage?.from)
-                name = user.info.fullName
+                name = user?.info?.fullName
         });
 
-        console.log(lastMessage, name);
-        return `from ${name}: ${lastMessage.message}`
+        return `from ${name}: ${lastMessage?.message}`
     }
 
     return (

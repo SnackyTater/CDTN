@@ -1,18 +1,21 @@
+@import '../../../utils/font';
 .backdrop__form{
     &__container{
-        width: 700px;
+        width: fit-content;
+        max-width: 700px;
         background-color: white;
-        padding: 20px;
+        padding: 40px;
         border-radius: 15px;
         text-align: center;
 
         span{
+            font-family: $BonaNova;
             font-size: 1.7vw;
             color: rgba($color: #000000, $alpha: 0.5);
         }
     }
     &__button__container{
         position: relative;
-        margin-left: 92%;
+        left: 45%
     }
 }

@@ -81,13 +81,13 @@ const unlikeUser = async(userID, targetID) => {
 }
 
 const toggleLikeUser = async(userID, targetID) => {
-    console.log(userID, targetID);
     //userID in receive parameter is actually user's account id
     const userInfo = await user.findOne({"_id": userID});
     
     const targetInfo = await user.findOne({"_id": targetID});
     
     if(userInfo && targetInfo){
+        console.log('a');
         const userMatchMakingStatus = userInfo.matchMaking.status;
         const targetMatchMakingStatus = targetInfo.matchMaking.status;
 
@@ -140,9 +140,9 @@ const toggleLikeUser = async(userID, targetID) => {
                 }
         }
 
-        return new Error('something gone wrong');
+        throw new Error('something gone wrong');
     }
-    return new Error('no user was found with given ID')
+    throw new Error('no user was found with given ID')
 }
 
 const nopeUser = async(userID, targetID) => {
@@ -178,10 +178,9 @@ const toggleNopeUser = async(userID, targetID) => {
             {"_id": userID}
         ]
     });
-    console.log(targetID)
+
     if(userNopes){
         const targetIndex = userNopes.findIndex((user) => user.id == targetID && user.type == 'nope');
-        console.log('im in')
         //nope target
         if(targetIndex == -1){
             const status = await nopeUser(userID, targetID);
@@ -199,9 +198,9 @@ const toggleNopeUser = async(userID, targetID) => {
             }
         }
 
-        return new Error('something gone wrong');
+        throw new Error('something gone wrong');
     }
-    return new Error('no user was found with given ID')
+    throw new Error('no user was found with given ID')
 }
 
 const recommend = async(userID) => {

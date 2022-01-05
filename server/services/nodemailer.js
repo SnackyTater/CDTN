@@ -23,22 +23,27 @@ const mailVerificate = (sendTo) => {
 };
 
 const mailResetPassword = (sendTo, id) => {
+    console.log(sendTo, id);
     return {
-        from: 'Cosmitto Dating App',
-        to: sendTo,
-        subject: 'Reset Password',
-        text: `click this link bellow to reset password http://${process.env.HOST + '/' + id}`,
+        mail: {
+            from: 'Cosmitto Dating App',
+            to: sendTo,
+            subject: 'Reset Password',
+            text: `click this link bellow to reset password https://${process.env.HOST + '/reset-password/' + id}, or for development environmet use this instead http://localhost:3000/reset-password/${id}`,
+        }
     }
 }
 
 const sendEmail = async ({email, option}) => {
     try{
+        console.log(email, option)
         const {mail, code} = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
+        console.log(mail);
         const res = await transporter.sendMail(mail);
-        if(res) return code;
+        if(res) return code || true;
     } catch(err) {
         console.log(err);
-        return new Error(err.message)
+        throw new Error(err.message)
     }
 };
 

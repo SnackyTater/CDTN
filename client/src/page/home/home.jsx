@@ -1,79 +1,91 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useCookies } from 'react-cookie';
-import { LoadingBackdrop, Sidebar, Snackbar } from '../../component';
+import { useHistory } from 'react-router-dom';
+
+import { LoadingBackdrop, Sidebar, Snackbar, IconButton } from '../../component';
 import { getUserInfo } from '../../api/common/user';
+import { HomeContext, HomeContextStore } from '../../context/home';
 
 import SidebarContent from './component/sidebar/sidebar.jsx';
 import Popup from './component/popup/popup';
-import MatchCardList from './component/main/match-card-list/match-card-list';
+import HomeMain from './component/main/main';
 
 import './home.scss';
 
 export default function Home() {
+    //state for display
     const [isLoading, setLoading] = useState(false);
+    const [popup, setPopup] = useState({ content: '', status: false });
     const [snackbar, setSnackbar] = useState({severity: '', message: '', isOpen: false});
-    const [sidebar, setSidebar] = useState({});
-    const [reloadSidebar, setReloadSidebar] = useState(true);
-    
-    const [cookies, setCookie] = useCookies('jwt');
-    const [popup, setPopup] = useState({
-        content: '',
-        status: false
-    });
 
+    //context
+    const {userInfo: user} = useContext(HomeContext);
+    const [userInfo, setUserInfo] = user;
+
+    //state for function
+    const [mainReload, setMainReload] = useState(false);
+
+    //hooks
+    const [cookies, setCookie] = useCookies('jwt');
+    const history = useHistory();
+
+    const token = cookies.jwt;
+
+    //only load 1 time after render
     useEffect(() => {
-        getUserInfo({token: cookies.jwt}).then((data) => {
-            setSidebar({image: data.info.profileImage[0].imageURL, fullName: data.info.fullName});
+        if(!cookies.jwt) history.push('/');
+
+        let isMounted = true;
+        getUserInfo({token}).then((userInfo) => {
+            isMounted && setUserInfo(userInfo);
         }).catch((error) => {
             setSnackbar({
-                isOpen: true,
                 severity: 'error',
-                message: `something gone wrong`
+                isOpen: true,
+                message: `can't load user info due to ${error.message}`
             })
         })
+
+        return () => {
+            isMounted = false;
+        }
+    }, [])
+
+    useEffect(() => {
+
     }, [])
 
     return (
-        <div className='home__container'>
-            {
-                (false) && <LoadingBackdrop/>
-            }
-
-            <div className='home__sidebar__container'>
-                <Sidebar 
-                    header={sidebar}
-                    content={
+            <div className='home'>
+                {
+                    (false) && <LoadingBackdrop/>
+                }
+                <div className='home__sidebar'>
+                    <Sidebar header={userInfo}>
                         <SidebarContent 
                             setPopup={(config) => {setPopup(config)}}
-                            reload={reloadSidebar}
+                            setSnackbar={(content) => {setSnackbar(content)}}
                         />
-                    }
-                />
-            </div>
-
-            <div className='home__content__container'>
-                <div className='home__content'>
-                    <MatchCardList 
-                        setReload={() => {}}
+                    </Sidebar>
+                </div>
+                <div className='home__main'>
+                    <HomeMain 
+                        reload={mainReload}
+                        setMainReload={(content) => {setMainReload(content)}}
                         setSnackbar={(content) => {setSnackbar(content)}}
                     />
                 </div>
-
-                <div className='home__popup'>
-                    <Popup 
-                        isOpen={popup.status}
-                        info={popup.content}
-                        closeForm={() => {setPopup({...popup, status: false})}}
-                    />
-                </div>
+                <Snackbar 
+                    severity={snackbar.severity}
+                    message={snackbar.message}
+                    isOpen={snackbar.isOpen}
+                    closeSnackbar={() => {setSnackbar({...snackbar, isOpen: false})}}
+                />
+                <Popup 
+                    isOpen={popup.status}
+                    info={popup.content}
+                    closeForm={() => {setPopup({...popup, status: false})}}
+                />
             </div>
-            <Snackbar 
-                severity={snackbar.severity}
-                message={snackbar.message}
-                isOpen={snackbar.isOpen}
-                closeSnackbar={() => {setSnackbar({...snackbar, isOpen: false})}}
-            />
-        </div>
     )
 }
-

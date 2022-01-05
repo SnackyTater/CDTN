@@ -8,6 +8,8 @@ import { userInitialState, userReducer, userAction } from '../../../../../../sto
 //import fetcher
 import { getUserInfo, updateUserInfo } from '../../../../../../api/common/user';
 
+import './config.scss';
+
 export default function Config({setLoading, setSnackbar}) {
     const [state, dispatch] = useReducer(userReducer, userInitialState);
     const [cookies] = useCookies(['jwt']);
@@ -64,10 +66,10 @@ export default function Config({setLoading, setSnackbar}) {
 
     const changeHanlder = (e) => {    
         const {name, value} = e.target;
-        console.log(name,value, SET_USER_CONFIG)
+        console.log(name, value);
         dispatch({
             type: SET_USER_CONFIG,
-            payload: { name, value}
+            payload: { name, value: value}
         })
         // console.log('aaa')
     }
@@ -75,28 +77,28 @@ export default function Config({setLoading, setSnackbar}) {
     return (
         <div className='profile__form__container'>
             <div className='profile__form__content' style={{"width": '300px'}}>
-                <h2 className='profile__form__content__title'>age preference</h2>
+                <h3>age preference</h3>
                 <AgeSlider
                     name={'age'}
                     age={[state.user.matchMaking.config.age.from, state.user.matchMaking.config.age.to]}
                     setAge={changeHanlder}
                 />
 
-                <h2 className='profile__form__content__title'>distance preference</h2>
+                <h3>distance preference</h3>
                 <RangeSlider
                     name={'diameter'}
-                    inputRange={state.user.matchMaking.config.zoneLimit.diameter/10000}
+                    inputRange={state.user.matchMaking.config.zoneLimit.diameter/1000}
                     onChange={changeHanlder}
                 />
 
-                <span>only show people in this range</span>
+                <span className='config__form__content__title'>only show people in this range</span>
                 <Switch
                     checked={state.user.matchMaking.config.gender}
                     name={'disableDiameter'}
                     onChange={(e) => changeHanlder(e)}
                 />
 
-                <h2 className='profile__form__content__title'>looking for</h2>
+                <h3>looking for</h3>
                 <GenderPicker
                     genderArray={['male', 'female', 'both']}
                     name={'gender'}

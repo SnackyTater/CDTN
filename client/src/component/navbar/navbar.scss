@@ -5,6 +5,8 @@
     color: #edf0f1;
 }
 
+
+
 .navbar{
     &__container{
         width: 100%;
@@ -12,7 +14,16 @@
         justify-content: flex-start;
         align-items: center;
         padding: 30px 5%;
-        background-color: transparent;
+
+        &--light{
+            @extend .navbar__container;
+            background-image: linear-gradient(225deg,#ff6036,#fd267a);
+        }
+
+        &--dark{
+            @extend .navbar__container;
+            background-color: transparent;
+        }
     }
 
     &__navigator{

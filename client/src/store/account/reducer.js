@@ -59,7 +59,6 @@ export const reducer = (state, action) => {
         }
         case SET_ACCOUNT_INFO: {
             if(payload.validate){
-                console.log()
                 stateHolder = _.set(`error.${payload.name}`, validateField(state, payload.name, payload.value), stateHolder);
             }
             stateHolder = _.set(`account.${payload.name}`, payload.value, stateHolder);
@@ -82,6 +81,5 @@ export const reducer = (state, action) => {
             return stateHolder;
         }
     }
-    console.log(stateHolder);
     return stateHolder;
 }

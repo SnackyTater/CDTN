@@ -26,7 +26,6 @@ const getAccount = async(accountIdentityVerification) => {
 }
 
 const updateAccount = async(id, updateInfo) => {
-    console.log(id, updateInfo)
     const query = await account.updateOne({"_id": id}, updateInfo);
     if(query) return query;
     throw TypeError('no account was found with given ID');

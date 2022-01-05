@@ -1,4 +1,3 @@
-import _ from 'lodash/fp';
 import { useEffect, useState } from 'react';
 import { getPassion } from '../../../../../../api/common/passion';
 import { TextInput, GenderPicker, PassionPicker, ImageCardList, TextAreaInput, DatePicker } from '../../../../../../component';
@@ -12,20 +11,30 @@ export default function User({state, dispatch, setLoading}) {
     const { SET_USER_INFO, SET_USER_IMAGE, SET_USER_PASSION } = userAction;
 
     useEffect(() => {
+        let isMounted = true;
+        
         Promise.all([getPassion(), getLocation()]).then((data) => {
             const passionList = data[0];
             const { coords } = data[1];
 
-            setPassion(passionList);
-            dispatch({
+            isMounted && setPassion(passionList);
+            isMounted && dispatch({
                 type: SET_USER_INFO,
                 payload: {
                     name: 'coordinates',
                     value: [coords.longitude, coords.latitude]
                 }
             })
-            setLoading(false);
+
+            isMounted && setLoading(false);
+        }).catch((error) => {
+            if(error.message.includes('geolocation'))
+                alert('you need to grant access to your location before using this function, please reload the page and allow it');
         })
+
+        return () => {
+            isMounted = false;
+        } 
     }, [])
 
     const changeHanlder = (e) => {
@@ -72,21 +81,21 @@ export default function User({state, dispatch, setLoading}) {
             <div className='user-form__content'>
                 <div style={{margin: ' 0 0'}}>
                     
-                    <h3>full name</h3>
+                    <h3>Full Name</h3>
                     <TextInput 
                         name={'fullName'}
                         onChange={changeHanlder}
                         error={state?.error?.fullName}
                     />
 
-                    <h3>gender</h3>
+                    <h3>Gender</h3>
                     <GenderPicker
                         name={'gender'}
                         onClick={changeHanlder}
                         error={state?.error?.gender}
                     />
 
-                    <h3>interest in</h3>
+                    <h3>Interest In</h3>
                     <GenderPicker
                         name={'interestIn'}
                         onClick={changeHanlder}
@@ -94,7 +103,7 @@ export default function User({state, dispatch, setLoading}) {
                         error={state?.error?.interestIn}
                     />
 
-                    <h3>select passion</h3>
+                    <h3>Select Passion</h3>
                     <PassionPicker 
                         passions={passions}
                         selectPassion={passionChangeHandler}
@@ -102,15 +111,16 @@ export default function User({state, dispatch, setLoading}) {
                         error={state.error.passions}
                     />
 
-                    <h3>date of birth</h3>
+                    <h3>Date of Birth</h3>
                     <DatePicker 
-                        label={'date of birth'}
+                        
                         name={'DateOfBirth'}
+                        value={state.user.info.DateOfBirth}
                         onChange={changeHanlder}
                         error={state?.error?.DateOfBirth}
                     />
 
-                    <h3>tell us about yourself</h3>
+                    <h3>Tell Us About Yourself</h3>
                     <TextAreaInput 
                         name={'description'}
                         onChange={changeHanlder}
@@ -119,7 +129,7 @@ export default function User({state, dispatch, setLoading}) {
             </div>
             <div className='user-form__content'>
                 <div style={{margin: ' 0 auto'}}>
-                    <h3>Profile image</h3>
+                    <h3>Profile Image</h3>
                     <ImageCardList
                         row={[1,2]}
                         column={[1,2,3]}

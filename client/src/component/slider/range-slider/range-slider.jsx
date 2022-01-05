@@ -18,7 +18,7 @@ export default function RangeSlider({onChange, inputRange, name}) {
             aria-label="Custom marks"
             min={1}
             max={20}
-            onChange={(e) => {onChange({target: {name, value: e.target.value *10000}})}}
+            onChange={(e) => {onChange({target: {name, value: e.target.value * 1000}})}}
             value={inputRange || 8}
             getAriaValueText={valuetext}
             step={1}

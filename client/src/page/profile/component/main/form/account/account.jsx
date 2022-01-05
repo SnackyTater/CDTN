@@ -40,7 +40,6 @@ export default function AccountForm({setLoading, setSnackbar}) {
 
     const accountChangeHandler = (e) => {
         const {value, name} = e.target;
-        console.log(name, value)
         dispatch({
             type: SET_ACCOUNT_INFO,
             payload: { name, value, validate: true }

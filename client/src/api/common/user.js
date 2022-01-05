@@ -8,7 +8,6 @@ const getUserInfo = ({token}) => {
 }
 
 const updateUserInfo = ({token, body}) => {
-    console.log(token);
     return fetcher.put({
         url: 'user',
         token: token,

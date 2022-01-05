@@ -27,6 +27,7 @@ export default function Setting({age, setAge, name}) {
         } else {
             setValue([value[0], Math.max(newValue[1], value[0] + minDistance)]);
         }
+
         setAge(event);
     };
 

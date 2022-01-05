@@ -1,12 +1,30 @@
+@import '../../utils/font';
+
 .logo{
     margin: 2vh 2vw;
     display: flex;
+    text-decoration: none;
+
+    &__title{
+        font-size: 2rem;
+        font-family: $BonaNova-bold;
+
+        &--light{
+            @extend .logo__title;
+            color: black;
+        }
+
+        &--dark{
+            @extend .logo__title;
+            color: white;
+        }
+    }
 }
-.logo__title--light{
-    font-size: 2em;
-    color: black;
-}
-.logo__title--dark{
-    font-size: 2em;
-    color: white;
-}
+// .logo__title--light{
+//     font-size: 2em;
+//     color: black;
+// }
+// .logo__title--dark{
+//     font-size: 2em;
+//     color: white;
+// }

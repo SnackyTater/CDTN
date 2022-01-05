@@ -24,11 +24,10 @@ export default function Signup({isOpen, closeForm}) {
         try{
             console.log('ssss')
             const {code} = await sendEmail({email: email});
-            console.log(code);
+            setError({status: true, message: ''});
             setCode(code);
             setDisplay('verificate');
         } catch(error) {
-            console.log(error)
             setLoading(false);
             setError({message: error.message, status: false})
         }
@@ -44,10 +43,13 @@ export default function Signup({isOpen, closeForm}) {
     const formController = (form) => {
         switch(form){
             case 'verificate': {
+                console.log('verificate', input);
                 return <>
+                    <h3>validation</h3>
+                    <p>please enter the code we've send to your email</p>
                     <div className='signup__form__input__container'>
                         <TextInput
-                            def
+                            placeholder={input}
                             error={error}
                             onChange={(e) => {setInput(e.target.value)}}               
                         />
@@ -63,27 +65,30 @@ export default function Signup({isOpen, closeForm}) {
             }
             default: {
                 return <>
-                <div className='signup__form__input__container'>
-                    <TextInput 
-                        name={'email'}
-                        error={error}
-                        onChange={(e) => {setEmail(e.target.value)}} 
-                    />
-                </div>
-                <div className='signup__form__button__container'>
-                    <LoadingButton 
-                        isLoading={isLoading}
-                        onClick={sendEmailHandler}
-                        placeholder={'send email'}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <AlternateEmail />
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                </div>
+                    <h3>sign up</h3>
+                    <p>please enter email</p>
+                    <div className='signup__form__input__container'>
+                        <TextInput 
+                            name={'email'}
+                            placeholder={email}
+                            error={error}
+                            onChange={(e) => {setEmail(e.target.value)}} 
+                        />
+                    </div>
+                    <div className='signup__form__button__container'>
+                        <LoadingButton 
+                            isLoading={isLoading}
+                            onClick={sendEmailHandler}
+                            placeholder={'send email'}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <AlternateEmail />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </div>
             </>
             }
         }

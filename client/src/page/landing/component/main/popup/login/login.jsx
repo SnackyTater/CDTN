@@ -9,7 +9,7 @@ import { login } from '../../../../../../api/common/account';
 
 import './login.scss';
 
-export default function Login({isOpen, closeForm}) {
+export default function Login({isOpen, closeForm, openForgotPassword}) {
     const [loginInfo, setLoginInfo] = useState({ identityVerification: '', password: '' });
     const [error, setError] = useState({ identityVerification: '', password: '' });
     const [cookies, setCookie] = useCookies('jwt');
@@ -67,6 +67,8 @@ export default function Login({isOpen, closeForm}) {
                             onClick={() => {closeForm()}}
                         />
                     </div>
+                    <h3>log in</h3>
+                    <p>please enter username (email or mobile number) and password below to login</p>
                     <div className='login__input__container'>
                         {
                             fieldList.map((item, index) => <TextInput 
@@ -84,7 +86,9 @@ export default function Login({isOpen, closeForm}) {
                                 }}  
                             />)
                         }
-                        <a href='/forgot-password'>forgot password ?</a>
+                        <a
+                            onClick={() => openForgotPassword()}
+                        >forgot password ?</a>
                     </div>
                     <div className='login__button__container'>
                         

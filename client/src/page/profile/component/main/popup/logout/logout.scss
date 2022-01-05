@@ -1,8 +1,22 @@
+@import '../../../../../../utils/font';
 .logout__container{
-    padding: 50px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    h2{
+        font-family: $BonaNova-bold;
+        color: rgba($color: #000000, $alpha: 0.7)
+    }
+    
+    p{
+        font-family: $BonaNova;
+        color: rgba($color: #000000, $alpha: 0.5);
+    }
 }
 .logout__button__container{
+    margin-top: 20px;
     display: flex;
+    justify-content: center;
 }
 .logout__button{
     flex: 1;

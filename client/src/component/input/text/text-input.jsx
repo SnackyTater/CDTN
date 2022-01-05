@@ -1,7 +1,6 @@
 import {TextField} from '@mui/material';
 
 export default function Input({name, label, disableStatus, onChange, error, type, placeholder, InputProps}) {
-
     return (
         <TextField 
             InputLabelProps={{ shrink: true }}

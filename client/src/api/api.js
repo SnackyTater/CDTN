@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios';  
 
 const host = (process.env.NODE_ENV === 'development') ? 'http://localhost:5000' : 'https://cosmitto.herokuapp.com'; 
 
@@ -14,10 +14,13 @@ const config = ({token, type}) => {
 export const fetcher = {
     get: async({url, token, type}) => {
         try{
-            const {data} = await axios.get(`${host}/${url}`, config({token, type}));
+            const {data} = await axios.get(`${host}/${url}`, config({token, type}))
             return data;
         } catch(error) {
+            // console.log('aaa');
+            // return new Error(error?.response?.data);
             throw new Error(error?.response?.data);
+            // console.log(error.response?.data);
         }
     },
     post: async({url, token, type, body}) => {
@@ -25,12 +28,12 @@ export const fetcher = {
             const {data} = await axios.post(`${host}/${url}`, body, config({token, type}));
             return data;
         } catch(error) {
+            console.log(error)
             throw new Error(error?.response?.data);
         }
     },
     put: async({url, token, type, body}) => {
         try{
-            console.log(config({token: token, type}))
             const {data} = await axios.put(`${host}/${url}`, body, config({token, type}));
             return data;
         } catch(error) {

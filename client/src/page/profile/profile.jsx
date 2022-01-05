@@ -53,12 +53,7 @@ export default function Profile() {
         <div className="profile">
             <div className='profile__sidebar'>
                 <Sidebar 
-                    header={
-                        {
-                            image: sidebarHeader.avatar, 
-                            fullName: sidebarHeader.fullName
-                        }
-                    } 
+                    header={sidebarHeader} 
                     content={
                         <SidebarContent 
                             navigateTo={setForm}

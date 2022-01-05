@@ -93,10 +93,12 @@ export default function Signup(){
                     state={accountState}
                     dispatch={accountDispatch}
                 />
-                <LoadingButton 
-                    placeholder={'sign up'}
-                    onClick={handleCreateAccount}
-                />
+                <div className='signup__content__button'>
+                    <LoadingButton 
+                        placeholder={'sign up'}
+                        onClick={handleCreateAccount}
+                    />
+                </div>
             </div>
         </div>
         </>

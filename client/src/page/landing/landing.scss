@@ -5,6 +5,8 @@
 
 }
 
+@import "../../utils/font";
+
 .landing__header__container{
     position: fixed;
     width: 100%;
@@ -24,6 +26,7 @@
         text-align: center;
 
         p{
+            font-family: $BonaNova-bold;
             font-size: 8vw;
             padding: 30px 20px;
             color: whitesmoke;

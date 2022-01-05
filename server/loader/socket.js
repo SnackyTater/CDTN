@@ -25,9 +25,11 @@ module.exports = (io) => {
             socket.join(room)
         })
 
-        socket.on('message', (payload) => {
-            console.log(payload)
+        socket.on('message', async(payload) => {
             const {room, message} = payload;
+            const sender = socket.tokenInfo.UID;
+            await room && message && sender && sendChat(room, sender, message);
+
             io.to(room).emit('message', {
                 from: socket.tokenInfo.UID,
                 message: message

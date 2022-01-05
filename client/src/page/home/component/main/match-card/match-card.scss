@@ -1,6 +1,6 @@
 .match-card{
-    width: inherit;
-    height: inherit;
+    width: 450px;
+    height: 650px;
     background-color: black;
     position: absolute;
     border-radius: 8px;
@@ -31,6 +31,9 @@
             bottom: 0px;
             background-image: linear-gradient(180deg, transparent, black);
             color: white;
+            word-wrap: break-word;
+            overflow-x: scroll;
+            scrollbar-width: none;
             
             div{
                 margin: 20px;

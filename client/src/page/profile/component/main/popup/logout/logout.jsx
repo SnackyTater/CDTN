@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
+import { DefaultBackdrop, DefaultButton } from '../../../../../../component';
 
 import './logout.scss';
 
@@ -10,7 +11,7 @@ export default function Logout({closePopup}) {
 
     const logoutHandler = (e) => {
         history.push('/');
-        // removeCookie('jwt');
+        removeCookie('jwt');
     }
 
     const closePopupHandler = (e) => {
@@ -18,19 +19,21 @@ export default function Logout({closePopup}) {
     }
 
     return (
-        <div className='logout__container'>
-            <p>you sure you want to logout</p>
-            <div className='logout__button__container'>
-                <button 
-                    className='logout__button'
-                    onClick={logoutHandler}
-                >ok</button>
-
-                <button 
-                    className='logout__button'
-                    onClick={closePopupHandler}
-                >cancel</button>
+        <DefaultBackdrop
+            isOpen={true}
+            closeForm={closePopupHandler}
+            
+        >
+            <div className='logout__container'>
+                <h2>log out</h2>
+                <p>you sure you want to logout ?</p>
+                <div className='logout__button__container'>
+                    <DefaultButton 
+                        onClick={logoutHandler}
+                        placeholder={'log out'}
+                    />
+                </div>
             </div>
-        </div>
+        </DefaultBackdrop>
     )
 }

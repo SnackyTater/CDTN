@@ -17,22 +17,21 @@ export default function ChatInterface({room, userID}) {
         
         getChatContent({token: cookies.jwt, chatID: room}).then((chat) => {
             setChatlog(chat.log);
-            
-        })
 
-        socket.on('connect', () => {
-            console.log('connected successfully')
-        })
-
-        socket.emit('join', room);
-
-        socket.on('message', message => {
-            setChatlog(prev => setChatlog([...prev, message]));
+            socket.on('connect', () => {
+                console.log('connected successfully')
+            })
+    
+            socket.emit('join', room);
+    
+            socket.on('message', message => {
+                console.log(message);
+                setChatlog(prev => setChatlog([...prev, message]));
+            })
         })
 
         return () => {
             socket.disconnect();
-            console.log('blin');
         }
     }, [room])
 
@@ -52,9 +51,9 @@ export default function ChatInterface({room, userID}) {
         <>
             <div className='box__chat-display'>
                     {
-                        chatLog?.map((chat) => {
+                        chatLog?.map((chat, index) => {
                             const detect = (chat.from === userID) ? 'me' : 'other'
-                            return <div className={`message--${detect}`}>{chat.message}</div>
+                            return <div key={index} className={`message--${detect}`}>{chat.message}</div>
                         })
                     }
             </div>

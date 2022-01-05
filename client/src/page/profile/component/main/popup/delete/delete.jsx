@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
+import { DefaultBackdrop, DefaultButton } from '../../../../../../component';
 
 import './delete.scss';
 
@@ -12,7 +13,7 @@ export default function DeleteAccount({closePopup}) {
 
     const deleteHandler = async(e) => {
         // await deleteAccount({token: cookies.jwt}).catch((err) => {console.log(err)})
-        // removeCookie('jwt');
+        removeCookie('jwt');
         history.push('/');
     }
 
@@ -21,19 +22,20 @@ export default function DeleteAccount({closePopup}) {
     }
 
     return (
-        <div className='logout__container'>
-            <p>are you really sure you want to delete your account. once you've done it, there's no going back</p>
-            <div className='logout__button__container'>
-                <button 
-                    className='logout__button'
-                    onClick={deleteHandler}
-                >ok</button>
-
-                <button 
-                    className='logout__button'
-                    onClick={closePopupHandler}
-                >cancel</button>
+        <DefaultBackdrop
+            closeForm={closePopupHandler}
+            isOpen={true}
+        >
+            <div className='delete__container'>
+                <h2>Delete Account</h2>
+                <p>are you really sure you want to delete your account ? Once you've done it, there's no going back</p>
+                <div className='delete__button__container'>
+                    <DefaultButton 
+                        placeholder={'delete account'}
+                        onClick={deleteHandler}
+                    />
+                </div>
             </div>
-        </div>
+        </DefaultBackdrop>
     )
 }

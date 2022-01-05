@@ -1,6 +1,6 @@
 import { IconButton as MuiIconButton } from '@mui/material';
 
-export default function IconButton({ripple, onClick, icon, hoverConfig, config}) {
+export default function IconButton({ripple, onClick, icon, hoverConfig, config, children}) {
     return (
         <MuiIconButton
             disableRipple={ripple}
@@ -10,7 +10,7 @@ export default function IconButton({ripple, onClick, icon, hoverConfig, config})
             }}
             onClick={() => {onClick && onClick()}}
         >
-            {icon}
+            {icon || children}
         </MuiIconButton>
     )
 }

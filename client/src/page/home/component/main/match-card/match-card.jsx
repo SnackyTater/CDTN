@@ -5,6 +5,7 @@ import { ageCalulator } from '../../../../../utils/utils';
 import './match-card.scss';
 export default function MatchCard({info, like, nope, prev, next, value}) {
     const userInfo = info?.info;
+    const distance = info.distance;
 
     const iconConfig = (color) => {
         return {
@@ -52,15 +53,16 @@ export default function MatchCard({info, like, nope, prev, next, value}) {
                 <div className='match-card__info__content'>
                     <div>
                         <span className='match-card__info__content-name'>
-                            {userInfo?.fullName}
+                            {userInfo?.fullName.toString()}
                         </span>
                         <span className='match-card__info__content-age'>
                             {ageCalulator(userInfo?.DateOfBirth).toString()}
                         </span>
+                        {/* <span>{`${Math.floor(distance)} km away`}</span> */}
                     </div>
                     <div>
                         <span className='match-card__info__content-description'>
-                            {userInfo?.description || 'lorem ipsum'}
+                            {userInfo?.description.toString() || 'lorem ipsum'}
                         </span>
                     </div>
                 </div>
@@ -78,7 +80,7 @@ export default function MatchCard({info, like, nope, prev, next, value}) {
                         }}
                         icon={button.icon}
                     />)
-                }
+                }a
             </div>
         </div>
     )

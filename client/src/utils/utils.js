@@ -65,9 +65,7 @@ const getLocation = async(func) => {
 const checkError = (input) => {
     let checker = true;
     Object.keys(input).forEach((key) => {
-        console.log(key, input[key].status);
-        if(!input[key].status) checker = false
-        // console.log(key, input[key].status);
+        if(!input[key].status) checker = false;
     })
     return checker;
 }

@@ -108,6 +108,7 @@ router.post('/reset-password/:id', async(req, res) => {
     try{
         const requestID = req.params.id;
         const newPassword = req.body;
+        console.log(req.body);
 
         const request = await getRequest(requestID);
         await deleteRequest(requestID);

@@ -27,8 +27,10 @@ router.get('/get-matches', authenticateToken, async(req, res) => {
 router.post('/like', authenticateToken, async(req, res) => {
     try{
         let status = await toggleLikeUser(req.tokenInfo.UID, req.body.targetID);
+        console.log(status);
         res.status(200).json(status);
     } catch(err) {
+        console.log('message', err.message);
         res.status(400).send(err.message);
     }
 })

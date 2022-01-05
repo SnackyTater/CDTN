@@ -23,12 +23,12 @@ export default function PassionPicker({passions, selectPassion, selectedPassion,
         <div className='passion-picker'>
             <div>
                 {
-                    (selectedPassion.length === 0)
+                    (selectedPassion?.length === 0)
                     ?   <SimpleButton 
                             content={'select passions'}
                             onClick={openForm}
                         />
-                    :   selectedPassion.map((passionID, index) =>
+                    :   selectedPassion?.map((passionID, index) =>
                             <Tag
                                 key={index}
                                 name={'passions'}
@@ -39,19 +39,19 @@ export default function PassionPicker({passions, selectPassion, selectedPassion,
                             />
                         )
                 }
-                {!error.status && <h3 className='passion-picker-error'>{error.message}</h3>}
+                {!error?.status && <h3 className='passion-picker-error'>{error.message}</h3>}
             </div>
             <DefaultBackdrop
                 isOpen={isOpen}
                 closeForm={closeForm}
                 title={'select your passions'}
             > 
-                {passions.map((passion, index) => <Tag 
+                {passions?.map((passion, index) => <Tag 
                     key={index}
                     value={passion._id}
                     content={passion.name}
                     isActive={
-                        _.includes([...selectedPassion], passion._id)
+                        selectedPassion && _.includes([...selectedPassion], passion._id)
                     }
                     onClick={(e) => {selectPassion(e)}}
                 />)}

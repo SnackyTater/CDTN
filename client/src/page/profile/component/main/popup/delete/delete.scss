@@ -1,12 +1,25 @@
-.logout__container{
-    padding: 50px;
+@import '../../../../../../utils/font';
+
+.delete__container{
     width: 300px;
     text-align: center;
+
+    h2{
+        font-family: $BonaNova-bold;
+        color: rgba($color: #000000, $alpha: 0.7)
+    }
+    
+    p{
+        font-family: $BonaNova;
+        color: rgba($color: #FF0000, $alpha: 0.9);
+    }
 }
-.logout__button__container{
+.delete__button__container{
+    margin-top: 20px;
     display: flex;
+    justify-content: center;
 }
-.logout__button{
+.delete__button{
     flex: 1;
     margin: 5px;
 }

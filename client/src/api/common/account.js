@@ -42,5 +42,18 @@ const deleteAccount = ({token}) => {
         token: token
     })
 }
+const sendMailToResetPassword = ({email}) => {
+    return fetcher.post({
+        url: 'account/reset-password',
+        body: {email}
+    })
+}
 
-export {login, getAccountInfo, createAccount, updateAccount, deleteAccount, sendEmail}
+const resetPassword = ({id, password}) => {
+    return fetcher.post({
+        url: `account/reset-password/${id}`,
+        body: {password}
+    })
+}
+
+export {login, getAccountInfo, createAccount, updateAccount, deleteAccount, sendEmail, sendMailToResetPassword, resetPassword}

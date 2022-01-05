@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { InputAdornment } from '@mui/material';
+import { useHistory } from 'react-router-dom';
 import { Mail, PhoneAndroid, Person, Password } from '@mui/icons-material';
 
 import { TextInput } from '../../../../../../component';
@@ -6,6 +8,23 @@ import { acccountAction } from '../../../../../../store';
 
 export default function AccountForm({state, dispatch}) {
     const { SET_ACCOUNT_INFO } = acccountAction;
+    const history = useHistory();
+
+    useEffect(() => {
+        if(history.location.state){
+            dispatch({
+                type: SET_ACCOUNT_INFO,
+                
+                payload: {
+                    name: 'email',
+                    value: history.location.state.email,
+                }
+            })
+        } else {
+            history.push('/');
+        }
+
+    }, [])
 
     const changeHanlder = (e) => {
         const {value, name} = e.target;
@@ -26,7 +45,8 @@ export default function AccountForm({state, dispatch}) {
         },
         {
             name: 'email',
-            iconStart: <Mail/>
+            iconStart: <Mail/>,
+            disableStatus: (history?.location?.state?.email) ? true : false
         },
         {
             name: 'mobile',
@@ -58,6 +78,7 @@ export default function AccountForm({state, dispatch}) {
                             placeholder={state.account[item.name]}
                             name={item.name}
                             type={item.type}
+                            disableStatus={item.disableStatus}
                             error={state.error[item?.name]}
                             onChange={changeHanlder}
                             InputProps={{
