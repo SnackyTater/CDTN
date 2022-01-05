@@ -1,10 +1,24 @@
 # CDTN
 name: cosmitto
-description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
+description: tinder-clone
 
-# link heroku: https://cosmitto.herokuapp.com/
+# use
+- front-end: 
+    + reactJS
+    + SASS
+    + socket.io-client (for chat)
+    + axios (fetching data)
+- back-end: express, mongoose, socket-io
+    + express
+    + mongoose
+    + socket.io
+    + nodemailer (sending email)
+    + cloudinary & multer (receiving & saving image from front-end)
+    + jsonwebtoken || JWT
 
-# các API đã hoạt động (không cần update thêm trừ khi yêu cầu thay đổi)
+# heroku: https://cosmitto.herokuapp.com/
+
+# API list
 - "/account"                        (get)
 - "/account"                        (post)
 - "/account"                        (put)
@@ -27,7 +41,8 @@ description: tinder-clone, dùng cho chuyên đề tốt nghiệp 2020-2021
 - "/chat/:id"                       (get)
 
 
-# todo
-- làm script tạo dummy data
 
-todo: sửa sidebar ở profile + chat, range slider ở config, cho lại function vào like + nope, 
+# todo
+- create script for creating dummy data
+- use webpack to bundle & create dev server for react
+- use gulp for automate task 
