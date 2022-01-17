@@ -6,7 +6,7 @@ import {getChatContent} from '../../../../../api/common/chat';
 import './chat.scss'
 
 export default function ChatInterface({room, userID}) {
-    room = '61c830441b0597f78c555fdb';
+    // room = '61c830441b0597f78c555fdb';
     const [chatLog, setChatlog] = useState([]);
     const [message, setMessage] = useState('');
     const [cookies, setCookie] = useCookies('jwt');
@@ -28,6 +28,8 @@ export default function ChatInterface({room, userID}) {
                 console.log(message);
                 setChatlog(prev => setChatlog([...prev, message]));
             })
+        }).catch((error) => {
+            console.log(error);
         })
 
         return () => {

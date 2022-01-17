@@ -15,11 +15,9 @@ export default function Chat() {
     const [isLoading, setLoading] = useState(false);
     const [room, setRoom] = useState('');
     const [cookies, setCookie] = useCookies('jwt');
-    setCookie('jwt', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBSUQiOiI2MWM2ZGQzYTAzZDI3NmZjZjMxOTc2MWQiLCJVSUQiOiI2MWM2ZGQzYjAzZDI3NmZjZjMxOTc2MWYiLCJpYXQiOjE2NDA1NzkzODg2NDMsImV4cCI6MTY0MDY2NTc4ODY0M30.qBG29HP0N09_Ub36DV8St-t5dLEd5T0Z7lVxEujnzmU')
     const history = useHistory();
     
     useEffect(() => {
-        
         if(room.length === 0) setRoom(history?.location?.state?.roomID);
 
         getUserInfo({token: cookies.jwt}).then((userData) => {

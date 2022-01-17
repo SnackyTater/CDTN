@@ -1,22 +1,21 @@
 # CDTN
-name: cosmitto
-description: tinder-clone
+- name: cosmitto
+- description: tinder-clone
+- heroku: https://cosmitto.herokuapp.com
 
-# use
-- front-end: 
-    + reactJS
-    + SASS
-    + socket.io-client (for chat)
-    + axios (fetching data)
-- back-end: express, mongoose, socket-io
-    + express
-    + mongoose
-    + socket.io
-    + nodemailer (sending email)
-    + cloudinary & multer (receiving & saving image from front-end)
-    + jsonwebtoken || JWT
+# front-end: 
+- reactJS
+- SASS
+- socket.io-client (for chat)
+- axios (fetching data)
 
-# heroku: https://cosmitto.herokuapp.com/
+# back-end: express, mongoose, socket-io
+- express
+- mongoose
+- socket.io
+- nodemailer (sending email)
+- cloudinary & multer (receiving & saving image from front-end)
+- jsonwebtoken || JWT
 
 # API list
 - "/account"                        (get)
@@ -39,8 +38,6 @@ description: tinder-clone
 - "/matchMaking/get-matches"        (get)
 - "/chat"                           (get)
 - "/chat/:id"                       (get)
-
-
 
 # todo
 - create script for creating dummy data
