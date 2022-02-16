@@ -1,13 +1,49 @@
 const nodemailer = require('nodemailer');
-const {generateCode} = require('../scripts/utils')
+const {google} = require('googleapis');
+const OAuth2 = google.auth.OAuth2;
+const {generateCode} = require('../scripts/utils');
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'cosmittodatingapp@gmail.com',
-        pass: 'Cosmitto123'
-    }
-});
+const createTransport = async() => {
+    const oauth2Client = new OAuth2(
+        process.env.NODEMAILER_CLIENT_ID,
+        process.env.NODEMAILER_CLIENT_SECRET,
+        "https://developers.google.com/oauthplayground"
+    );
+
+    console.log(oauth2Client);
+    
+    oauth2Client.setCredentials({
+        refresh_token: process.env.NODEMAILER_REFRESH_TOKEN
+    });
+
+    const accessToken = await new Promise((resolve, reject) => {
+        oauth2Client.getAccessToken((err, token) => {
+          if (err) {
+            reject(err);
+            // reject("Failed to create access token :(");
+          }
+          resolve(token);
+        });
+    });
+
+    console.log('blin')
+    const transporter = await nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: 'cosmittodatingapp@gmail.com',
+          accessToken,
+          clientId: process.env.NODEMAILER_CLIENT_ID,
+          clientSecret: process.env.NODEMAILER_CLIENT_SECRET,
+          refreshToken: process.env.NODEMAILER_REFRESH_TOKEN
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+      });
+    
+      return transporter;
+}
 
 const mailVerificate = (sendTo) => {
     const code = generateCode(5);
@@ -36,10 +72,9 @@ const mailResetPassword = (sendTo, id) => {
 
 const sendEmail = async ({email, option}) => {
     try{
-        console.log(email, option)
         const {mail, code} = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
-        console.log(mail);
-        const res = await transporter.sendMail(mail);
+        let mailTranporter = await createTransport();
+        const res = await mailTranporter.sendMail(mail);
         if(res) return code || true;
     } catch(err) {
         console.log(err);
