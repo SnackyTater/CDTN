@@ -12,42 +12,36 @@ export default function route() {
         <Router>
             <div className='App'>
                 <Switch>
-                    <PopupContext.Provider value={PopupContextStore()}>
-                        <Route exact path="/">
-                            <LandingPage/>
-                        </Route>
-
-                        <SnackbarContext.Provider value={SnackbarContextStore()}>
-                            <Route exact path="/home">
-                                <HomeContext.Provider value={HomeContextStore()}>
-                                    <HomePage/>
-                                </HomeContext.Provider>
-                            </Route>
-
-                            <Route exact path="/profile">
-                                <ProfilePage/>
-                            </Route>
-
-                            <Route exact path="/chat">
-                                <ChatPage/>
-                            </Route>
-                        </SnackbarContext.Provider>
-                        
-
-                        <Route exact path="/signup">
-                            <SignupPage/>
-                        </Route>
-                    </PopupContext.Provider>
+                    <Route exact path="/">
+                        <LandingPage/>
+                    </Route>
+                    
+                    <Route exact path="/home">
+                        <HomeContext.Provider value={HomeContextStore()}>
+                            <HomePage/>
+                        </HomeContext.Provider>
+                    </Route>
+                    
+                    <Route exact path="/profile">
+                        <ProfilePage/>
+                    </Route>
+                    
+                    <Route exact path="/chat">
+                        <ChatPage/>
+                    </Route>
+                    
+                    <Route exact path="/signup">
+                        <SignupPage/>
+                    </Route>
 
                     <Route exact path="/reset-password/:id">
                         <ResetPasswordPage />
                     </Route>
 
-                    <Route path="/404">
+                    <Route path="*">
                         <NotFoundPage />
                     </Route>
 
-                    <Redirect to="/404"/>
                 </Switch>
             </div>
         </Router>

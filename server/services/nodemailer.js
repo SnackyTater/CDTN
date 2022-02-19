@@ -66,16 +66,17 @@ const mailResetPassword = (sendTo, id) => {
             to: sendTo,
             subject: 'Reset Password',
             text: `click this link bellow to reset password https://${process.env.HOST + '/reset-password/' + id}, or for development environmet use this instead http://localhost:3000/reset-password/${id}`,
-        }
+        },
+        id: id
     }
 }
 
 const sendEmail = async ({email, option}) => {
     try{
-        const {mail, code} = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
+        const {mail, code, id} = (option.type === 'verificate') ? mailVerificate(email) : mailResetPassword(email, option.requestID);
         let mailTranporter = await createTransport();
         const res = await mailTranporter.sendMail(mail);
-        if(res) return code || true;
+        if(res) return code || id;
     } catch(err) {
         console.log(err);
         throw new Error(err.message)
