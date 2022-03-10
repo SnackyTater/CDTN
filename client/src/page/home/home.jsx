@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
+import io from '../../socket/socket';
 
 import { LoadingBackdrop, Sidebar, Snackbar, IconButton } from '../../component';
 import { getUserInfo } from '../../api/common/user';
@@ -27,9 +28,13 @@ export default function Home() {
 
     //hooks
     const [cookies, setCookie] = useCookies('jwt');
+    const [id] = useCookies('id');
     const history = useHistory();
 
     const token = cookies.jwt;
+
+    //socket
+    const socket = io(token);
 
     //only load 1 time after render
     useEffect(() => {
@@ -37,7 +42,10 @@ export default function Home() {
 
         let isMounted = true;
         getUserInfo({token}).then((userInfo) => {
+            
             isMounted && setUserInfo(userInfo);
+
+            socket.emit('join', userInfo._id);
         }).catch((error) => {
             setSnackbar({
                 severity: 'error',
@@ -52,7 +60,9 @@ export default function Home() {
     }, [])
 
     useEffect(() => {
-
+        socket.on('notification', (msg) => {
+            setSnackbar({severity: 'success', message: msg, isOpen: true});
+        })
     }, [])
 
     return (

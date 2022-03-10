@@ -1,6 +1,11 @@
 const user = require('../models/user');
 const {createChatRoom, getChatRoom} = require('./chat');
 const { dobCalculator, calculateDistance } = require('../scripts/utils');
+const io = require('../server');
+
+const dummy = async() => {
+    console.log(io);
+}
 
 const matchUser = async(userID, targetID) => {
     const userStatus = await user.updateOne({
@@ -87,7 +92,7 @@ const toggleLikeUser = async(userID, targetID) => {
     const targetInfo = await user.findOne({"_id": targetID});
     
     if(userInfo && targetInfo){
-        console.log('a');
+        
         const userMatchMakingStatus = userInfo.matchMaking.status;
         const targetMatchMakingStatus = targetInfo.matchMaking.status;
 
@@ -97,6 +102,7 @@ const toggleLikeUser = async(userID, targetID) => {
 
         //match with target
         if(userIsMatch != -1){
+            
             return {
                 status: {},
                 info: {},
@@ -107,6 +113,16 @@ const toggleLikeUser = async(userID, targetID) => {
             const {userStatus, targetStatus, chatRoom} = await matchUser(userID, targetID)
 
             if(userStatus.modifiedCount && targetStatus.modifiedCount){
+                io.io.to(userID).emit('notification', {
+                    message: `match with ${targetInfo.info.fullName}`,
+                    info: targetInfo,
+                })
+
+                io.io.to(targetID).emit('notification', {
+                    message: `match with ${userInfo.info.fullName}`,
+                    info: userInfo
+                })
+
                 return {
                     status: {userStatus, targetStatus},
                     info: {
@@ -120,7 +136,7 @@ const toggleLikeUser = async(userID, targetID) => {
         //like target
         if(targetIndex == -1){
             const status = await likeUser(userID, targetID);
-
+            // io.io.to(userID).emit('notification', `socket like ${targetID}`);
             if(status.modifiedCount && status.matchedCount)
                 return {
                     status: status,
@@ -369,4 +385,5 @@ module.exports = {
     toggleNopeUser,
     recommend,
     getMatches,
+    dummy
 }

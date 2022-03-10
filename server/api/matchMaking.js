@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {recommend, toggleLikeUser, toggleNopeUser, getMatches} = require('../controller/matchMaking');
+const {recommend, toggleLikeUser, toggleNopeUser, getMatches, dummy} = require('../controller/matchMaking');
 const {authenticateToken} = require('../authorization/auth');
 
 router.get('/recs', authenticateToken, async(req, res) => {
@@ -52,5 +52,13 @@ router.post('/nope', authenticateToken, async(req, res) => {
         res.json(err);
     }
 })
+
+// router.post('/dummy', async(req, res) => {
+//     try{
+//         await dummy();
+//     }catch(err){
+//         console.log(err);
+//     }
+// })
 
 module.exports = router;

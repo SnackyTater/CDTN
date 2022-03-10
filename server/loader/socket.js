@@ -19,6 +19,7 @@ module.exports = (io) => {
     })
     .on('connection', (socket) => {
         console.log('user connect to socket');
+        
 
         socket.on('join', (room) => {
             console.log(`user has join room ${room}`)

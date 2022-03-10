@@ -32,6 +32,7 @@ export default function Login({isOpen, closeForm, openForgotPassword}) {
                 password: loginInfo.password,
             })
             setCookie('jwt', access_token);
+            
             history.push('/home');
         } catch(error) {
             setLoading(false);

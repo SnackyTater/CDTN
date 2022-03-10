@@ -12,6 +12,7 @@ const getUser = async(id, config) => {
             "_id": 1,
             "matchMaking.config": 1,
         })
+        .populate('info.passions')
         .lean();
     
     if(!userInfo) throw new Error ('no user was found with given id');

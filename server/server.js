@@ -34,3 +34,5 @@ mongooseLoader().then(() => {
     console.log('mongoose is now online');
 })
 
+module.exports.io = io;
+
